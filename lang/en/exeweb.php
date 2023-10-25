@@ -70,18 +70,11 @@ $string['indicator:socialbreadthdef'] = 'File social';
 $string['indicator:socialbreadthdef_help'] = 'The participant has reached this percentage of the social engagement offered by the File exewebs during this analysis interval (Levels = No participation, Participant alone)';
 $string['indicator:socialbreadthdef_link'] = 'Learning_analytics_indicators#Social_breadth';
 $string['modifieddate'] = 'Modified {$a}';
-$string['modulename'] = 'File';
-$string['modulename_help'] = 'The file module enables a teacher to provide a file as a course exeweb. Where possible, the file will be displayed within the course interface; otherwise students will be prompted to download it. The file may include supporting files, for example an HTML page may have embedded images.
-
-Note that students need to have the appropriate software on their computers in order to open the file.
-
-A file may be used
-
-* To share presentations given in class
-* To include a mini website as a course exeweb
-* To provide draft files of software programs so students can edit and submit them for assessment';
+$string['modulename'] = 'eXeLearning Web';
+$string['modulename_help'] = 'The eXeLearning web enables a teacher to provide a eXeLearning web zip as a course resource. The package can be uploaded, but can be created or edited
+directly from an eXeLearnig Online server.';
 $string['modulename_link'] = 'mod/exeweb/view';
-$string['modulenameplural'] = 'Files';
+$string['modulenameplural'] = 'eXeLearnigs webs';
 $string['optionsheader'] = 'Display options';
 $string['page-mod-exeweb-x'] = 'Any file module page';
 $string['pluginadministration'] = 'Exeweb module administration';
