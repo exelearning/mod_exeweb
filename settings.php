@@ -27,14 +27,68 @@ defined('MOODLE_INTERNAL') || die;
 if ($ADMIN->fulltree) {
     require_once("$CFG->libdir/resourcelib.php");
 
-    $displayoptions = resourcelib_get_displayoptions([ RESOURCELIB_DISPLAY_AUTO,
-                                                        RESOURCELIB_DISPLAY_EMBED,
-                                                        RESOURCELIB_DISPLAY_FRAME,
-                                                        RESOURCELIB_DISPLAY_DOWNLOAD,
-                                                        RESOURCELIB_DISPLAY_OPEN,
-                                                        RESOURCELIB_DISPLAY_NEW,
-                                                        RESOURCELIB_DISPLAY_POPUP,
-                                                     ]);
+    // Connection settings.
+    $settings->add(new admin_setting_heading('exeweb/connectionsettings',
+        get_string('exeonline:connectionsettings', 'mod_exeweb'), ''));
+
+    $settings->add(new admin_setting_configtext('exeweb/exeonlinebaseuri',
+        get_string('exeonline:baseuri', 'mod_exeweb'),
+        get_string('exeonline:baseuri_desc', 'mod_exeweb'), '', PARAM_RAW_TRIMMED));
+
+    $settings->add(new admin_setting_configpasswordunmask('exeweb/hmackey1',
+        get_string('exeonline:hmackey1', 'mod_exeweb'),
+        get_string('exeonline:hmackey1_desc', 'mod_exeweb'), ''));
+
+    $settings->add(new admin_setting_configduration('exeweb/tokenexpiration',
+        get_string('exeonline:tokenexpiration', 'mod_exeweb'),
+        get_string('exeonline:tokenexpiration_desc', 'mod_exeweb'), 86400, 1));
+
+    // Exescorm default template.
+    $filemanageroptions = [
+        'accepted_types' => ['.zip'],
+        'maxbytes' => 0,
+        'maxfiles' => 1,
+        'subdirs' => 0,
+    ];
+
+    $settings->add(new admin_setting_configstoredfile('exeweb/template',
+        get_string('exeweb:template', 'mod_exeweb'),
+        get_string('exeweb:template_desc', 'mod_exeweb'),
+        'config', 0, $filemanageroptions
+    ));
+
+    $settings->add(new admin_setting_configcheckbox('exeweb/sendtemplate',
+        get_string('exeweb:sendtemplate', 'mod_exeweb'), get_string('exeweb:sendtemplate_desc', 'mod_exeweb'), 0));
+
+    // The eXescorm package validation rules.
+    $mandatoryfilesre = implode("\n", [
+        '/^contentv[\d+]\.xml$/',
+        '/^content\.xsd$/',
+        '/^content\.data$/',
+    ]);
+    $forbiddenfilesre = implode("\n", [
+        '/.*\.php$/',
+    ]);
+    $settings->add(new admin_setting_configtextarea('exeweb/mandatoryfileslist',
+        new lang_string('exeweb:mandatoryfileslist', 'mod_exeweb'),
+        new lang_string('exeweb:mandatoryfileslist_desc', 'mod_exeweb'), $mandatoryfilesre, PARAM_RAW, '50', '10'));
+    $settings->add(new admin_setting_configtextarea('exeweb/forbiddenfileslist',
+        new lang_string('exeweb:forbiddenfileslist', 'mod_exeweb'),
+        new lang_string('exeweb:forbiddenfileslist_desc', 'mod_exeweb'), $forbiddenfilesre, PARAM_RAW, '50', '10'));
+
+    // Default display settings.
+    $settings->add(new admin_setting_heading('exeweb/displaysettings',
+        get_string('defaultdisplaysettings', 'mod_exeweb'), ''));
+
+    $displayoptions = resourcelib_get_displayoptions([
+        RESOURCELIB_DISPLAY_AUTO,
+        RESOURCELIB_DISPLAY_EMBED,
+        RESOURCELIB_DISPLAY_FRAME,
+        RESOURCELIB_DISPLAY_DOWNLOAD,
+        RESOURCELIB_DISPLAY_OPEN,
+        RESOURCELIB_DISPLAY_NEW,
+        RESOURCELIB_DISPLAY_POPUP,
+    ]);
     $defaultdisplayoptions = [
         RESOURCELIB_DISPLAY_AUTO,
         RESOURCELIB_DISPLAY_EMBED,
@@ -57,8 +111,8 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox('exeweb/printintro',
         new lang_string('printintro', 'mod_exeweb'), new lang_string('printintroexplain', 'mod_exeweb'), 1));
     $settings->add(new admin_setting_configselect('exeweb/display',
-        new lang_string('displayselect', 'mod_exeweb'), new lang_string('displayselectexplain', 'mod_exeweb'), RESOURCELIB_DISPLAY_AUTO,
-        $displayoptions));
+        new lang_string('displayselect', 'mod_exeweb'), new lang_string('displayselectexplain', 'mod_exeweb'),
+        RESOURCELIB_DISPLAY_AUTO, $displayoptions));
     $settings->add(new admin_setting_configcheckbox('exeweb/showsize',
         new lang_string('showsize', 'mod_exeweb'), new lang_string('showsize_desc', 'mod_exeweb'), 0));
     $settings->add(new admin_setting_configcheckbox('exeweb/showtype',

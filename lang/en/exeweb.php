@@ -38,6 +38,7 @@ $string['configpopupstatus'] = 'Should popup windows show the status bar by defa
 $string['configpopuptoolbar'] = 'Should popup windows show the tool bar by default?';
 $string['configpopupwidth'] = 'What width should be the default width for new popup windows?';
 $string['contentheader'] = 'Content';
+$string['defaultdisplaysettings'] = 'Default display settings';
 $string['displayoptions'] = 'Available display options';
 $string['displayselect'] = 'Display';
 $string['displayselect_help'] = 'This setting, together with the file type and whether the browser allows embedding, determines how the file is displayed. Options may include:
@@ -53,6 +54,22 @@ $string['displayselect_link'] = 'mod/exeweb/mod';
 $string['displayselectexplain'] = 'Choose display type, unfortunately not all types are suitable for all files.';
 $string['dnduploadexeweb'] = 'Create file exeweb';
 $string['encryptedcode'] = 'Encrypted code';
+$string['exeonline:connectionsettings'] = 'eXeLearning server connection settings';
+$string['exeonline:baseuri'] = 'Remote URI';
+$string['exeonline:baseuri_desc'] = 'eXeLearning Online URL';
+$string['exeonline:hmackey1'] = 'Signing key';
+$string['exeonline:hmackey1_desc'] = 'Key used to sign data sent to the eXeLearning server, so we can be sure it was originated in this server. Use up to 32 characters.';
+$string['exeonline:tokenexpiration'] = 'Token expiration';
+$string['exeonline:tokenexpiration_desc'] = 'Max time (in seconds) to edit a package in eXeLearning and get back to Moodle.';
+$string['exeweb:forbiddenfileslist'] = 'Forbidden files RE list';
+$string['exeweb:forbiddenfileslist_desc'] = 'A forbidden files list can be cofigured here. Enter each forbidden file as a PHP regular expresion (RE) on a new line. For example:';
+$string['exeweb:mandatoryfileslist'] = ' Mandatory files RE list';
+$string['exeweb:mandatoryfileslist_desc'] = 'A mandatory files list can be cofigured here. Enter each mandatory file as a PHP regular expresion (RE) a new line.';
+$string['exeweb:onlinetypehelp'] = 'When you click on either save buttons at the bottom of this page, it\'ll take you to eXeLearning to create or edit there the package. When done, eXeLearning will send the newly created/edited package back to Moodle.';
+$string['exeweb:sendtemplate'] = 'Send template';
+$string['exeweb:sendtemplate_desc'] = 'Sends default template to eXeLearning when creating a new activity.';
+$string['exeweb:template'] = 'New package template.';
+$string['exeweb:template_desc'] = 'Package ulpoaded here will be used as default package for new activities. It will be show until replaced by the one sent by eXeLearning.';
 $string['filenotfound'] = 'File not found, sorry.';
 $string['filterfiles'] = 'Use filters on file content';
 $string['filterfilesexplain'] = 'Select type of file content filtering, please note this may cause problems for some Flash and Java applets. Please make sure that all text files are in UTF-8 encoding.';
@@ -76,6 +93,9 @@ directly from an eXeLearnig Online server.';
 $string['modulename_link'] = 'mod/exeweb/view';
 $string['modulenameplural'] = 'eXeLearnigs webs';
 $string['optionsheader'] = 'Display options';
+$string['package'] = 'Package file';
+$string['package_help'] = 'The package file is a file containing a web zip created with eXeLearning.';
+$string['packagehdr'] = 'Package';
 $string['page-mod-exeweb-x'] = 'Any file module page';
 $string['pluginadministration'] = 'Exeweb module administration';
 $string['pluginname'] = 'Exeweb';
@@ -98,6 +118,11 @@ $string['exewebdetails_sizetype'] = '{$a->size} {$a->type}';
 $string['exewebdetails_sizedate'] = '{$a->size} {$a->date}';
 $string['exewebdetails_typedate'] = '{$a->type} {$a->date}';
 $string['exewebdetails_sizetypedate'] = '{$a->size} {$a->type} {$a->date}';
+$string['exewebtype'] = 'Type';
+$string['exewebtype_help'] = 'This setting determines how the package is included in the course. There are up to 2 options:
+
+* Uploaded package - Enables an eXeLearning web zip package to be chosen via the file picker
+* Create with eXeLearning Online - Creates the activity and takes you to eXeLearning to create the package. When done, eXeLearning will send the newly created package back to Moodle.';
 $string['exeweb:exportexeweb'] = 'Export exeweb';
 $string['exeweb:view'] = 'View exeweb';
 $string['search:activity'] = 'File';
@@ -120,3 +145,6 @@ If there are multiple files in this exeweb, the start file type is displayed.
 
 If the file type is not known to the system, it will not display.';
 $string['uploadeddate'] = 'Uploaded {$a}';
+$string['typeexewebcreate'] = 'Create with eXeLearning';
+$string['typeexewebedit'] = 'Edit with eXeLearning';
+$string['typelocal'] = 'Uploaded package';

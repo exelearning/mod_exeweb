@@ -20,6 +20,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
+/** PACKAGE_TYPE_LOCAL = local */
+define('EXEWEB_ORIGIN_LOCAL', 'local');
+/** PACKAGE_TYPE_EXESCORMNET = exescorm */
+define('EXEWEB_ORIGIN_EXEONLINE', 'exeonline');
 
 /**
  * List of features supported in Exeweb module

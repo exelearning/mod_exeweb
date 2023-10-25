@@ -41,6 +41,7 @@ $string['configpopupstatus'] = 'Las ventanas "popup", ¿deben por defecto mostra
 $string['configpopuptoolbar'] = 'Las ventanas "popup", ¿deben por defecto mostrar la barra de herramientas?';
 $string['configpopupwidth'] = '¿Qué ancho deben tener por defecto las ventanas "popup"?';
 $string['contentheader'] = 'Contenido';
+$string['defaultdisplaysettings'] = 'Configuración de pantalla predeterminada';
 $string['displayoptions'] = 'Opciones para mostrar disponibles';
 $string['displayselect'] = 'Mostrar';
 $string['displayselect_help'] = 'Este ajuste, junto con el tipo de archivo, y siempre que el navegador permita incrustar código, determina cómo se muestra el archivo.
@@ -54,6 +55,22 @@ Las opciones pueden incluir:
 $string['displayselect_link'] = 'mod/exeweb/mod';
 $string['displayselectexplain'] = 'Elegir tipo (desafortunadamente no todos los tipos funcionan en todos los archivos).';
 $string['encryptedcode'] = 'Código encriptado';
+$string['exeonline:connectionsettings'] = 'Configuración de la conexión con el servidor eXeLearning Online';
+$string['exeonline:baseuri'] = 'URI remoto';
+$string['exeonline:baseuri_desc'] = 'URL de eXeLearning Online';
+$string['exeonline:hmackey1'] = 'Clave de firma';
+$string['exeonline:hmackey1_desc'] = 'Clave utilizada para firmar los datos enviados al servidor de eXeLearning, de forma que podamos estar seguros de que se originaron en este servidor. Utilice un máximo de 32 caracteres.';
+$string['exeonline:tokenexpiration'] = 'Caducidad del token';
+$string['exeonline:tokenexpiration_desc'] = 'Tiempo máximo (en segundos) para editar el paquete en eXeLearning y volver a Moodle.';
+$string['exeweb:forbiddenfileslist'] = 'Archivos prohibidos Lista RE';
+$string['exeweb:forbiddenfileslist_desc'] = 'Aquí puede cofigurar una lista de archivos prohibidos. Introduzca cada archivo prohibido como una expresión regular PHP (RE) en una nueva línea. Por ejemplo:';
+$string['exeweb:mandatoryfileslist'] = ' Ficheros obligatorios Lista RE';
+$string['exeweb:mandatoryfileslist_desc'] = 'Aquí se puede cofigurar una lista de archivos obligatorios. Introduzca cada archivo obligatorio como una expresión regular PHP (RE) en una nueva línea.';
+$string['exeweb:onlinetypehelp'] = 'Cuando haga clic en cualquiera de los botones de guardar en la parte inferior de esta página, le llevará a eXeLearning para crear o editar el contenido. Cuando termine, eXeLearning lo enviará de vuelta a Moodle.';
+$string['exeweb:sendtemplate'] = 'Enviar plantilla';
+$string['exeweb:sendtemplate_desc'] = 'Envía la plantilla predeterminada a eXeLearning al crear un nuevo contenido.';
+$string['exeweb:template'] = 'Nueva plantilla de paquete.';
+$string['exeweb:template_desc'] = 'El elp subido aquí se utilizará como paquete por defecto para los nuevos contenidos. Se mostrará hasta que sea sustituido por el enviado por eXeLearning.';
 $string['filenotfound'] = 'Lo sentimos, el archivo no se ha encontrado.';
 $string['filterfiles'] = 'Utilice filtros del contenido del archivo';
 $string['filterfilesexplain'] = 'Seleccione el tipo de archivo que contiene el filtro. Esto puede causar problemas en algunos applets de Flash y Java. Por favor, asegúrese de que todos los archivos de texto están en UTF-8.';
@@ -78,6 +95,9 @@ $string['modulename_link'] = 'mod/exeweb/view';
 $string['modulenameplural'] = 'Archivos';
 $string['notmigrated'] = 'Este tipo de recurso heredado ({$a}) no ha sido trasladado aún.';
 $string['optionsheader'] = 'Mostrar opciones';
+$string['package'] = 'Paquete';
+$string['package_help'] = 'El archivo del paquete es un archivo que contiene un web zip generado con eXeLearning.';
+$string['packagehdr'] = 'Paquete';
 $string['page-mod-exeweb-x'] = 'Cualquier página del módulo Archivo';
 $string['pluginadministration'] = 'Administración del módulo archivo';
 $string['pluginname'] = 'Recurso';
@@ -98,6 +118,11 @@ $string['exewebdetails_sizedate'] = '{$a->size} {$a->date}';
 $string['exewebdetails_sizetype'] = '{$a->size} {$a->type}';
 $string['exewebdetails_sizetypedate'] = '{$a->size} {$a->type} {$a->date}';
 $string['exewebdetails_typedate'] = '{$a->type} {$a->date}';
+$string['exewebtype'] = 'Tipo';
+$string['exewebtype_help'] = 'Este ajuste determina cómo se incluye el paquete en el curso. Hay 2 opciones:
+
+* Paquete subido - Permite elegir web zip creado con eXeLearning por medio del selector de archivos
+* Crear con eXeLearning - Crea la actividad y te lleva a eXeLearning Online apra crear el paquete. Al terminar, eXeLearning enviará el recién creado paquete de vuelta a Moodle.';
 $string['search:activity'] = 'Archivo';
 $string['selectmainfile'] = 'Por favor, seleccione el archivo principal haciendo clic en el icono junto a su nombre.';
 $string['showdate'] = 'Mostrar la fecha de subida/modificación';
@@ -113,3 +138,6 @@ $string['showtype_help'] = 'Muestra el tipo de documento, tal que \'Documento de
 Si hay varios archivos en el recurso, se muestra el tipo del archivo inicial.
 Si el tipo de archivo es desconocido para el sistema, no se muestra.';
 $string['uploadeddate'] = 'Subido {$a}';
+$string['typeexewebcreate'] = 'Crear con eXeLearning';
+$string['typeexewebedit'] = 'Editar con eXeLearning';
+$string['typelocal'] = 'Paquete subido';

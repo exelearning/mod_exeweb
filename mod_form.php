@@ -49,13 +49,53 @@ class mod_exeweb_mod_form extends moodleform_mod {
         $attributes = $element->getAttributes();
         $attributes['rows'] = 5;
         $element->setAttributes($attributes);
-        $filemanageroptions = [];
-        $filemanageroptions['accepted_types'] = '*';
-        $filemanageroptions['maxbytes'] = 0;
-        $filemanageroptions['maxfiles'] = -1;
-        $filemanageroptions['mainfile'] = true;
 
-        $mform->addElement('filemanager', 'files', get_string('selectfiles'), null, $filemanageroptions);
+        // Package section.
+        $mform->addElement('header', 'packagehdr', get_string('packagehdr', 'mod_exeweb'));
+        $mform->setExpanded('packagehdr', true);
+
+        $editmode = !empty($this->_instance);
+        // Package types.
+        $exewebtypes = [
+            EXEWEB_ORIGIN_LOCAL => get_string('typelocal', 'mod_exeweb'),
+        ];
+        $defaulttype = EXEWEB_ORIGIN_LOCAL;
+        if (!empty($config->exeonlinebaseuri) && !empty($config->hmackey1)) {
+            if ($editmode) {
+                $exewebtypes[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebedit', 'mod_exeweb');
+            } else {
+                $exewebtypes[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebcreate', 'mod_exeweb');
+            }
+            $defaulttype = EXEWEB_ORIGIN_EXEONLINE;
+        }
+
+        $nonfilepickertypes = [
+            EXEWEB_ORIGIN_EXEONLINE,
+        ];
+        // Reference.
+        $mform->addElement('select', 'exewebtype', get_string('exewebtype', 'mod_exeweb'), $exewebtypes);
+        $mform->setDefault('exewebtype', $defaulttype);
+        $mform->setType('exewebtype', PARAM_ALPHA);
+        $mform->addHelpButton('exewebtype', 'exewebtype', 'exeweb');
+        // Workarround to hide static element.
+        $group = [];
+        $staticelement = $mform->createElement('static', 'onlinetypehelp', '',
+                                                get_string('exeweb:onlinetypehelp', 'mod_exeweb'));
+        $staticelement->updateAttributes(['class' => 'font-weight-bold']);
+        $group[] = $staticelement;
+        $mform->addGroup($group, 'typehelpgroup', '', ' ', false);
+        $mform->hideIf('typehelpgroup', 'exewebtype', 'noteq', EXEWEB_ORIGIN_EXEONLINE);
+        // New local package upload.
+        $filemanageroptions = array();
+        $filemanageroptions['accepted_types'] = ['.zip', ];
+        $filemanageroptions['maxbytes'] = 0;
+        $filemanageroptions['maxfiles'] = 1;
+        $filemanageroptions['subdirs'] = 0;
+
+        $mform->addElement('filemanager', 'packagefile', get_string('package', 'mod_exeweb'), null, $filemanageroptions);
+        $mform->addHelpButton('packagefile', 'package', 'exeweb');
+        $mform->hideIf('packagefile', 'exewebtype', 'in', $nonfilepickertypes);
+        // End of package section.
 
         // -------------------------------------------------------
         $mform->addElement('header', 'optionssection', get_string('appearance'));
