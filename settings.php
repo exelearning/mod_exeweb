@@ -45,31 +45,31 @@ if ($ADMIN->fulltree) {
 
     // General settings.
     $settings->add(new admin_setting_configtext('exeweb/framesize',
-        get_string('framesize', 'exeweb'), get_string('configframesize', 'exeweb'), 130, PARAM_INT));
+        new lang_string('framesize', 'mod_exeweb'), new lang_string('configframesize', 'mod_exeweb'), 130, PARAM_INT));
     $settings->add(new admin_setting_configmultiselect('exeweb/displayoptions',
-        get_string('displayoptions', 'exeweb'), get_string('configdisplayoptions', 'exeweb'),
+        new lang_string('displayoptions', 'mod_exeweb'), new lang_string('configdisplayoptions', 'mod_exeweb'),
         $defaultdisplayoptions, $displayoptions));
 
     // Modedit defaults.
-    $settings->add(new admin_setting_heading('exewebmodeditdefaults', get_string('modeditdefaults', 'admin'),
-                get_string('condifmodeditdefaults', 'admin')));
+    $settings->add(new admin_setting_heading('exewebmodeditdefaults', new lang_string('modeditdefaults', 'admin'),
+                new lang_string('condifmodeditdefaults', 'admin')));
 
     $settings->add(new admin_setting_configcheckbox('exeweb/printintro',
-        get_string('printintro', 'exeweb'), get_string('printintroexplain', 'exeweb'), 1));
+        new lang_string('printintro', 'mod_exeweb'), new lang_string('printintroexplain', 'mod_exeweb'), 1));
     $settings->add(new admin_setting_configselect('exeweb/display',
-        get_string('displayselect', 'exeweb'), get_string('displayselectexplain', 'exeweb'), RESOURCELIB_DISPLAY_AUTO,
+        new lang_string('displayselect', 'mod_exeweb'), new lang_string('displayselectexplain', 'mod_exeweb'), RESOURCELIB_DISPLAY_AUTO,
         $displayoptions));
     $settings->add(new admin_setting_configcheckbox('exeweb/showsize',
-        get_string('showsize', 'exeweb'), get_string('showsize_desc', 'exeweb'), 0));
+        new lang_string('showsize', 'mod_exeweb'), new lang_string('showsize_desc', 'mod_exeweb'), 0));
     $settings->add(new admin_setting_configcheckbox('exeweb/showtype',
-        get_string('showtype', 'exeweb'), get_string('showtype_desc', 'exeweb'), 0));
+        new lang_string('showtype', 'mod_exeweb'), new lang_string('showtype_desc', 'mod_exeweb'), 0));
     $settings->add(new admin_setting_configcheckbox('exeweb/showdate',
-        get_string('showdate', 'exeweb'), get_string('showdate_desc', 'exeweb'), 0));
+        new lang_string('showdate', 'mod_exeweb'), new lang_string('showdate_desc', 'mod_exeweb'), 0));
     $settings->add(new admin_setting_configtext('exeweb/popupwidth',
-        get_string('popupwidth', 'exeweb'), get_string('popupwidthexplain', 'exeweb'), 620, PARAM_INT, 7));
+        new lang_string('popupwidth', 'mod_exeweb'), new lang_string('popupwidthexplain', 'mod_exeweb'), 620, PARAM_INT, 7));
     $settings->add(new admin_setting_configtext('exeweb/popupheight',
-        get_string('popupheight', 'exeweb'), get_string('popupheightexplain', 'exeweb'), 450, PARAM_INT, 7));
-    $options = ['0' => get_string('none'), '1' => get_string('allfiles'), '2' => get_string('htmlfilesonly'), ];
+        new lang_string('popupheight', 'mod_exeweb'), new lang_string('popupheightexplain', 'mod_exeweb'), 450, PARAM_INT, 7));
+    $options = ['0' => new lang_string('none'), '1' => new lang_string('allfiles'), '2' => new lang_string('htmlfilesonly'), ];
     $settings->add(new admin_setting_configselect('exeweb/filterfiles',
-        get_string('filterfiles', 'exeweb'), get_string('filterfilesexplain', 'exeweb'), 0, $options));
+        new lang_string('filterfiles', 'mod_exeweb'), new lang_string('filterfilesexplain', 'mod_exeweb'), 0, $options));
 }

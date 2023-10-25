@@ -72,23 +72,23 @@ class mod_exeweb_mod_form extends moodleform_mod {
             reset($options);
             $mform->setDefault('display', key($options));
         } else {
-            $mform->addElement('select', 'display', get_string('displayselect', 'exeweb'), $options);
+            $mform->addElement('select', 'display', get_string('displayselect', 'mod_exeweb'), $options);
             $mform->setDefault('display', $config->display);
             $mform->addHelpButton('display', 'displayselect', 'exeweb');
         }
 
-        $mform->addElement('checkbox', 'showsize', get_string('showsize', 'exeweb'));
+        $mform->addElement('checkbox', 'showsize', get_string('showsize', 'mod_exeweb'));
         $mform->setDefault('showsize', $config->showsize);
         $mform->addHelpButton('showsize', 'showsize', 'exeweb');
-        $mform->addElement('checkbox', 'showtype', get_string('showtype', 'exeweb'));
+        $mform->addElement('checkbox', 'showtype', get_string('showtype', 'mod_exeweb'));
         $mform->setDefault('showtype', $config->showtype);
         $mform->addHelpButton('showtype', 'showtype', 'exeweb');
-        $mform->addElement('checkbox', 'showdate', get_string('showdate', 'exeweb'));
+        $mform->addElement('checkbox', 'showdate', get_string('showdate', 'mod_exeweb'));
         $mform->setDefault('showdate', $config->showdate);
         $mform->addHelpButton('showdate', 'showdate', 'exeweb');
 
         if (array_key_exists(RESOURCELIB_DISPLAY_POPUP, $options)) {
-            $mform->addElement('text', 'popupwidth', get_string('popupwidth', 'exeweb'), ['size' => 3, ]);
+            $mform->addElement('text', 'popupwidth', get_string('popupwidth', 'mod_exeweb'), ['size' => 3, ]);
             if (count($options) > 1) {
                 $mform->hideIf('popupwidth', 'display', 'noteq', RESOURCELIB_DISPLAY_POPUP);
             }
@@ -96,7 +96,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
             $mform->setDefault('popupwidth', $config->popupwidth);
             $mform->setAdvanced('popupwidth', true);
 
-            $mform->addElement('text', 'popupheight', get_string('popupheight', 'exeweb'), ['size' => 3, ]);
+            $mform->addElement('text', 'popupheight', get_string('popupheight', 'mod_exeweb'), ['size' => 3, ]);
             if (count($options) > 1) {
                 $mform->hideIf('popupheight', 'display', 'noteq', RESOURCELIB_DISPLAY_POPUP);
             }
@@ -108,7 +108,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
         if (array_key_exists(RESOURCELIB_DISPLAY_AUTO, $options) ||
           array_key_exists(RESOURCELIB_DISPLAY_EMBED, $options) ||
           array_key_exists(RESOURCELIB_DISPLAY_FRAME, $options)) {
-            $mform->addElement('checkbox', 'printintro', get_string('printintro', 'exeweb'));
+            $mform->addElement('checkbox', 'printintro', get_string('printintro', 'mod_exeweb'));
             $mform->hideIf('printintro', 'display', 'eq', RESOURCELIB_DISPLAY_POPUP);
             $mform->hideIf('printintro', 'display', 'eq', RESOURCELIB_DISPLAY_DOWNLOAD);
             $mform->hideIf('printintro', 'display', 'eq', RESOURCELIB_DISPLAY_OPEN);
@@ -117,7 +117,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
         }
 
         $options = ['0' => get_string('none'), '1' => get_string('allfiles'), '2' => get_string('htmlfilesonly'), ];
-        $mform->addElement('select', 'filterfiles', get_string('filterfiles', 'exeweb'), $options);
+        $mform->addElement('select', 'filterfiles', get_string('filterfiles', 'mod_exeweb'), $options);
         $mform->setDefault('filterfiles', $config->filterfiles);
         $mform->setAdvanced('filterfiles', true);
 

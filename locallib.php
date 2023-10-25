@@ -113,7 +113,7 @@ function exeweb_display_frame($exeweb, $cm, $course, $file) {
         $title = strip_tags(format_string($course->shortname.': '.$exeweb->name));
         $framesize = $config->framesize;
         $contentframetitle = s(format_string($exeweb->name));
-        $modulename = s(get_string('modulename', 'exeweb'));
+        $modulename = s(get_string('modulename', 'mod_exeweb'));
         $dir = get_string('thisdirection', 'langconfig');
 
         $file = <<<EOF
@@ -146,7 +146,7 @@ function exeweb_get_clicktoopen($file, $revision, $extra='') {
     $fullurl = moodle_url::make_pluginfile_url($file->get_contextid(), 'mod_exeweb', 'content', $revision,
                 $file->get_filepath(), $filename);
 
-    $string = get_string('clicktoopen2', 'exeweb', "<a href=\"$fullurl\" $extra>$filename</a>");
+    $string = get_string('clicktoopen2', 'mod_exeweb', "<a href=\"$fullurl\" $extra>$filename</a>");
 
     return $string;
 }
@@ -161,7 +161,7 @@ function exeweb_get_clicktodownload($file, $revision) {
     $fullurl = moodle_url::make_pluginfile_url($file->get_contextid(), 'mod_exeweb', 'content', $revision,
                 $file->get_filepath(), $filename, true);
 
-    $string = get_string('clicktodownload', 'exeweb', "<a href=\"$fullurl\">$filename</a>");
+    $string = get_string('clicktodownload', 'mod_exeweb', "<a href=\"$fullurl\">$filename</a>");
 
     return $string;
 }
@@ -349,7 +349,7 @@ function exeweb_get_optional_details($exeweb, $cm) {
         }
 
         if ($infodisplayed > 1) {
-            $details = get_string("exewebdetails_{$langstring}", 'exeweb',
+            $details = get_string("exewebdetails_{$langstring}", 'mod_exeweb',
                     (object)['size' => $size, 'type' => $type, 'date' => $date]);
         } else {
             // Only one of size, type and date is set, so just append.
@@ -403,7 +403,7 @@ function exeweb_print_filenotfound($exeweb, $cm, $course) {
     global $DB, $OUTPUT, $PAGE;
     $PAGE->activityheader->set_description(exeweb_get_intro($exeweb, $cm));
     exeweb_print_header($exeweb, $cm, $course);
-    echo $OUTPUT->notification(get_string('filenotfound', 'exeweb'));
+    echo $OUTPUT->notification(get_string('filenotfound', 'mod_exeweb'));
     echo $OUTPUT->footer();
     die;
 }

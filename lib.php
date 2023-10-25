@@ -296,7 +296,7 @@ function exeweb_cm_info_view(cm_info $cm) {
  */
 function exeweb_get_file_areas($course, $cm, $context) {
     $areas = [];
-    $areas['content'] = get_string('exewebcontent', 'exeweb');
+    $areas['content'] = get_string('exewebcontent', 'mod_exeweb');
     return $areas;
 }
 
@@ -421,7 +421,7 @@ function exeweb_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
  * @param stdClass $currentcontext Current context of block
  */
 function exeweb_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $modulepagetype = ['mod-exeweb-*' => get_string('page-mod-exeweb-x', 'exeweb')];
+    $modulepagetype = ['mod-exeweb-*' => get_string('page-mod-exeweb-x', 'mod_exeweb')];
     return $modulepagetype;
 }
 

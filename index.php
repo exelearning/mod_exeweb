@@ -36,8 +36,8 @@ $event = \mod_exeweb\event\course_module_instance_list_viewed::create($params);
 $event->add_record_snapshot('course', $course);
 $event->trigger();
 
-$strexeweb    = get_string('modulename', 'exeweb');
-$strexewebs    = get_string('modulenameplural', 'exeweb');
+$strexeweb    = get_string('modulename', 'mod_exeweb');
+$strexewebs    = get_string('modulenameplural', 'mod_exeweb');
 $strsectionname  = get_string('sectionname', 'format_'.$course->format);
 $strname         = get_string('name');
 $strintro        = get_string('moduleintro');
