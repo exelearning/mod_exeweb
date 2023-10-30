@@ -22,6 +22,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_exeweb\exeonline\exeonline_redirector;
+use mod_exeweb\exeweb_package;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
@@ -56,27 +59,27 @@ class mod_exeweb_mod_form extends moodleform_mod {
 
         $editmode = !empty($this->_instance);
         // Package types.
-        $exewebtypes = [
+        $exeorigins = [
             EXEWEB_ORIGIN_LOCAL => get_string('typelocal', 'mod_exeweb'),
         ];
         $defaulttype = EXEWEB_ORIGIN_LOCAL;
         if (!empty($config->exeonlinebaseuri) && !empty($config->hmackey1)) {
             if ($editmode) {
-                $exewebtypes[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebedit', 'mod_exeweb');
+                $exeorigins[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebedit', 'mod_exeweb');
             } else {
-                $exewebtypes[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebcreate', 'mod_exeweb');
+                $exeorigins[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebcreate', 'mod_exeweb');
+                $defaulttype = EXEWEB_ORIGIN_EXEONLINE;
             }
-            $defaulttype = EXEWEB_ORIGIN_EXEONLINE;
         }
 
         $nonfilepickertypes = [
             EXEWEB_ORIGIN_EXEONLINE,
         ];
-        // Reference.
-        $mform->addElement('select', 'exewebtype', get_string('exewebtype', 'mod_exeweb'), $exewebtypes);
-        $mform->setDefault('exewebtype', $defaulttype);
-        $mform->setType('exewebtype', PARAM_ALPHA);
-        $mform->addHelpButton('exewebtype', 'exewebtype', 'exeweb');
+        // Package origin.
+        $mform->addElement('select', 'exeorigin', get_string('exeorigin', 'mod_exeweb'), $exeorigins);
+        $mform->setDefault('exeorigin', $defaulttype);
+        $mform->setType('exeorigin', PARAM_ALPHA);
+        $mform->addHelpButton('exeorigin', 'exeorigin', 'exeweb');
         // Workarround to hide static element.
         $group = [];
         $staticelement = $mform->createElement('static', 'onlinetypehelp', '',
@@ -84,7 +87,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
         $staticelement->updateAttributes(['class' => 'font-weight-bold']);
         $group[] = $staticelement;
         $mform->addGroup($group, 'typehelpgroup', '', ' ', false);
-        $mform->hideIf('typehelpgroup', 'exewebtype', 'noteq', EXEWEB_ORIGIN_EXEONLINE);
+        $mform->hideIf('typehelpgroup', 'exeorigin', 'noteq', EXEWEB_ORIGIN_EXEONLINE);
         // New local package upload.
         $filemanageroptions = array();
         $filemanageroptions['accepted_types'] = ['.zip', ];
@@ -92,9 +95,9 @@ class mod_exeweb_mod_form extends moodleform_mod {
         $filemanageroptions['maxfiles'] = 1;
         $filemanageroptions['subdirs'] = 0;
 
-        $mform->addElement('filemanager', 'packagefile', get_string('package', 'mod_exeweb'), null, $filemanageroptions);
+        $mform->addElement('filepicker', 'packagefile', get_string('package', 'mod_exeweb'), null, $filemanageroptions);
         $mform->addHelpButton('packagefile', 'package', 'exeweb');
-        $mform->hideIf('packagefile', 'exewebtype', 'in', $nonfilepickertypes);
+        $mform->hideIf('packagefile', 'exeorigin', 'in', $nonfilepickertypes);
         // End of package section.
 
         // -------------------------------------------------------
@@ -117,12 +120,6 @@ class mod_exeweb_mod_form extends moodleform_mod {
             $mform->addHelpButton('display', 'displayselect', 'exeweb');
         }
 
-        $mform->addElement('checkbox', 'showsize', get_string('showsize', 'mod_exeweb'));
-        $mform->setDefault('showsize', $config->showsize);
-        $mform->addHelpButton('showsize', 'showsize', 'exeweb');
-        $mform->addElement('checkbox', 'showtype', get_string('showtype', 'mod_exeweb'));
-        $mform->setDefault('showtype', $config->showtype);
-        $mform->addHelpButton('showtype', 'showtype', 'exeweb');
         $mform->addElement('checkbox', 'showdate', get_string('showdate', 'mod_exeweb'));
         $mform->setDefault('showdate', $config->showdate);
         $mform->addHelpButton('showdate', 'showdate', 'exeweb');
@@ -175,9 +172,10 @@ class mod_exeweb_mod_form extends moodleform_mod {
 
     public function data_preprocessing(&$defaultvalues) {
         if ($this->current->instance) {
-            $draftitemid = file_get_submitted_draft_itemid('files');
-            file_prepare_draft_area($draftitemid, $this->context->id, 'mod_exeweb', 'content', 0, ['subdirs' => true, ]);
-            $defaultvalues['files'] = $draftitemid;
+            $draftitemid = file_get_submitted_draft_itemid('packagefile');
+            file_prepare_draft_area($draftitemid, $this->context->id, 'mod_exeweb', 'package',
+                                    false, ['subdirs' => false, 'maxfiles' => 1, ]);
+            $defaultvalues['packagefile'] = $draftitemid;
         }
         if (!empty($defaultvalues['displayoptions'])) {
             $displayoptions = (array) unserialize_array($defaultvalues['displayoptions']);
@@ -215,30 +213,65 @@ class mod_exeweb_mod_form extends moodleform_mod {
 
         $errors = parent::validation($data, $files);
 
-        $usercontext = context_user::instance($USER->id);
-        $fs = get_file_storage();
-        if (!$files = $fs->get_area_files($usercontext->id, 'user', 'draft', $data['files'], 'sortorder, id', false)) {
-            $errors['files'] = get_string('required');
-            return $errors;
-        }
-        if (count($files) == 1) {
-            // No need to select main file if only one picked.
-            return $errors;
-        } else if (count($files) > 1) {
-            $mainfile = false;
-            foreach ($files as $file) {
-                if ($file->get_sortorder() == 1) {
-                    $mainfile = true;
-                    break;
+        $type = $data['exeorigin'];
+
+        if ($type === EXEWEB_ORIGIN_LOCAL ) {
+            if (empty($data['packagefile'])) {
+                $errors['packagefile'] = get_string('required');
+            } else {
+                $draftitemid = $data['packagefile'];
+
+                // Get file from users draft area.
+                $usercontext = context_user::instance($USER->id);
+                $fs = get_file_storage();
+                $files = $fs->get_area_files($usercontext->id, 'user', 'draft', $draftitemid, 'sortorder, id', false);
+
+                if (!$files) {
+                    $errors['packagefile'] = get_string('required');
+                } else {
+                    $file = reset($files);
+                    // Validate this exeweb package.
+                    $errors = array_merge($errors, exeweb_package::validate_package($file));
                 }
+
             }
-            // Set a default main file.
-            if (!$mainfile) {
-                $file = reset($files);
-                file_set_sortorder($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(),
-                                   $file->get_filepath(), $file->get_filename(), 1);
+        } else if ($type !== EXEWEB_ORIGIN_EXEONLINE) {
+            $errors['exeorigin'] = get_string('invalidpackage', 'mod_exeweb');
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Allows module to modify the data returned by form get_data().
+     * This method is also called in the bulk activity completion form.
+     *
+     * Only available on moodleform_mod.
+     *
+     * @param stdClass $data the form data to be modified.
+     */
+    public function data_postprocessing($data) {
+        parent::data_postprocessing($data);
+
+        // Hack to get redirected to eXeLearning Online to edit package.
+        if ($data->exeorigin === EXEWEB_ORIGIN_EXEONLINE ) {
+            if (! isset($data->showgradingmanagement)) {
+                if (isset($data->submitbutton)) {
+                    // Return to activity. If it this a new activity we don't have a coursemodule yet. We'll fix it in redirector.
+                    $returnto = new moodle_url("/mod/exeweb/view.php", ['id' => $data->coursemodule, 'forceview' => 1]);
+
+                } else {
+                    // Return to course.
+                    $data->submitbutton = true;
+                    $returnto = course_get_url($data->course, $data->coursesection ?? null, array('sr' => $data->sr));
+                }
+                // If send template is true, we'll always make an edition. On new activities,
+                // It will send default/uploaded template to eXeLearning.
+                $sendtemplate = get_config('exeweb', 'sendtemplate');
+                $action = ($sendtemplate || ! empty($data->update)) ? 'edit' : 'add';
+                $data->showgradingmanagement = true;
+                $data->gradingman = new exeonline_redirector($action, $returnto);
             }
         }
-        return $errors;
     }
 }

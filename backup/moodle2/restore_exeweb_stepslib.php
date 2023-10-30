@@ -54,6 +54,7 @@ class restore_exeweb_activity_structure_step extends restore_activity_structure_
     protected function after_execute() {
         // Add choice related files, no need to match by itemname (just internally handled context).
         $this->add_related_files('mod_exeweb', 'intro', null);
+        $this->add_related_files('mod_exeweb', 'package', null);
         $this->add_related_files('mod_exeweb', 'content', null);
     }
 }

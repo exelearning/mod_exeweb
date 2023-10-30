@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['areapackage'] = 'Archivo de paquete';
+$string['badexelearningpackage'] = 'El paquete no cumple las normas de los contenidos eXescorm definidas para el sitio.';
 $string['clicktodownload'] = 'Haga clic en {$a} para descargar el archivo.';
 $string['clicktoopen2'] = 'Haga clic en {$a} para ver el archivo.';
 $string['configdisplayoptions'] = 'Puede seleccionar cualquiera de las opciones disponibles (los ajustes existentes no se modificarán). Mantenga pulsada la tecla CTRL para seleccionar varios campos simultáneamente.';
@@ -54,7 +56,7 @@ Las opciones pueden incluir:
 * En ventana emergente - La URL se muestra en una ventana nueva del navegador sin menús y sin barra de direcciones';
 $string['displayselect_link'] = 'mod/exeweb/mod';
 $string['displayselectexplain'] = 'Elegir tipo (desafortunadamente no todos los tipos funcionan en todos los archivos).';
-$string['encryptedcode'] = 'Código encriptado';
+$string['dnduploadexeweb'] = 'Create file exeweb';
 $string['exeonline:connectionsettings'] = 'Configuración de la conexión con el servidor eXeLearning Online';
 $string['exeonline:baseuri'] = 'URI remoto';
 $string['exeonline:baseuri_desc'] = 'URL de eXeLearning Online';
@@ -87,6 +89,7 @@ $string['indicator:socialbreadth_help'] = 'Este indicador está basado en la amp
 $string['indicator:socialbreadthdef'] = 'Archivo social';
 $string['indicator:socialbreadthdef_help'] = 'El participante ha alcanzado este porcentaje del compromiso social ofrecido por los recursos de Archivo durante este intervalo de análisis (Niveles = Sin participación, Participante solo)';
 $string['indicator:socialbreadthdef_link'] = 'Learning_analytics_indicators#Social_breadth';
+$string['invalidpackage'] = 'Paquete inválido.';
 $string['modifieddate'] = 'Actualizado  {$a}';
 $string['modulename'] = 'Archivo';
 $string['modulename_help'] = 'El módulo eXeLearning web permite a los profesores proveer un paquete eXeLearning en formato web zip como un recurso del curso. El paquete puede ser subido, o creearse y editarse
@@ -118,8 +121,8 @@ $string['exewebdetails_sizedate'] = '{$a->size} {$a->date}';
 $string['exewebdetails_sizetype'] = '{$a->size} {$a->type}';
 $string['exewebdetails_sizetypedate'] = '{$a->size} {$a->type} {$a->date}';
 $string['exewebdetails_typedate'] = '{$a->type} {$a->date}';
-$string['exewebtype'] = 'Tipo';
-$string['exewebtype_help'] = 'Este ajuste determina cómo se incluye el paquete en el curso. Hay 2 opciones:
+$string['exeorigin'] = 'Tipo';
+$string['exeorigin_help'] = 'Este ajuste determina cómo se incluye el paquete en el curso. Hay 2 opciones:
 
 * Paquete subido - Permite elegir web zip creado con eXeLearning por medio del selector de archivos
 * Crear con eXeLearning - Crea la actividad y te lleva a eXeLearning Online apra crear el paquete. Al terminar, eXeLearning enviará el recién creado paquete de vuelta a Moodle.';

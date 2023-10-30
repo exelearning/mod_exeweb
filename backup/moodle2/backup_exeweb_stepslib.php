@@ -47,6 +47,7 @@ class backup_exeweb_activity_structure_step extends backup_activity_structure_st
 
         // Define file annotations.
         $exeweb->annotate_files('mod_exeweb', 'intro', null); // This file areas haven't itemid.
+        $exeweb->annotate_files('mod_exeweb', 'package', null); // This file areas haven't itemid.
         $exeweb->annotate_files('mod_exeweb', 'content', null); // This file areas haven't itemid.
 
         // Return the root element (exeweb), wrapped into standard activity structure.

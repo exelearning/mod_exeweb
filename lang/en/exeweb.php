@@ -22,6 +22,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
+$string['areapackage'] = 'Package file';
+$string['badexelearningpackage'] = 'The package does not comply with the eXescorm package rules defined for the site.';
 $string['clicktodownload'] = 'Click {$a} link to download the file.';
 $string['clicktoopen2'] = 'Click {$a} link to view the file.';
 $string['configdisplayoptions'] = 'Select all options that should be available, existing settings are not modified. Hold CTRL key to select multiple fields.';
@@ -53,7 +57,6 @@ $string['displayselect_help'] = 'This setting, together with the file type and w
 $string['displayselect_link'] = 'mod/exeweb/mod';
 $string['displayselectexplain'] = 'Choose display type, unfortunately not all types are suitable for all files.';
 $string['dnduploadexeweb'] = 'Create file exeweb';
-$string['encryptedcode'] = 'Encrypted code';
 $string['exeonline:connectionsettings'] = 'eXeLearning server connection settings';
 $string['exeonline:baseuri'] = 'Remote URI';
 $string['exeonline:baseuri_desc'] = 'eXeLearning Online URL';
@@ -86,6 +89,7 @@ $string['indicator:socialbreadth_help'] = 'This indicator is based on the social
 $string['indicator:socialbreadthdef'] = 'File social';
 $string['indicator:socialbreadthdef_help'] = 'The participant has reached this percentage of the social engagement offered by the File exewebs during this analysis interval (Levels = No participation, Participant alone)';
 $string['indicator:socialbreadthdef_link'] = 'Learning_analytics_indicators#Social_breadth';
+$string['invalidpackage'] = 'Invalid package';
 $string['modifieddate'] = 'Modified {$a}';
 $string['modulename'] = 'eXeLearning Web';
 $string['modulename_help'] = 'The eXeLearning web enables a teacher to provide a eXeLearning web zip as a course resource. The package can be uploaded, but can be created or edited
@@ -118,8 +122,8 @@ $string['exewebdetails_sizetype'] = '{$a->size} {$a->type}';
 $string['exewebdetails_sizedate'] = '{$a->size} {$a->date}';
 $string['exewebdetails_typedate'] = '{$a->type} {$a->date}';
 $string['exewebdetails_sizetypedate'] = '{$a->size} {$a->type} {$a->date}';
-$string['exewebtype'] = 'Type';
-$string['exewebtype_help'] = 'This setting determines how the package is included in the course. There are up to 2 options:
+$string['exeorigin'] = 'Type';
+$string['exeorigin_help'] = 'This setting determines how the package is included in the course. There are up to 2 options:
 
 * Uploaded package - Enables an eXeLearning web zip package to be chosen via the file picker
 * Create with eXeLearning Online - Creates the activity and takes you to eXeLearning to create the package. When done, eXeLearning will send the newly created package back to Moodle.';

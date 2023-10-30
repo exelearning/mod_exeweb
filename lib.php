@@ -20,11 +20,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+use mod_exeweb\exeweb_package;
 
-/** PACKAGE_TYPE_LOCAL = local */
+/** EXEWEB_ORIGIN_LOCAL = local */
 define('EXEWEB_ORIGIN_LOCAL', 'local');
-/** PACKAGE_TYPE_EXESCORMNET = exescorm */
+/** EXEWEB_ORIGIN_EXEONLINE = exeonline */
 define('EXEWEB_ORIGIN_EXEONLINE', 'exeonline');
 
 /**
@@ -108,7 +108,7 @@ function exeweb_get_post_actions() {
  * @return int new exeweb instance id
  */
 function exeweb_add_instance($data, $mform) {
-    global $CFG, $DB;
+    global $CFG, $DB, $USER;
     require_once("$CFG->libdir/resourcelib.php");
     require_once("$CFG->dirroot/mod/exeweb/locallib.php");
     $cmid = $data->coursemodule;
@@ -120,7 +120,44 @@ function exeweb_add_instance($data, $mform) {
 
     // We need to use context now, so we need to make sure all needed info is already in db.
     $DB->set_field('course_modules', 'instance', $data->id, ['id' => $cmid]);
-    exeweb_set_mainfile($data);
+    $context = context_module::instance($cmid);
+
+    if ($data->exeorigin === EXEWEB_ORIGIN_EXEONLINE) {
+        // We are going to set a template file so activity is complete event if exelearning failure.
+        $context = context_module::instance($cmid);
+        $fs = get_file_storage();
+        $templatename = get_config('exeweb', 'template');
+        $templatefile = false;
+        $fileinfo = [
+            'contextid' => $context->id,
+            'component' => 'mod_exeweb',
+            'filearea' => 'package',
+            'itemid' => 0,
+            'filepath' => '/',
+            'filename' => 'default_package.zip',
+            'userid' => $USER->id,
+            'source' => 'default_package.zip',
+            'author' => fullname($USER),
+            'license' => 'unknown',
+        ];
+
+        if (! empty($templatename)) {
+            $templatefile = $fs->get_file(1, 'exeweb', 'config', 0, '/', ltrim($templatename, '/'));
+        }
+
+        if ($templatefile) {
+            $package = $fs->create_file_from_storedfile($fileinfo, $templatefile);
+        } else {
+            $defaultpackagepath = $CFG->dirroot . '/mod/exeweb/data/default_package.zip';
+            $package = $fs->create_file_from_pathname($fileinfo, $defaultpackagepath);
+        }
+    } else {
+        // Local uploaded package.
+        $package = exeweb_package::save_draft_file($data);
+    }
+
+    $contentslist = exeweb_package::expand_package($package);
+    exeweb_package::set_mainfile($contentslist, $package->get_contextid());
 
     $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
     \core_completion\api::update_completion_date_event($cmid, 'exeweb', $data->id, $completiontimeexpected);
@@ -144,7 +181,13 @@ function exeweb_update_instance($data, $mform) {
     exeweb_set_display_options($data);
 
     $DB->update_record('exeweb', $data);
-    exeweb_set_mainfile($data);
+
+    if ($data->exeorigin === EXEWEB_ORIGIN_LOCAL) {
+        // Only save uploaded package if is local uploaded.
+        $package = exeweb_package::save_draft_file($data);
+        $contentslist = exeweb_package::expand_package($package);
+        exeweb_package::set_mainfile($contentslist, $package->get_contextid());
+    }
 
     $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
     \core_completion\api::update_completion_date_event($data->coursemodule, 'exeweb', $data->id, $completiontimeexpected);
@@ -303,6 +346,8 @@ function exeweb_cm_info_view(cm_info $cm) {
 function exeweb_get_file_areas($course, $cm, $context) {
     $areas = [];
     $areas['content'] = get_string('exewebcontent', 'mod_exeweb');
+    $areas['package'] = get_string('areapackage', 'mod_exeweb');
+
     return $areas;
 }
 
@@ -346,7 +391,23 @@ function exeweb_get_file_info($browser, $areas, $course, $cm, $context, $fileare
             }
         }
         require_once("$CFG->dirroot/mod/exeweb/locallib.php");
-        return new exeweb_content_file_info($browser, $context, $storedfile, $urlbase, $areas[$filearea], true, true, true, false);
+        return new exeweb_content_file_info(
+            $browser, $context, $storedfile, $urlbase, $areas[$filearea], true, true, true, false
+        );
+    } else if ($filearea === 'package') {
+        $filepath = is_null($filepath) ? '/' : $filepath;
+        $filename = is_null($filename) ? '.' : $filename;
+
+        $urlbase = $CFG->wwwroot.'/pluginfile.php';
+        if (!$storedfile = $fs->get_file($context->id, 'mod_exeweb', 'package', 0, $filepath, $filename)) {
+            if ($filepath === '/' && $filename === '.') {
+                $storedfile = new virtual_root_file($context->id, 'mod_exeweb', 'package', 0);
+            } else {
+                // Not found.
+                return null;
+            }
+        }
+        return new file_info_stored($browser, $context, $storedfile, $urlbase, $areas[$filearea], false, true, false, false);
     }
 
     // Note: exeweb_intro handled in file_browser automatically.
@@ -443,7 +504,7 @@ function exeweb_export_contents($cm, $baseurl) {
     $exeweb = $DB->get_record('exeweb', ['id' => $cm->instance], '*', MUST_EXIST);
 
     $fs = get_file_storage();
-    $files = $fs->get_area_files($context->id, 'mod_exeweb', 'content', 0, 'sortorder DESC, id ASC', false);
+    $files = $fs->get_area_files($context->id, 'mod_exeweb', 'package', 0, 'sortorder DESC, id ASC', false);
 
     foreach ($files as $fileinfo) {
         $file = [];
@@ -451,7 +512,7 @@ function exeweb_export_contents($cm, $baseurl) {
         $file['filename'] = $fileinfo->get_filename();
         $file['filepath'] = $fileinfo->get_filepath();
         $file['filesize'] = $fileinfo->get_filesize();
-        $file['fileurl'] = moodle_url::make_pluginfile_url($context->id, 'mod_exeweb', 'content', $exeweb->revision,
+        $file['fileurl'] = moodle_url::make_pluginfile_url($context->id, 'mod_exeweb', 'package', $exeweb->revision,
                                             $fileinfo->get_filepath(), $fileinfo->get_filename());
         $file['timecreated'] = $fileinfo->get_timecreated();
         $file['timemodified'] = $fileinfo->get_timemodified();
@@ -475,10 +536,12 @@ function exeweb_export_contents($cm, $baseurl) {
  * @return array containing details of the files / types the mod can handle
  */
 function exeweb_dndupload_register() {
-    // TODO: Should we accept any extension?
-    return ['files' => [
-                     ['extension' => '*', 'message' => get_string('dnduploadexeweb', 'mod_exeweb')]
-                    ]];
+    return [
+        'files' => [
+            ['extension' => 'zip',
+            'message' => get_string('dnduploadexeweb', 'mod_exeweb')]
+        ]
+    ];
 }
 
 /**
@@ -487,6 +550,7 @@ function exeweb_dndupload_register() {
  * @return int instance id of the newly created mod
  */
 function exeweb_dndupload_handle($uploadinfo) {
+    // TODO: Check package and process it.
     // Gather the required info.
     $data = new \stdClass();
     $data->course = $uploadinfo->course->id;

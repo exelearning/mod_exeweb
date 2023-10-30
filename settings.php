@@ -84,7 +84,6 @@ if ($ADMIN->fulltree) {
         RESOURCELIB_DISPLAY_AUTO,
         RESOURCELIB_DISPLAY_EMBED,
         RESOURCELIB_DISPLAY_FRAME,
-        RESOURCELIB_DISPLAY_DOWNLOAD,
         RESOURCELIB_DISPLAY_OPEN,
         RESOURCELIB_DISPLAY_NEW,
         RESOURCELIB_DISPLAY_POPUP,
@@ -92,7 +91,6 @@ if ($ADMIN->fulltree) {
     $defaultdisplayoptions = [
         RESOURCELIB_DISPLAY_AUTO,
         RESOURCELIB_DISPLAY_EMBED,
-        RESOURCELIB_DISPLAY_DOWNLOAD,
         RESOURCELIB_DISPLAY_OPEN,
         RESOURCELIB_DISPLAY_POPUP,
     ];
@@ -113,10 +111,6 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configselect('exeweb/display',
         new lang_string('displayselect', 'mod_exeweb'), new lang_string('displayselectexplain', 'mod_exeweb'),
         RESOURCELIB_DISPLAY_AUTO, $displayoptions));
-    $settings->add(new admin_setting_configcheckbox('exeweb/showsize',
-        new lang_string('showsize', 'mod_exeweb'), new lang_string('showsize_desc', 'mod_exeweb'), 0));
-    $settings->add(new admin_setting_configcheckbox('exeweb/showtype',
-        new lang_string('showtype', 'mod_exeweb'), new lang_string('showtype_desc', 'mod_exeweb'), 0));
     $settings->add(new admin_setting_configcheckbox('exeweb/showdate',
         new lang_string('showdate', 'mod_exeweb'), new lang_string('showdate_desc', 'mod_exeweb'), 0));
     $settings->add(new admin_setting_configtext('exeweb/popupwidth',

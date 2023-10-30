@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+use mod_exeweb\exeweb_package;
+
 require_once("$CFG->libdir/filelib.php");
 require_once("$CFG->libdir/resourcelib.php");
 require_once("$CFG->dirroot/mod/exeweb/lib.php");
@@ -457,22 +459,42 @@ class exeweb_content_file_info extends file_info_stored {
 
 function exeweb_set_mainfile($data) {
     global $DB;
+    // TODO: see origin.
+
     $fs = get_file_storage();
     $cmid = $data->coursemodule;
-    $draftitemid = $data->files;
+    $draftitemid = $data->packagefile;
 
     $context = context_module::instance($cmid);
     if ($draftitemid) {
-        $options = ['subdirs' => true, 'embed' => false];
+        $options = ['subdirs' => false, 'embed' => false];
         if ($data->display == RESOURCELIB_DISPLAY_EMBED) {
             $options['embed'] = true;
         }
-        file_save_draft_area_files($draftitemid, $context->id, 'mod_exeweb', 'content', 0, $options);
+        file_save_draft_area_files($draftitemid, $context->id, 'mod_exeweb', 'package', 0, $options);
     }
-    $files = $fs->get_area_files($context->id, 'mod_exeweb', 'content', 0, 'sortorder', false);
-    if (count($files) == 1) {
-        // Only one file attached, set it as main file automatically.
-        $file = reset($files);
-        file_set_sortorder($context->id, 'mod_exeweb', 'content', 0, $file->get_filepath(), $file->get_filename(), 1);
+    $files = $fs->get_area_files($context->id, 'mod_exeweb', 'package', 0, '', false);
+    $package = reset($files);
+    if ($package) {
+        $contentlist = exeweb_package::expand_package($package);
     }
+    // TODO: how to know main file? index.html, setting...?
+    $filepath = '/';
+    if (empty($contentlist)) {
+        return false;
+    }
+    $firstfile = key($contentlist);
+    if (mb_substr($firstfile, -1) === '/') {
+        $filepath = '/' . $firstfile;
+    }
+    // Now we should have contents of web zip package in content area. Find index.html and set is as main file.
+    $mainfile = $fs->get_file($context->id, 'mod_exeweb', 'content', 0, $filepath, 'index.html');
+    if ($mainfile === false) {
+        $mainfile = $fs->get_file($context->id, 'mod_exeweb', 'content', 0, $filepath, 'index.htm');
+    }
+    if ($mainfile) {
+        file_set_sortorder($context->id, 'mod_exeweb', 'content', 0, $mainfile->get_filepath(), $mainfile->get_filename(), 1);
+        return true;
+    }
+    return false;
 }
