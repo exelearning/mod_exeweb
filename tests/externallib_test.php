@@ -150,8 +150,9 @@ class externallib_test extends externallib_advanced_testcase {
 
         // Create what we expect to be returned when querying the two courses.
         $expectedfields = ['id', 'coursemodule', 'course', 'name', 'intro', 'introformat', 'introfiles', 'lang',
-                                'contentfiles', 'display', 'displayoptions',
-                                'filterfiles', 'revision', 'timemodified', 'section', 'visible', 'groupmode', 'groupingid'];
+                                'contentfiles', 'display', 'displayoptions', 'filterfiles', 'entrypath', 'entryname',
+                                'revision', 'timecreated', 'timemodified', 'usermodified',
+                                'section', 'visible', 'groupmode', 'groupingid'];
 
         // Add expected coursemodule and data.
         $exeweb1->coursemodule = $exeweb1->cmid;

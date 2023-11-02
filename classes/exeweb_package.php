@@ -157,9 +157,9 @@ class exeweb_package {
      *
      * @param array $contentlist
      * @param integer $contextid
-     * @return boolean
+     * @return \stored_file|boolean
      */
-    public static function set_mainfile(array $contentlist, int $contextid): bool {
+    public static function get_mainfile(array $contentlist, int $contextid) {
         if (empty($contentlist)) {
             return false;
         }
@@ -174,8 +174,7 @@ class exeweb_package {
         foreach ($mainfilenames as $item) {
             $mainfile = $fs->get_file($contextid, 'mod_exeweb', 'content', 0, $filepath, $item);
             if ($mainfile !== false) {
-                file_set_sortorder($contextid, 'mod_exeweb', 'content', 0, $mainfile->get_filepath(), $mainfile->get_filename(), 1);
-                return true;
+                return $mainfile;
             }
         }
         return false;

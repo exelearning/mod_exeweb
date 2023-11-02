@@ -25,6 +25,8 @@ require_once($CFG->libdir . "/phpunit/classes/restore_date_testcase.php");
  * Restore date tests.
  *
  * @package    mod_exeweb
+ * @category   phpunit
+ * @covers     \restore_date_testcase
  * @copyright  2017 onwards Ankit Agarwal <ankit.agrr@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

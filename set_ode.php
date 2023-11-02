@@ -146,13 +146,18 @@ if (!empty($errors)) {
 // Package is valid so delete files from package area and move the new one.
 $fs->delete_area_files($context->id, 'mod_exeweb', 'package');
 $fileinfo['filearea'] = 'package';
-$file = $fs->create_file_from_storedfile($fileinfo, $tmpfile);
+$package = $fs->create_file_from_storedfile($fileinfo, $tmpfile);
 $fs->delete_area_files($context->id, 'mod_exeweb', 'temppackage');
-// Set filename as new instance reference.
-$exeweb->reference = $file->get_filename();
-$DB->update_record('exeweb', $exeweb);
+// Process package contents.
+$contentslist = exeweb_package::expand_package($package);
+$mainfile = exeweb_package::get_mainfile($contentslist, $package->get_contextid());
+if ($mainfile !== false) {
+    file_set_sortorder($mainfile->get_contextid(), 'mod_exeweb', 'content', 0, $mainfile->get_filepath(), $mainfile->get_filename(), 1);
+    $data->entrypath = $mainfile->get_filepath();
+    $data->entryname = $mainfile->get_filename();
+}
 
-exeweb_package::expand_package($file);
+$DB->update_record('exeweb', $exeweb);
 
 // Prepare OK response.
 $resultmsg['status'] = '0';

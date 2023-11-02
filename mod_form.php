@@ -147,7 +147,6 @@ class mod_exeweb_mod_form extends moodleform_mod {
           array_key_exists(RESOURCELIB_DISPLAY_FRAME, $options)) {
             $mform->addElement('checkbox', 'printintro', get_string('printintro', 'mod_exeweb'));
             $mform->hideIf('printintro', 'display', 'eq', RESOURCELIB_DISPLAY_POPUP);
-            $mform->hideIf('printintro', 'display', 'eq', RESOURCELIB_DISPLAY_DOWNLOAD);
             $mform->hideIf('printintro', 'display', 'eq', RESOURCELIB_DISPLAY_OPEN);
             $mform->hideIf('printintro', 'display', 'eq', RESOURCELIB_DISPLAY_NEW);
             $mform->setDefault('printintro', $config->printintro);

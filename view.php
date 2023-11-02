@@ -58,18 +58,15 @@ $PAGE->set_url('/mod/exeweb/view.php', ['id' => $cm->id]);
 
 $fs = get_file_storage();
 // TODO: this is not very efficient!!
-$files = $fs->get_area_files($context->id, 'mod_exeweb', 'content', 0, 'sortorder DESC, id ASC', false);
-if (count($files) < 1) {
+$file = $fs->get_file($context->id, 'mod_exeweb', 'content', 0, $exeweb->entrypath, $exeweb->entryname);
+
+if (! $file) {
     exeweb_print_filenotfound($exeweb, $cm, $course);
     die;
-} else {
-    $file = reset($files);
-    unset($files);
 }
 
-$exeweb->mainfile = $file->get_filename();
 $displaytype = exeweb_get_final_display_type($exeweb);
-if ($displaytype == RESOURCELIB_DISPLAY_OPEN || $displaytype == RESOURCELIB_DISPLAY_DOWNLOAD) {
+if ($displaytype == RESOURCELIB_DISPLAY_OPEN) {
     $redirect = true;
 }
 
@@ -84,7 +81,7 @@ if ($redirect && !$forceview) {
     // Coming from course page or url index page
     // this redirect trick solves caching problems when tracking views ;-) .
     $path = '/'.$context->id.'/mod_exeweb/content/'.$exeweb->revision.$file->get_filepath().$file->get_filename();
-    $fullurl = moodle_url::make_file_url('/pluginfile.php', $path, $displaytype == RESOURCELIB_DISPLAY_DOWNLOAD);
+    $fullurl = moodle_url::make_file_url('/pluginfile.php', $path);
     redirect($fullurl);
 }
 

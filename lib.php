@@ -112,7 +112,9 @@ function exeweb_add_instance($data, $mform) {
     require_once("$CFG->libdir/resourcelib.php");
     require_once("$CFG->dirroot/mod/exeweb/locallib.php");
     $cmid = $data->coursemodule;
-    $data->timemodified = time();
+    $data->timecreated = time();
+    $data->timemodified = $data->timecreated;
+    $data->usermodified = $USER->id;
 
     exeweb_set_display_options($data);
 
@@ -124,7 +126,6 @@ function exeweb_add_instance($data, $mform) {
 
     if ($data->exeorigin === EXEWEB_ORIGIN_EXEONLINE) {
         // We are going to set a template file so activity is complete event if exelearning failure.
-        $context = context_module::instance($cmid);
         $fs = get_file_storage();
         $templatename = get_config('exeweb', 'template');
         $templatefile = false;
@@ -157,7 +158,13 @@ function exeweb_add_instance($data, $mform) {
     }
 
     $contentslist = exeweb_package::expand_package($package);
-    exeweb_package::set_mainfile($contentslist, $package->get_contextid());
+    $mainfile = exeweb_package::get_mainfile($contentslist, $package->get_contextid());
+    if ($mainfile !== false) {
+        file_set_sortorder($context->id, 'mod_exeweb', 'content', 0, $mainfile->get_filepath(), $mainfile->get_filename(), 1);
+        $data->entrypath = $mainfile->get_filepath();
+        $data->entryname = $mainfile->get_filename();
+        $DB->update_record('exeweb', $data);
+    }
 
     $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
     \core_completion\api::update_completion_date_event($cmid, 'exeweb', $data->id, $completiontimeexpected);
@@ -172,22 +179,28 @@ function exeweb_add_instance($data, $mform) {
  * @return bool true
  */
 function exeweb_update_instance($data, $mform) {
-    global $CFG, $DB;
+    global $CFG, $DB, $USER;
     require_once("$CFG->libdir/resourcelib.php");
-    $data->timemodified = time();
-    $data->id           = $data->instance;
+    $data->timecreated = time();
+    $data->timemodified = $data->timecreated;
+    $data->usermodified = $USER->id;    $data->id           = $data->instance;
     $data->revision++;
 
     exeweb_set_display_options($data);
-
-    $DB->update_record('exeweb', $data);
 
     if ($data->exeorigin === EXEWEB_ORIGIN_LOCAL) {
         // Only save uploaded package if is local uploaded.
         $package = exeweb_package::save_draft_file($data);
         $contentslist = exeweb_package::expand_package($package);
-        exeweb_package::set_mainfile($contentslist, $package->get_contextid());
+        $mainfile = exeweb_package::get_mainfile($contentslist, $package->get_contextid());
+        if ($mainfile !== false) {
+            file_set_sortorder($package->get_contextid(), 'mod_exeweb', 'content', 0,
+                                $mainfile->get_filepath(), $mainfile->get_filename(), 1);
+            $data->entrypath = $mainfile->get_filepath();
+            $data->entryname = $mainfile->get_filename();
+        }
     }
+    $DB->update_record('exeweb', $data);
 
     $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
     \core_completion\api::update_completion_date_event($data->coursemodule, 'exeweb', $data->id, $completiontimeexpected);
@@ -273,14 +286,6 @@ function exeweb_get_coursemodule_info($coursemodule) {
     if ($coursemodule->showdescription) {
         // Convert intro to html. Do not filter cached version, filters run at display time.
         $info->content = format_module_intro('exeweb', $exeweb, $coursemodule->id, false);
-    }
-
-    // See if there is at least one file.
-    $fs = get_file_storage();
-    $files = $fs->get_area_files($context->id, 'mod_exeweb', 'content', 0, 'sortorder DESC, id ASC', false, 0, 0, 1);
-    if (count($files) >= 1) {
-        $mainfile = reset($files);
-        $exeweb->mainfile = $mainfile->get_filename();
     }
 
     $display = exeweb_get_final_display_type($exeweb);

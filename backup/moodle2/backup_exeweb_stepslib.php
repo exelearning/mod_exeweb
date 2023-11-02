@@ -36,7 +36,8 @@ class backup_exeweb_activity_structure_step extends backup_activity_structure_st
         // Define each element separated.
         $exeweb = new backup_nested_element('exeweb', ['id'], [
             'name', 'intro', 'introformat', 'tobemigrated', 'display',
-            'displayoptions', 'filterfiles', 'revision', 'timemodified']);
+            'displayoptions', 'filterfiles', 'entrypath', 'entryname',
+            'revision', 'timecreated', 'timemodified', 'usermodified']);
 
         // Build the tree (none).
 

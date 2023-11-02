@@ -50,30 +50,11 @@ function exeweb_display_embed($exeweb, $cm, $course, $file) {
     $mimetype = $file->get_mimetype();
     $title    = $exeweb->name;
 
-    $mediamanager = core_media_manager::instance($PAGE);
-    $embedoptions = [
-        core_media_manager::OPTION_TRUSTED => true,
-        core_media_manager::OPTION_BLOCK => true,
-    ];
+    // We need a way to discover if we are loading remote docs inside an iframe.
+    $moodleurl->param('embed', 1);
 
-    if (file_mimetype_in_typegroup($mimetype, 'web_image')) {  // It's an image.
-        $code = resourcelib_embed_image($moodleurl->out(), $title);
-
-    } else if ($mimetype === 'application/pdf') {
-        // PDF document.
-        $code = resourcelib_embed_pdf($moodleurl->out(), $title, $clicktoopen);
-
-    } else if ($mediamanager->can_embed_url($moodleurl, $embedoptions)) {
-        // Media (audio/video) file.
-        $code = $mediamanager->embed_url($moodleurl, $title, 0, 0, $embedoptions);
-
-    } else {
-        // We need a way to discover if we are loading remote docs inside an iframe.
-        $moodleurl->param('embed', 1);
-
-        // Anything else - just try object tag enlarged as much as possible.
-        $code = resourcelib_embed_general($moodleurl, $title, $clicktoopen, $mimetype);
-    }
+    // Anything else - just try object tag enlarged as much as possible.
+    $code = resourcelib_embed_general($moodleurl, $title, $clicktoopen, $mimetype);
 
     // Let the module handle the display.
     $PAGE->activityheader->set_description(exeweb_get_intro($exeweb, $cm));
@@ -153,20 +134,6 @@ function exeweb_get_clicktoopen($file, $revision, $extra='') {
     return $string;
 }
 
-/**
- * Internal function - create click to open text with link.
- */
-function exeweb_get_clicktodownload($file, $revision) {
-    global $CFG;
-
-    $filename = $file->get_filename();
-    $fullurl = moodle_url::make_pluginfile_url($file->get_contextid(), 'mod_exeweb', 'content', $revision,
-                $file->get_filepath(), $filename, true);
-
-    $string = get_string('clicktodownload', 'mod_exeweb', "<a href=\"$fullurl\">$filename</a>");
-
-    return $string;
-}
 
 /**
  * Print exeweb info and workaround link when JS not available.
@@ -184,7 +151,6 @@ function exeweb_print_workaround($exeweb, $cm, $course, $file) {
 
     exeweb_print_header($exeweb, $cm, $course);
 
-    $exeweb->mainfile = $file->get_filename();
     echo '<div class="exewebworkaround">';
     switch (exeweb_get_final_display_type($exeweb)) {
         case RESOURCELIB_DISPLAY_POPUP:
@@ -202,10 +168,6 @@ function exeweb_print_workaround($exeweb, $cm, $course, $file) {
         case RESOURCELIB_DISPLAY_NEW:
             $extra = 'onclick="this.target=\'_blank\'"';
             echo exeweb_get_clicktoopen($file, $exeweb->revision, $extra);
-            break;
-
-        case RESOURCELIB_DISPLAY_DOWNLOAD:
-            echo exeweb_get_clicktodownload($file, $exeweb->revision);
             break;
 
         case RESOURCELIB_DISPLAY_OPEN:
@@ -248,13 +210,11 @@ function exeweb_get_file_details($exeweb, $cm) {
     if (!empty($options['showsize']) || !empty($options['showtype']) || !empty($options['showdate'])) {
         $context = context_module::instance($cm->id);
         $fs = get_file_storage();
-        $files = $fs->get_area_files($context->id, 'mod_exeweb', 'content', 0, 'sortorder DESC, id ASC', false);
-        // For a typical file exeweb, the sortorder is 1 for the main file
-        // and 0 for all other files. This sort approach is used just in case
-        // there are situations where the file has a different sort order.
-        $mainfile = $files ? reset($files) : null;
+        $mainfile = $fs->get_file($context->id, 'mod_exeweb', 'content', 0, $exeweb->entrypath, $exeweb->entryname);
+
         if (!empty($options['showsize'])) {
             $filedetails['size'] = 0;
+            $files = $fs->get_area_files($context->id, 'mod_exeweb', 'content', 0, 'id', false);
             foreach ($files as $file) {
                 // This will also synchronize the file size for external files if needed.
                 $filedetails['size'] += $file->get_filesize();
@@ -422,21 +382,7 @@ function exeweb_get_final_display_type($exeweb) {
         return $exeweb->display;
     }
 
-    if (empty($exeweb->mainfile)) {
-        return RESOURCELIB_DISPLAY_DOWNLOAD;
-    } else {
-        $mimetype = mimeinfo('type', $exeweb->mainfile);
-    }
-
-    if (file_mimetype_in_typegroup($mimetype, 'archive')) {
-        return RESOURCELIB_DISPLAY_DOWNLOAD;
-    }
-    if (file_mimetype_in_typegroup($mimetype, ['web_image', '.htm', 'web_video', 'web_audio'])) {
-        return RESOURCELIB_DISPLAY_EMBED;
-    }
-
-    // Let the browser deal with it somehow.
-    return RESOURCELIB_DISPLAY_OPEN;
+    return RESOURCELIB_DISPLAY_EMBED;
 }
 
 /**
@@ -455,46 +401,4 @@ class exeweb_content_file_info extends file_info_stored {
         }
         return parent::get_visible_name();
     }
-}
-
-function exeweb_set_mainfile($data) {
-    global $DB;
-    // TODO: see origin.
-
-    $fs = get_file_storage();
-    $cmid = $data->coursemodule;
-    $draftitemid = $data->packagefile;
-
-    $context = context_module::instance($cmid);
-    if ($draftitemid) {
-        $options = ['subdirs' => false, 'embed' => false];
-        if ($data->display == RESOURCELIB_DISPLAY_EMBED) {
-            $options['embed'] = true;
-        }
-        file_save_draft_area_files($draftitemid, $context->id, 'mod_exeweb', 'package', 0, $options);
-    }
-    $files = $fs->get_area_files($context->id, 'mod_exeweb', 'package', 0, '', false);
-    $package = reset($files);
-    if ($package) {
-        $contentlist = exeweb_package::expand_package($package);
-    }
-    // TODO: how to know main file? index.html, setting...?
-    $filepath = '/';
-    if (empty($contentlist)) {
-        return false;
-    }
-    $firstfile = key($contentlist);
-    if (mb_substr($firstfile, -1) === '/') {
-        $filepath = '/' . $firstfile;
-    }
-    // Now we should have contents of web zip package in content area. Find index.html and set is as main file.
-    $mainfile = $fs->get_file($context->id, 'mod_exeweb', 'content', 0, $filepath, 'index.html');
-    if ($mainfile === false) {
-        $mainfile = $fs->get_file($context->id, 'mod_exeweb', 'content', 0, $filepath, 'index.htm');
-    }
-    if ($mainfile) {
-        file_set_sortorder($context->id, 'mod_exeweb', 'content', 0, $mainfile->get_filepath(), $mainfile->get_filename(), 1);
-        return true;
-    }
-    return false;
 }

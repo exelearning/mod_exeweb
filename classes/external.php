@@ -181,9 +181,13 @@ class mod_exeweb_external extends external_api {
                             'contentfiles' => new external_files('Files in the content'),
                             'display' => new external_value(PARAM_INT, 'How to display the exeweb'),
                             'displayoptions' => new external_value(PARAM_RAW, 'Display options (width, height)'),
+                            'entrypath' => new external_value(PARAM_PATH, 'Entry file directory path'),
+                            'entryname' => new external_value(PARAM_FILE, 'Entry file name'),
                             'filterfiles' => new external_value(PARAM_INT, 'If filters should be applied to the exeweb content'),
                             'revision' => new external_value(PARAM_INT, 'Incremented when after each file changes, to avoid cache'),
+                            'timecreated' => new external_value(PARAM_INT, 'Time when the exeweb was created'),
                             'timemodified' => new external_value(PARAM_INT, 'Last time the exeweb was modified'),
+                            'usermodified' => new external_value(PARAM_INT, 'Id of user who made last modification'),
                         ]
                     ))
                 ),
