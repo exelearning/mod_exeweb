@@ -43,7 +43,7 @@ if ($ADMIN->fulltree) {
         get_string('exeonline:tokenexpiration', 'mod_exeweb'),
         get_string('exeonline:tokenexpiration_desc', 'mod_exeweb'), 86400, 1));
 
-    // Exescorm default template.
+    // Exeweb default template.
     $filemanageroptions = [
         'accepted_types' => ['.zip'],
         'maxbytes' => 0,
@@ -60,7 +60,7 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox('exeweb/sendtemplate',
         get_string('exeweb:sendtemplate', 'mod_exeweb'), get_string('exeweb:sendtemplate_desc', 'mod_exeweb'), 0));
 
-    // The eXescorm package validation rules.
+    // The eXeweb package validation rules.
     $mandatoryfilesre = implode("\n", [
         '/^contentv[\d+]\.xml$/',
         '/^content\.xsd$/',

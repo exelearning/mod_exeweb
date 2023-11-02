@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['areapackage'] = 'Package file';
-$string['badexelearningpackage'] = 'The package does not comply with the eXescorm package rules defined for the site.';
+$string['badexelearningpackage'] = 'The package does not comply with the package rules defined for the site.';
 $string['clicktodownload'] = 'Click {$a} link to download the file.';
 $string['clicktoopen2'] = 'Click {$a} link to view the file.';
 $string['configdisplayoptions'] = 'Select all options that should be available, existing settings are not modified. Hold CTRL key to select multiple fields.';

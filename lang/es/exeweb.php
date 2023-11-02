@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['areapackage'] = 'Archivo de paquete';
-$string['badexelearningpackage'] = 'El paquete no cumple las normas de los contenidos eXescorm definidas para el sitio.';
+$string['badexelearningpackage'] = 'El paquete no cumple las normas de los contenidos definidas para el sitio.';
 $string['clicktodownload'] = 'Haga clic en {$a} para descargar el archivo.';
 $string['clicktoopen2'] = 'Haga clic en {$a} para ver el archivo.';
 $string['configdisplayoptions'] = 'Puede seleccionar cualquiera de las opciones disponibles (los ajustes existentes no se modificarán). Mantenga pulsada la tecla CTRL para seleccionar varios campos simultáneamente.';
