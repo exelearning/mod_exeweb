@@ -47,25 +47,24 @@ function exeweb_display_embed($exeweb, $cm, $course, $file) {
     $moodleurl = moodle_url::make_pluginfile_url($context->id, 'mod_exeweb', 'content', $exeweb->revision,
             $file->get_filepath(), $file->get_filename());
 
-    $mimetype = $file->get_mimetype();
     $title    = $exeweb->name;
 
     // We need a way to discover if we are loading remote docs inside an iframe.
     $moodleurl->param('embed', 1);
-
-    // Anything else - just try object tag enlarged as much as possible.
-    $code = resourcelib_embed_general($moodleurl, $title, $clicktoopen, $mimetype);
 
     // Let the module handle the display.
     $PAGE->activityheader->set_description(exeweb_get_intro($exeweb, $cm));
 
     exeweb_print_header($exeweb, $cm, $course);
 
-    echo format_text($code, FORMAT_HTML, ['noclean' => true]);
+    echo $PAGE->get_renderer('mod_exeweb')->generate_embed_general($cm, $moodleurl, $title, $clicktoopen);
 
     echo $OUTPUT->footer();
     die;
 }
+
+
+
 
 /**
  * Display exeweb frames.
@@ -144,7 +143,7 @@ function exeweb_get_clicktoopen($file, $revision, $extra='') {
  * @return does not return
  */
 function exeweb_print_workaround($exeweb, $cm, $course, $file) {
-    global $CFG, $OUTPUT, $PAGE;
+    global $OUTPUT, $PAGE;
 
     // Let the module handle the display.
     $PAGE->activityheader->set_description(exeweb_get_intro($exeweb, $cm, true));
@@ -152,7 +151,7 @@ function exeweb_print_workaround($exeweb, $cm, $course, $file) {
     exeweb_print_header($exeweb, $cm, $course);
 
     echo '<div class="exewebworkaround">';
-    switch (exeweb_get_final_display_type($exeweb)) {
+    switch ($exeweb->display) {
         case RESOURCELIB_DISPLAY_POPUP:
             $fullurl = moodle_url::make_pluginfile_url($file->get_contextid(), 'mod_exeweb', 'content', $exeweb->revision,
                             $file->get_filepath(), $file->get_filename());
@@ -331,6 +330,7 @@ function exeweb_get_optional_details($exeweb, $cm) {
  * @return string
  */
 function exeweb_get_intro(object $exeweb, object $cm, bool $ignoresettings = false): string {
+    global $PAGE;
     $options = empty($exeweb->displayoptions) ? [] : (array) unserialize_array($exeweb->displayoptions);
 
     $extraintro = exeweb_get_optional_details($exeweb, $cm);
@@ -370,20 +370,6 @@ function exeweb_print_filenotfound($exeweb, $cm, $course) {
     die;
 }
 
-/**
- * Decide the best display format.
- * @param object $exeweb
- * @return int display type constant
- */
-function exeweb_get_final_display_type($exeweb) {
-    global $CFG, $PAGE;
-
-    if ($exeweb->display != RESOURCELIB_DISPLAY_AUTO) {
-        return $exeweb->display;
-    }
-
-    return RESOURCELIB_DISPLAY_EMBED;
-}
 
 /**
  * File browsing support class

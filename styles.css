@@ -11,3 +11,52 @@
     font-size: 0.8em;
     color: #555;
 }
+
+
+#page-mod-exeweb-view .btn-fullscreen {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background-image: url('[[pix:mod_exeweb|fullscreen]]');
+    background-size: 18px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#page-mod-exeweb-view .btn-fullscreen.actived {
+    background-image: url('[[pix:mod_exeweb|fullscreen2]]');
+}
+
+#page-mod-exeweb-view .btn-fullscreen img {
+    height: 18px;
+    padding: 0;
+    margin: 0;
+}
+
+#page-mod-exeweb-view .btn-fullscreen:hover {
+    transition: background-size 0.1s ease-out;
+    background-size: 22px;
+}
+
+#page-mod-exeweb-player #exewebpage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#page-mod-exeweb-view #exewebpage.fullscreen {
+    overflow-y: auto;
+    background-color: #ffffff;
+}
+
+#page-mod-exeweb-view #exewebpage.fullscreen #exewebobject {
+    width: 100%;
+    height: 100vh;
+    border: none;
+}

@@ -57,15 +57,14 @@ exeweb_view($exeweb, $course, $cm, $context);
 $PAGE->set_url('/mod/exeweb/view.php', ['id' => $cm->id]);
 
 $fs = get_file_storage();
-// TODO: this is not very efficient!!
-$file = $fs->get_file($context->id, 'mod_exeweb', 'content', 0, $exeweb->entrypath, $exeweb->entryname);
 
+$file = $fs->get_file($context->id, 'mod_exeweb', 'content', 0, $exeweb->entrypath, $exeweb->entryname);
 if (! $file) {
     exeweb_print_filenotfound($exeweb, $cm, $course);
     die;
 }
 
-$displaytype = exeweb_get_final_display_type($exeweb);
+$displaytype = $exeweb->display;
 if ($displaytype == RESOURCELIB_DISPLAY_OPEN) {
     $redirect = true;
 }
@@ -85,6 +84,10 @@ if ($redirect && !$forceview) {
     redirect($fullurl);
 }
 
+$renderer = $PAGE->get_renderer('mod_exeweb');
+
+$PAGE->requires->js_call_amd('mod_exeweb/fullscreen', 'init');
+$PAGE->requires->js_call_amd('mod_exeweb/resize', 'init', ['exewebobject', ]);
 switch ($displaytype) {
     case RESOURCELIB_DISPLAY_EMBED:
         exeweb_display_embed($exeweb, $cm, $course, $file);

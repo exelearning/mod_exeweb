@@ -72,9 +72,6 @@ class mod_exeweb_mod_form extends moodleform_mod {
             }
         }
 
-        $nonfilepickertypes = [
-            EXEWEB_ORIGIN_EXEONLINE,
-        ];
         // Package origin.
         $mform->addElement('select', 'exeorigin', get_string('exeorigin', 'mod_exeweb'), $exeorigins);
         $mform->setDefault('exeorigin', $defaulttype);
@@ -97,7 +94,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
 
         $mform->addElement('filepicker', 'packagefile', get_string('package', 'mod_exeweb'), null, $filemanageroptions);
         $mform->addHelpButton('packagefile', 'package', 'exeweb');
-        $mform->hideIf('packagefile', 'exeorigin', 'in', $nonfilepickertypes);
+        $mform->hideIf('packagefile', 'exeorigin', 'noteq', EXEWEB_ORIGIN_LOCAL);
         // End of package section.
 
         // -------------------------------------------------------
@@ -142,8 +139,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
             $mform->setAdvanced('popupheight', true);
         }
 
-        if (array_key_exists(RESOURCELIB_DISPLAY_AUTO, $options) ||
-          array_key_exists(RESOURCELIB_DISPLAY_EMBED, $options) ||
+        if (array_key_exists(RESOURCELIB_DISPLAY_EMBED, $options) ||
           array_key_exists(RESOURCELIB_DISPLAY_FRAME, $options)) {
             $mform->addElement('checkbox', 'printintro', get_string('printintro', 'mod_exeweb'));
             $mform->hideIf('printintro', 'display', 'eq', RESOURCELIB_DISPLAY_POPUP);
@@ -162,12 +158,48 @@ class mod_exeweb_mod_form extends moodleform_mod {
 
         // -------------------------------------------------------
         $this->add_action_buttons();
+        $mform->hideIf('buttonar', 'exeorigin', 'eq', EXEWEB_ORIGIN_EXEONLINE);
+
+        $this->add_edit_online_buttons('editonlinearr');
+        $mform->hideIf('editonlinearr', 'exeorigin', 'eq', EXEWEB_ORIGIN_LOCAL);
 
         // -------------------------------------------------------
         $mform->addElement('hidden', 'revision');
         $mform->setType('revision', PARAM_INT);
         $mform->setDefault('revision', 1);
     }
+
+    /**
+     * Generate buttons within a group with alternative texts.
+     *
+     * @param string $groupname
+     * @return void
+     */
+    public function add_edit_online_buttons($groupname) {
+        $submitlabel = get_string('exeweb:editonlineanddisplay', 'mod_exeweb');
+        $submit2label = get_string('exeweb:editonlineandreturntocourse', 'mod_exeweb');
+
+        $mform = $this->_form;
+
+        // Elements in a row need a group.
+        $buttonarray = array();
+
+        // Label for the submit button to return to the course.
+        // Ignore this button in single activity format because it is confusing.
+        if ($submit2label !== false && $this->courseformat->has_view_page()) {
+            $buttonarray[] = $mform->createElement('submit', 'exebutton2', $submit2label);
+        }
+
+        if ($submitlabel !== false) {
+            $buttonarray[] = $mform->createElement('submit', 'exebutton', $submitlabel);
+        }
+
+        $buttonarray[] = $mform->createElement('cancel');
+
+        $mform->addGroup($buttonarray, $groupname, '', array(' '), false);
+        $mform->setType($groupname, PARAM_RAW);
+    }
+
 
     public function data_preprocessing(&$defaultvalues) {
         if ($this->current->instance) {
@@ -255,15 +287,15 @@ class mod_exeweb_mod_form extends moodleform_mod {
         // Hack to get redirected to eXeLearning Online to edit package.
         if ($data->exeorigin === EXEWEB_ORIGIN_EXEONLINE ) {
             if (! isset($data->showgradingmanagement)) {
-                if (isset($data->submitbutton)) {
+                if (isset($data->exebutton)) {
                     // Return to activity. If it this a new activity we don't have a coursemodule yet. We'll fix it in redirector.
                     $returnto = new moodle_url("/mod/exeweb/view.php", ['id' => $data->coursemodule, 'forceview' => 1]);
-
                 } else {
                     // Return to course.
-                    $data->submitbutton = true;
                     $returnto = course_get_url($data->course, $data->coursesection ?? null, array('sr' => $data->sr));
                 }
+                // Set this becouse modedit.php expects it.
+                $data->submitbutton = true;
                 // If send template is true, we'll always make an edition. On new activities,
                 // It will send default/uploaded template to eXeLearning.
                 $sendtemplate = get_config('exeweb', 'sendtemplate');

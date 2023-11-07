@@ -54,7 +54,7 @@ class mod_exeweb_generator extends testing_module_generator {
 
         // Fill in optional values if not specified.
         if (!isset($record->display)) {
-            $record->display = RESOURCELIB_DISPLAY_AUTO;
+            $record->display = RESOURCELIB_DISPLAY_EMBED;
         }
         if (!isset($record->printintro)) {
             $record->printintro = 0;

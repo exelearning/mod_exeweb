@@ -221,7 +221,7 @@ function exeweb_set_display_options($data) {
         $displayoptions['popupwidth']  = $data->popupwidth;
         $displayoptions['popupheight'] = $data->popupheight;
     }
-    if (in_array($data->display, [RESOURCELIB_DISPLAY_AUTO, RESOURCELIB_DISPLAY_EMBED, RESOURCELIB_DISPLAY_FRAME])) {
+    if (in_array($data->display, [RESOURCELIB_DISPLAY_EMBED, RESOURCELIB_DISPLAY_FRAME])) {
         $displayoptions['printintro']   = (int)!empty($data->printintro);
     }
     if (!empty($data->showsize)) {
@@ -288,7 +288,7 @@ function exeweb_get_coursemodule_info($coursemodule) {
         $info->content = format_module_intro('exeweb', $exeweb, $coursemodule->id, false);
     }
 
-    $display = exeweb_get_final_display_type($exeweb);
+    $display = $exeweb->display;
 
     if ($display == RESOURCELIB_DISPLAY_POPUP) {
         $fullurl = "$CFG->wwwroot/mod/exeweb/view.php?id=$coursemodule->id&amp;redirect=1";
@@ -376,7 +376,6 @@ function exeweb_get_file_info($browser, $areas, $course, $cm, $context, $fileare
     global $CFG;
 
     if (!has_capability('moodle/course:managefiles', $context)) {
-        // Students can not peak here!
         return null;
     }
 

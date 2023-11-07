@@ -65,6 +65,7 @@ if ($ADMIN->fulltree) {
         '/^contentv[\d+]\.xml$/',
         '/^content\.xsd$/',
         '/^content\.data$/',
+        '/^[ \w-]*\/{0,1}index\.htm[l]{0,1}$/',
     ]);
     $forbiddenfilesre = implode("\n", [
         '/.*\.php$/',
@@ -81,7 +82,6 @@ if ($ADMIN->fulltree) {
         get_string('defaultdisplaysettings', 'mod_exeweb'), ''));
 
     $displayoptions = resourcelib_get_displayoptions([
-        RESOURCELIB_DISPLAY_AUTO,
         RESOURCELIB_DISPLAY_EMBED,
         RESOURCELIB_DISPLAY_FRAME,
         RESOURCELIB_DISPLAY_OPEN,
@@ -89,7 +89,6 @@ if ($ADMIN->fulltree) {
         RESOURCELIB_DISPLAY_POPUP,
     ]);
     $defaultdisplayoptions = [
-        RESOURCELIB_DISPLAY_AUTO,
         RESOURCELIB_DISPLAY_EMBED,
         RESOURCELIB_DISPLAY_OPEN,
         RESOURCELIB_DISPLAY_POPUP,
@@ -110,7 +109,7 @@ if ($ADMIN->fulltree) {
         new lang_string('printintro', 'mod_exeweb'), new lang_string('printintroexplain', 'mod_exeweb'), 1));
     $settings->add(new admin_setting_configselect('exeweb/display',
         new lang_string('displayselect', 'mod_exeweb'), new lang_string('displayselectexplain', 'mod_exeweb'),
-        RESOURCELIB_DISPLAY_AUTO, $displayoptions));
+        RESOURCELIB_DISPLAY_EMBED, $displayoptions));
     $settings->add(new admin_setting_configcheckbox('exeweb/showdate',
         new lang_string('showdate', 'mod_exeweb'), new lang_string('showdate_desc', 'mod_exeweb'), 0));
     $settings->add(new admin_setting_configtext('exeweb/popupwidth',
