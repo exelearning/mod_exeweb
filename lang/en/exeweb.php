@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,14 +12,15 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'exeweb', language 'en', branch 'MOODLE_20_STABLE'
+ * Strings for component 'exeweb', language 'en', version '4.1'.
  *
- * @package    mod_exeweb
- * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_exeweb
+ * @category    string
+ * @copyright   1999 Martin Dougiamas and contributors
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -47,9 +48,7 @@ $string['displayoptions'] = 'Available display options';
 $string['displayselect'] = 'Display';
 $string['displayselect_help'] = 'This setting, together with the file type and whether the browser allows embedding, determines how the file is displayed. Options may include:
 
-* Automatic - The best display option for the file type is selected automatically
 * Embed - The file is displayed within the page below the navigation bar together with the file description and any blocks
-* Force download - The user is prompted to download the file
 * Open - Only the file is displayed in the browser window
 * In pop-up - The file is displayed in a new browser window without menus or an address bar
 * In frame - The file is displayed within a frame below the navigation bar and file description
@@ -59,7 +58,7 @@ $string['displayselectexplain'] = 'Choose display type, unfortunately not all ty
 $string['dnduploadexeweb'] = 'Create file exeweb';
 $string['exeonline:connectionsettings'] = 'eXeLearning server connection settings';
 $string['exeonline:baseuri'] = 'Remote URI';
-$string['exeonline:baseuri_desc'] = 'eXeLearning Online URL';
+$string['exeonline:baseuri_desc'] = 'eXeLearning URL';
 $string['exeonline:hmackey1'] = 'Signing key';
 $string['exeonline:hmackey1_desc'] = 'Key used to sign data sent to the eXeLearning server, so we can be sure it was originated in this server. Use up to 32 characters.';
 $string['exeonline:tokenexpiration'] = 'Token expiration';
@@ -72,7 +71,7 @@ $string['exeweb:onlinetypehelp'] = 'When you click on either save buttons at the
 $string['exeweb:sendtemplate'] = 'Send template';
 $string['exeweb:sendtemplate_desc'] = 'Sends default template to eXeLearning when creating a new activity.';
 $string['exeweb:template'] = 'New package template.';
-$string['exeweb:template_desc'] = 'Package ulpoaded here will be used as default package for new activities. It will be show until replaced by the one sent by eXeLearning. Do NOT unzip the package.';
+$string['exeweb:template_desc'] = 'Package ulpoaded here will be used as default package for new activities. It will be shown until replaced by the one sent by eXeLearning. Do NOT unzip the package.';
 $string['exeweb:editonlineanddisplay'] = 'Edit on eXeLearning and display';
 $string['exeweb:editonlineandreturntocourse'] = 'Edit on eXeLearning and return to course';
 $string['filenotfound'] = 'File not found, sorry.';
@@ -93,19 +92,19 @@ $string['indicator:socialbreadthdef_help'] = 'The participant has reached this p
 $string['indicator:socialbreadthdef_link'] = 'Learning_analytics_indicators#Social_breadth';
 $string['invalidpackage'] = 'Invalid package';
 $string['modifieddate'] = 'Modified {$a}';
-$string['modulename'] = 'eXeLearning Web';
-$string['modulename_help'] = 'The eXeLearning web enables a teacher to provide a eXeLearning web zip as a course resource. The package can be uploaded, but can be created or edited
-directly from an eXeLearnig Online server.';
+$string['modulename'] = 'eXeLearning (website)';
+$string['modulename_help'] = 'The eXeLearning website module enables a teacher to provide an eXeLearning zipped website as a course resource. The package can be uploaded, but can be created or edited
+directly from an eXeLearnig server.';
 $string['modulename_link'] = 'mod/exeweb/view';
-$string['modulenameplural'] = 'eXeLearnigs webs';
+$string['modulenameplural'] = 'eXeLearnigs (websites)';
 $string['optionsheader'] = 'Display options';
 $string['player:toogleFullscreen'] = 'Toggle fullscreen';
 $string['package'] = 'Package file';
-$string['package_help'] = 'The package file is a file containing a web zip created with eXeLearning.';
+$string['package_help'] = 'The package file is a zip file containing a website created with eXeLearning.';
 $string['packagehdr'] = 'Package';
 $string['page-mod-exeweb-x'] = 'Any file module page';
 $string['pluginadministration'] = 'Exeweb module administration';
-$string['pluginname'] = 'eXeLearning (Webzip)';
+$string['pluginname'] = 'eXeLearning (website)';
 $string['popupheight'] = 'Pop-up height (in pixels)';
 $string['popupheightexplain'] = 'Specifies default height of popup windows.';
 $string['popupexeweb'] = 'This exeweb should appear in a popup window.';
@@ -113,8 +112,8 @@ $string['popupexeweblink'] = 'If it didn\'t, click here: {$a}';
 $string['popupwidth'] = 'Pop-up width (in pixels)';
 $string['popupwidthexplain'] = 'Specifies default width of popup windows.';
 $string['printintro'] = 'Display exeweb description';
-$string['printintroexplain'] = 'Display exeweb description below content? Some display types may not display description even if enabled.';
-$string['privacy:metadata'] = 'The File exeweb plugin does not store any personal data.';
+$string['printintroexplain'] = 'Display description below content? Some display types may not display description even if enabled.';
+$string['privacy:metadata'] = 'The exeweb plugin does not store any personal data.';
 $string['exeweb:addinstance'] = 'Add a new exeweb';
 $string['exewebcontent'] = 'Files and subfolders';
 $string['exewebdetails_'] = 'Avoid mdlcode unknown-string error message';
@@ -128,21 +127,17 @@ $string['exewebdetails_sizetypedate'] = '{$a->size} {$a->type} {$a->date}';
 $string['exeorigin'] = 'Type';
 $string['exeorigin_help'] = 'This setting determines how the package is included in the course. There are up to 2 options:
 
-* Uploaded package - Enables an eXeLearning web zip package to be chosen via the file picker
-* Create with eXeLearning Online - Creates the activity and takes you to eXeLearning to create the package. When done, eXeLearning will send the newly created package back to Moodle.';
+* Uploaded package - Enables a zipped eXeLearning website to be chosen via the file picker
+* Create/Edit with eXeLearning - Creates the activity and takes you to eXeLearning to edit the package. When done, eXeLearning will send the newly created package back to Moodle.';
 $string['exeweb:exportexeweb'] = 'Export exeweb';
 $string['exeweb:view'] = 'View exeweb';
 $string['search:activity'] = 'File';
 $string['selectmainfile'] = 'Please select the main file by clicking the icon next to file name.';
 $string['showdate'] = 'Show upload/modified date';
 $string['showdate_desc'] = 'Display upload/modified date on course page?';
-$string['showdate_help'] = 'Displays the upload/modified date beside links to the file.
-
-If there are multiple files in this exeweb, the start file upload/modified date is displayed.';
+$string['showdate_help'] = 'Displays the upload/modified date beside links to the file.';
 $string['showsize'] = 'Show size';
-$string['showsize_help'] = 'Displays the file size, such as \'3.1 MB\', beside links to the file.
-
-If there are multiple files in this exeweb, the total size of all files is displayed.';
+$string['showsize_help'] = 'Displays the file size, such as \'3.1 MB\', beside links to the file.';
 $string['showsize_desc'] = 'Display file size on course page?';
 $string['showtype'] = 'Show type';
 $string['showtype_desc'] = 'Display file type (e.g. \'Word document\') on course page?';
@@ -150,7 +145,7 @@ $string['showtype_help'] = 'Displays the type of the file, such as \'Word docume
 
 If there are multiple files in this exeweb, the start file type is displayed.
 
-If the file type is not known to the system, it will not display.';
+If the file type is not known to the system, it will not be displayed.';
 $string['uploadeddate'] = 'Uploaded {$a}';
 $string['typeexewebcreate'] = 'Create with eXeLearning';
 $string['typeexewebedit'] = 'Edit with eXeLearning';

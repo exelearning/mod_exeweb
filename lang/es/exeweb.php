@@ -46,8 +46,7 @@ $string['contentheader'] = 'Contenido';
 $string['defaultdisplaysettings'] = 'Configuración de pantalla predeterminada';
 $string['displayoptions'] = 'Opciones para mostrar disponibles';
 $string['displayselect'] = 'Mostrar';
-$string['displayselect_help'] = 'Este ajuste, junto con el tipo de archivo, y siempre que el navegador permita incrustar código, determina cómo se muestra el archivo.
-Las opciones pueden incluir:
+$string['displayselect_help'] = 'Este ajuste, junto con el tipo de archivo, y siempre que el navegador permita incrustar código, determina cómo se muestra el archivo. Las opciones pueden incluir:
 
 * Automático - Se selecciona de forma automática la mejor opción para visualizar el archivo
 * Incrustar - el fichero se muestra dentro de la página debajo de la barra de navegación junto con la descripción y cualquier otro bloque
@@ -57,9 +56,9 @@ Las opciones pueden incluir:
 $string['displayselect_link'] = 'mod/exeweb/mod';
 $string['displayselectexplain'] = 'Elegir tipo (desafortunadamente no todos los tipos funcionan en todos los archivos).';
 $string['dnduploadexeweb'] = 'Create file exeweb';
-$string['exeonline:connectionsettings'] = 'Configuración de la conexión con el servidor eXeLearning Online';
+$string['exeonline:connectionsettings'] = 'Configuración de la conexión con el servidor eXeLearning';
 $string['exeonline:baseuri'] = 'URI remoto';
-$string['exeonline:baseuri_desc'] = 'URL de eXeLearning Online';
+$string['exeonline:baseuri_desc'] = 'URL de eXeLearning';
 $string['exeonline:hmackey1'] = 'Clave de firma';
 $string['exeonline:hmackey1_desc'] = 'Clave utilizada para firmar los datos enviados al servidor de eXeLearning, de forma que podamos estar seguros de que se originaron en este servidor. Utilice un máximo de 32 caracteres.';
 $string['exeonline:tokenexpiration'] = 'Caducidad del token';
@@ -73,7 +72,7 @@ $string['exeweb:sendtemplate'] = 'Enviar plantilla';
 $string['exeweb:sendtemplate_desc'] = 'Envía la plantilla predeterminada a eXeLearning al crear un nuevo contenido.';
 $string['exeweb:template'] = 'Nueva plantilla de paquete.';
 $string['exeweb:template_desc'] = 'El elp subido aquí se utilizará como paquete por defecto para los nuevos contenidos. Se mostrará hasta que sea sustituido por el enviado por eXeLearning. NO descomprima el paquete.';
-$string['exeweb:editonlineanddisplay'] = 'Ir eXeLearning y mostrar';
+$string['exeweb:editonlineanddisplay'] = 'Ir a eXeLearning y mostrar';
 $string['exeweb:editonlineandreturntocourse'] = 'Ir a eXeLearning y volver al curso';
 $string['filenotfound'] = 'Lo sentimos, el archivo no se ha encontrado.';
 $string['filterfiles'] = 'Utilice filtros del contenido del archivo';
@@ -93,12 +92,11 @@ $string['indicator:socialbreadthdef_help'] = 'El participante ha alcanzado este 
 $string['indicator:socialbreadthdef_link'] = 'Learning_analytics_indicators#Social_breadth';
 $string['invalidpackage'] = 'Paquete inválido.';
 $string['modifieddate'] = 'Actualizado  {$a}';
-$string['modulename'] = 'Archivo';
-$string['modulename_help'] = 'El módulo eXeLearning web permite a los profesores proveer un paquete eXeLearning en formato web zip como un recurso del curso. El paquete puede ser subido, o creearse y editarse
-directamente de un servidor eXeLearning Online.';
+$string['modulename'] = 'eXeLearning (sitio web)';
+$string['modulename_help'] = 'El módulo eXeLearning (sitio web) permite a los profesores crear una actividad partiendo de un sitio web generado con eXeLearnig. El contenido puede ser subido, o creearse y editarse
+directamente en eXeLearning.';
 $string['modulename_link'] = 'mod/exeweb/view';
-$string['modulenameplural'] = 'Archivos';
-$string['notmigrated'] = 'Este tipo de recurso heredado ({$a}) no ha sido trasladado aún.';
+$string['modulenameplural'] = 'eXeLearning (sitios web)';
 $string['optionsheader'] = 'Mostrar opciones';
 $string['player:toogleFullscreen'] = 'Alternar pantalla completa';
 $string['package'] = 'Paquete';
@@ -106,8 +104,8 @@ $string['package_help'] = 'El archivo del paquete es un archivo que contiene un 
 $string['packagehdr'] = 'Paquete';
 $string['page-mod-exeweb-x'] = 'Cualquier página del módulo Archivo';
 $string['pluginadministration'] = 'Administración del módulo archivo';
-$string['pluginname'] = 'eXeLearning (Webzip)';
-$string['popupheight'] = 'Altura (en píxels) de la ventana emergente';
+$string['pluginname'] = 'eXeLearning (sitio web)';
+$string['popupheight'] = 'Altura (en píxeles) de la ventana emergente';
 $string['popupheightexplain'] = 'Especifica la altura por defecto de las ventanas emergentes.';
 $string['popupexeweb'] = 'Este recurso debe aparecer en una ventana emergente';
 $string['popupexeweblink'] = 'Si no, haga clic aquí: {$a}';
@@ -117,31 +115,36 @@ $string['printintro'] = 'Mostrar descripción del recurso';
 $string['printintroexplain'] = '¿Mostrar la descripción del recurso debajo del contenido? Algunos tipos de visualización pueden no mostrar la descripción incluso aunque esté activada esa opción.';
 $string['privacy:metadata'] = 'El complemento de recurso de archivo no almacena ningún dato personal.';
 $string['exeweb:addinstance'] = 'Añadir un nuevo recurso';
-$string['exeweb:exportexeweb'] = 'Exportar recurso';
-$string['exeweb:view'] = 'Ver recurso';
 $string['exewebcontent'] = 'Archivos y subcarpetas';
-$string['exewebdetails_sizedate'] = '{$a->size} {$a->date}';
+$string['exewebdetails_'] = 'Avoid mdlcode unknown-string error message';
+$string['exewebdetails_size'] = 'Avoid mdlcode unknown-string error message';
+$string['exewebdetails_type'] = 'Avoid mdlcode unknown-string error message';
+$string['exewebdetails_date'] = 'Avoid mdlcode unknown-string error message';
 $string['exewebdetails_sizetype'] = '{$a->size} {$a->type}';
-$string['exewebdetails_sizetypedate'] = '{$a->size} {$a->type} {$a->date}';
+$string['exewebdetails_sizedate'] = '{$a->size} {$a->date}';
 $string['exewebdetails_typedate'] = '{$a->type} {$a->date}';
-$string['exeorigin'] = 'Tipo';
+$string['exewebdetails_sizetypedate'] = '{$a->size} {$a->type} {$a->date}';
+$string['exeorigin'] = 'Type';
 $string['exeorigin_help'] = 'Este ajuste determina cómo se incluye el paquete en el curso. Hay 2 opciones:
 
-* Paquete subido - Permite elegir web zip creado con eXeLearning por medio del selector de archivos
-* Crear con eXeLearning - Crea la actividad y te lleva a eXeLearning Online apra crear el paquete. Al terminar, eXeLearning enviará el recién creado paquete de vuelta a Moodle.';
-$string['search:activity'] = 'Archivo';
-$string['selectmainfile'] = 'Por favor, seleccione el archivo principal haciendo clic en el icono junto a su nombre.';
+* Paquete subido - Permite elegir el zip creado con eXeLearning por medio del selector de archivos.
+* Crear/Editar con eXeLearning - Crea la actividad y te lleva a eXeLearning para editar el contenido. Al terminar, eXeLearning lo enviará de vuelta a Moodle.';
+$string['exeweb:exportexeweb'] = 'Exportar recurso';
+$string['exeweb:view'] = 'Ver recurso';
+$string['search:activity'] = 'Fichero';
+$string['selectmainfile'] = 'Selecciona el fichero principal haciendo clic en el icono que hay junto al nombre del fichero.';
 $string['showdate'] = 'Mostrar la fecha de subida/modificación';
 $string['showdate_desc'] = '¿Mostrar la fecha de subida/modificación en la página del curso?';
-$string['showdate_help'] = 'Muestra la fecha de subida/modificación junto al enlace al archivo. Si hay varios archivos en el recurso, se muestra la fecha de subida/modificación del archivo principal.';
+$string['showdate_help'] = 'Muestra la fecha de subida/modificación junto al enlace al archivo.';
 $string['showsize'] = 'Mostrar tamaño';
-$string['showsize_desc'] = '¿Mostrar el tamaño del archio en la página del curso?';
 $string['showsize_help'] = 'Muestra el tamaño del archivo, en el formato \'3 1 MB \', junto con el enlace al archivo.';
+$string['showsize_desc'] = '¿Mostrar el tamaño del archio en la página del curso?';
 $string['showtype'] = 'Mostrar tipo';
 $string['showtype_desc'] = '¿Mostrar tipo de archivo (ej. \'Documento de Texto\') en la página del curso?';
 $string['showtype_help'] = 'Muestra el tipo de documento, tal que \'Documento de texto\',  al lado del enlace al archivo.
 
 Si hay varios archivos en el recurso, se muestra el tipo del archivo inicial.
+
 Si el tipo de archivo es desconocido para el sistema, no se muestra.';
 $string['uploadeddate'] = 'Subido {$a}';
 $string['typeexewebcreate'] = 'Crear con eXeLearning';
