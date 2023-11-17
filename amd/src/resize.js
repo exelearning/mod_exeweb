@@ -34,53 +34,44 @@ import Log from 'core/log';
  */
 export const exewebResize = function() {
     let iFrame = document.querySelector('#exewebobject');
-    if (iFrame.contentWindow.document.body) {
+    if (iFrame.contentDocument.body) {
         iFrame.style.width = '100%';
-        iFrame.style.height = (iFrame.contentWindow.document.body.scrollHeight + 50) + 'px';
-        Log.debug('iFrame height: ' + (iFrame.contentWindow.document.body.scrollHeight + 50) + 'px');
+        let iFrameHeight = iFrame.contentDocument.body.scrollHeight;
+        iFrame.style.height = (iFrameHeight + 50) + 'px';
+        Log.debug('iFrame height: ' + (iFrameHeight + 50) + 'px');
     }
 };
 
 /**
  * IFrame's onload handler. Used to keep iFrame's height dynamic, varying on iFrame's contents.
  *
- * @param {element} iFrame
+ * @param {event} event
  */
-export const exewebIframeOnload = function(iFrame) {
-    Log.debug('Function exewebIframeOnload.');
+export const exewebIframeOnload = function(event) {
     exewebResize();
     // Set a mutation observer, so we can adapt to changes from iFrame's javascript (such
     // as tab clicks o hide/show sections).
+    let iFrame = event.target;
     const config = {attributes: true, childList: true, subtree: true};
-    const observer = new MutationObserver(exewebResize);
-    observer.observe(iFrame.contentWindow.document.body, config);
+    const observer = new MutationObserver(window.exewebResize);
+    observer.observe(iFrame.contentDocument.body, config);
 };
 
 export const init = () => {
     // Declare on window namespace so iframe onload event can find it.
     window.exewebResize = exewebResize;
     window.exewebIframeOnload = exewebIframeOnload;
+
     let page = document.getElementById('exewebpage');
     let iframe = document.getElementById('exewebobject');
-    console.log(iframe);
+    Log.debug('Setting iFframe load event listener');
+    iframe.addEventListener('load', exewebIframeOnload);
 
-    if (iframe.contentWindow.document.readyState === 'complete') {
-        Log.debug('Iframe already loaded.');
-        exewebIframeOnload(iframe);
-        iframe.contentWindow.addEventListener('load', exewebIframeOnload.bind(this));
-    } else {
-        Log.debug('Adding iframe onload listener');
-        const iFrameInterval = setInterval(() => {
-            console.log('waiting for iframe');
-            if (iframe.contentWindow.document.readyState === 'complete') {
-                Log.debug('Adding iframe onload listener');
-                exewebIframeOnload(iframe);
-                window.clearInterval(iFrameInterval);
-            }
-        }, 500);
+    if (iframe.contentDocument.readyState === 'complete') {
+        exewebResize();
     }
 
-    // Watch for page hanges.
+    // Watch for page changes.
     const pageObserver = new ResizeObserver(exewebResize);
     pageObserver.observe(page);
 };
