@@ -31,9 +31,10 @@
         <span class="sr-only">{{#str}}player:toogleFullscreen, mod_exeweb{{/str}}</span>
     </button>
     {{#editaction}}
-    <a class="btn btn-secondary mr-1" data-action="mod_exeweb/link-edit"
-        href="{{{editaction}}}">
+
+    <button id="editonexe" class="btn btn-secondary mr-1" data-action="mod_exeweb/link-edit"
+        onclick="window.open('{{{editaction}}}','_self')">
         {{#str}}typeexewebedit, mod_exeweb{{/str}}
-    </a>
+    </button>
     {{/editaction}}
 </div>

@@ -44,15 +44,18 @@ define([
             let btnToggle = document.getElementById('toggleFullscreen');
             let page = document.getElementById('exewebpage');
             let iframe = document.getElementById('exewebobject');
+            let btnEdit = document.getElementById('editonexe');
 
             if (page.classList.contains('fullscreen')) {
                 btnToggle.classList.remove('actived');
                 page.classList.remove('fullscreen');
                 iframe.classList.remove('fullscreen');
+                btnEdit.classList.remove('hidden');
             } else {
                 btnToggle.classList.add('actived');
                 page.classList.add('fullscreen');
                 iframe.classList.add('fullscreen');
+                btnEdit.classList.add('hidden');
             }
         };
 

@@ -145,6 +145,8 @@ if (!empty($errors)) {
 }
 // Package is valid so delete files from package area and move the new one.
 $fs->delete_area_files($context->id, 'mod_exeweb', 'package');
+$exeweb->revision++;
+$fileinfo['itemid'] = $exeweb->revision;
 $fileinfo['filearea'] = 'package';
 $package = $fs->create_file_from_storedfile($fileinfo, $tmpfile);
 $fs->delete_area_files($context->id, 'mod_exeweb', 'temppackage');

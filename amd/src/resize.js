@@ -41,32 +41,32 @@ export const exewebResize = function() {
 /**
  * IFrame's onload handler. Used to keep iFrame's height dynamic, varying on iFrame's contents.
  *
- * @param {Element} iFrame
+ * @param {Event} event
  */
-export const exewebIframeOnload = function(iFrame) {
+export const exewebIframeOnload = function(event) {
+    // Force resize.
     exewebResize();
     // Set a mutation observer, so we can adapt to changes from iFrame's javascript (such
     // as tab clicks o hide/show sections).
+    let iframeDocument = event.target;
     const config = {attributes: true, childList: true, subtree: true};
     const observer = new MutationObserver(exewebResize);
-    observer.observe(iFrame.contentWindow.document.body, config);
+    observer.observe(iframeDocument.body, config);
 };
 
 export const init = () => {
-    // Declare on window namespace so iframe onload event can find it?
-    // window.exewebResize = exewebResize;
+    // Declare on window namespace so iframe onload event can find it.
+    window.exewebIframeOnload = exewebResize;
 
     let page = document.getElementById('exewebpage');
-
     let iframe = document.getElementById('exewebobject');
 
-    // Watch for changes.
+    if (iframe.contentWindow.document.readyState === 'complete') {
+        exewebResize();
+    }
+    iframe.contentWindow.addEventListener('load', exewebIframeOnload);
+
+    // Watch for page hanges.
     const pageObserver = new ResizeObserver(exewebResize);
     pageObserver.observe(page);
-
-    // Check form changes in iFrame content length.
-    const config = {attributes: true, childList: true, subtree: true};
-    const iframeObserver = new MutationObserver(exewebResize);
-    iframeObserver.observe(iframe.contentWindow.document.body, config);
-
 };

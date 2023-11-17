@@ -105,7 +105,7 @@ if (! has_capability('mod/exeweb:addinstance', $context, $user)) {
 
 // Lookup area files.
 $fs = get_file_storage();
-$files = $fs->get_area_files($context->id, 'mod_exeweb', 'package', 0, '', false);
+$files = $fs->get_area_files($context->id, 'mod_exeweb', 'package', $exeweb->revision, '', false);
 $file = reset($files);
 if ($file) {
     $contents = $file->get_content();

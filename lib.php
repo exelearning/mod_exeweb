@@ -184,12 +184,12 @@ function exeweb_update_instance($data, $mform) {
     $data->timecreated = time();
     $data->timemodified = $data->timecreated;
     $data->usermodified = $USER->id;    $data->id           = $data->instance;
-    $data->revision++;
 
     exeweb_set_display_options($data);
 
     if ($data->exeorigin === EXEWEB_ORIGIN_LOCAL) {
         // Only save uploaded package if is local uploaded.
+        $data->revision++;
         $package = exeweb_package::save_draft_file($data);
         $contentslist = exeweb_package::expand_package($package);
         $mainfile = exeweb_package::get_mainfile($contentslist, $package->get_contextid());
@@ -451,11 +451,10 @@ function exeweb_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
         return false;
     }
 
-    array_shift($args); // Ignore revision - designed to prevent caching problems only.
-
+    $revision = array_shift($args); // Ignore revision - designed to prevent caching problems only.
     $fs = get_file_storage();
     $relativepath = implode('/', $args);
-    $fullpath = rtrim("/$context->id/mod_exeweb/$filearea/0/$relativepath", '/');
+    $fullpath = rtrim("/$context->id/mod_exeweb/$filearea/$revision/$relativepath", '/');
     do {
         if (!$file = $fs->get_file_by_hash(sha1($fullpath))) {
             if ($fs->get_file_by_hash(sha1("$fullpath/."))) {

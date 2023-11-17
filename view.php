@@ -58,7 +58,7 @@ $PAGE->set_url('/mod/exeweb/view.php', ['id' => $cm->id]);
 
 $fs = get_file_storage();
 
-$file = $fs->get_file($context->id, 'mod_exeweb', 'content', 0, $exeweb->entrypath, $exeweb->entryname);
+$file = $fs->get_file($context->id, 'mod_exeweb', 'content', $exeweb->revision, $exeweb->entrypath, $exeweb->entryname);
 if (! $file) {
     exeweb_print_filenotfound($exeweb, $cm, $course);
     die;

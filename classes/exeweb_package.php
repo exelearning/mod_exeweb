@@ -122,7 +122,8 @@ class exeweb_package {
 
         // Now extract files.
         $packer = get_file_packer('application/zip');
-        $result = $package->extract_to_storage($packer, $package->get_contextid(), 'mod_exeweb', 'content', 0, '/');
+        $result = $package->extract_to_storage($packer, $package->get_contextid(),
+            'mod_exeweb', 'content', $package->get_itemid(), '/');
 
         return $result;
     }
@@ -134,19 +135,22 @@ class exeweb_package {
      * @return \stored_file|bool The stored package file or false.
      */
     public static function save_draft_file(object $data) {
-        $fs = get_file_storage();
         $cmid = $data->coursemodule;
-        $draftitemid = $data->packagefile;
-
         $context = \context_module::instance($cmid);
+
+        $fs = get_file_storage();
+        // Clean old packages.
+        $fs->delete_area_files($context->id, 'mod_exeweb', 'package');
+
+        $draftitemid = $data->packagefile;
         if ($draftitemid) {
             $options = ['subdirs' => false, 'embed' => false];
             if ($data->display == RESOURCELIB_DISPLAY_EMBED) {
                 $options['embed'] = true;
             }
-            file_save_draft_area_files($draftitemid, $context->id, 'mod_exeweb', 'package', 0, $options);
+            file_save_draft_area_files($draftitemid, $context->id, 'mod_exeweb', 'package', $data->revision, $options);
         }
-        $files = $fs->get_area_files($context->id, 'mod_exeweb', 'package', 0, '', false);
+        $files = $fs->get_area_files($context->id, 'mod_exeweb', 'package', $data->revision, '', false);
         $package = reset($files);
         return $package;
     }
