@@ -154,7 +154,8 @@ $fs->delete_area_files($context->id, 'mod_exeweb', 'temppackage');
 $contentslist = exeweb_package::expand_package($package);
 $mainfile = exeweb_package::get_mainfile($contentslist, $package->get_contextid());
 if ($mainfile !== false) {
-    file_set_sortorder($mainfile->get_contextid(), 'mod_exeweb', 'content', 0, $mainfile->get_filepath(), $mainfile->get_filename(), 1);
+    file_set_sortorder($mainfile->get_contextid(), 'mod_exeweb', 'content',
+        $exeweb->revision, $mainfile->get_filepath(), $mainfile->get_filename(), 1);
     $data->entrypath = $mainfile->get_filepath();
     $data->entryname = $mainfile->get_filename();
 }
