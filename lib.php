@@ -133,7 +133,7 @@ function exeweb_add_instance($data, $mform) {
             'contextid' => $context->id,
             'component' => 'mod_exeweb',
             'filearea' => 'package',
-            'itemid' => 0,
+            'itemid' => $data->revision,
             'filepath' => '/',
             'filename' => 'default_package.zip',
             'userid' => $USER->id,
