@@ -17,7 +17,7 @@
     border: none;
     background-color: transparent;
     padding: 0;
-    margin: 0;
+    margin: .5em 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -31,6 +31,7 @@
 
 #page-mod-exeweb-view .btn-fullscreen.actived {
     background-image: url('[[pix:mod_exeweb|fullscreen2]]');
+    margin: 1em 1em .15em 0;
 }
 
 #page-mod-exeweb-view .btn-fullscreen img {
@@ -55,8 +56,12 @@
     background-color: #ffffff;
 }
 
-#page-mod-exeweb-view #exewebpage.fullscreen #exewebobject {
+#page-mod-exeweb-view #exewebobject{
     width: 100%;
+    min-height: 350px;
+}
+
+#page-mod-exeweb-view #exewebpage.fullscreen #exewebobject {
     height: 100vh;
     border: none;
 }
