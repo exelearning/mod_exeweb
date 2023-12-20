@@ -33,8 +33,11 @@ require_once($CFG->libdir.'/filelib.php');
 
 class mod_exeweb_mod_form extends moodleform_mod {
     public function definition() {
-        global $CFG, $DB;
-        $mform =& $this->_form;
+        global $CFG, $PAGE;
+
+        $PAGE->requires->jQuery();
+        $PAGE->requires->js_call_amd('mod_exeweb/modform', 'init');
+        $mform = $this->_form;
 
         $config = get_config('exeweb');
 
@@ -158,46 +161,11 @@ class mod_exeweb_mod_form extends moodleform_mod {
 
         // -------------------------------------------------------
         $this->add_action_buttons();
-        $mform->hideIf('buttonar', 'exeorigin', 'eq', EXEWEB_ORIGIN_EXEONLINE);
-
-        $this->add_edit_online_buttons('editonlinearr');
-        $mform->hideIf('editonlinearr', 'exeorigin', 'eq', EXEWEB_ORIGIN_LOCAL);
 
         // -------------------------------------------------------
         $mform->addElement('hidden', 'revision');
         $mform->setType('revision', PARAM_INT);
         $mform->setDefault('revision', 1);
-    }
-
-    /**
-     * Generate buttons within a group with alternative texts.
-     *
-     * @param string $groupname
-     * @return void
-     */
-    public function add_edit_online_buttons($groupname) {
-        $submitlabel = get_string('exeweb:editonlineanddisplay', 'mod_exeweb');
-        $submit2label = get_string('exeweb:editonlineandreturntocourse', 'mod_exeweb');
-
-        $mform = $this->_form;
-
-        // Elements in a row need a group.
-        $buttonarray = array();
-
-        // Label for the submit button to return to the course.
-        // Ignore this button in single activity format because it is confusing.
-        if ($submit2label !== false && $this->courseformat->has_view_page()) {
-            $buttonarray[] = $mform->createElement('submit', 'exebutton2', $submit2label);
-        }
-
-        if ($submitlabel !== false) {
-            $buttonarray[] = $mform->createElement('submit', 'exebutton', $submitlabel);
-        }
-
-        $buttonarray[] = $mform->createElement('cancel');
-
-        $mform->addGroup($buttonarray, $groupname, '', array(' '), false);
-        $mform->setType($groupname, PARAM_RAW);
     }
 
 
@@ -287,7 +255,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
         // Hack to get redirected to eXeLearning Online to edit package.
         if ($data->exeorigin === EXEWEB_ORIGIN_EXEONLINE ) {
             if (! isset($data->showgradingmanagement)) {
-                if (isset($data->exebutton)) {
+                if (isset($data->submitbutton)) {
                     // Return to activity. If it this a new activity we don't have a coursemodule yet. We'll fix it in redirector.
                     $returnto = new moodle_url("/mod/exeweb/view.php", ['id' => $data->coursemodule, 'forceview' => 1]);
                 } else {
