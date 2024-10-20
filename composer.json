@@ -1,0 +1,45 @@
+{
+    "name": "moodle/moodle-mod_exescorm",
+    "description": "Moodle ExeSCORM plugin",
+    "require-dev": {
+        "moodlehq/moodle-cs": "^3.4",
+        "mustache/mustache": "^2.14",
+        "phpmd/phpmd": "^2.14",
+        "phpunit/phpunit": "^11.4"
+    },
+    "scripts": {
+        "lint": [
+            "phpcs --standard=moodle --extensions=php --ignore=vendor/* -p -w -s --no-cache --colors --report-full --report-width=132 --encoding=utf-8 ."
+
+        ],
+        "fix": [
+            "phpcbf --standard=moodle --extensions=php --ignore=vendor/* -p -w -s --no-cache --colors --report-full --report-width=132 --encoding=utf-8 ."
+
+        ],
+        "test": [
+            "phpunit --bootstrap vendor/autoload.php tests"
+        ],
+        "phpmd": [
+            "curl -o phpmd-rules.xml https://raw.githubusercontent.com/moodlehq/moodle-plugin-ci/refs/heads/main/res/config/phpmd.xml",
+            "phpmd . text phpmd-rules.xml"
+        ],
+        "mustache": [
+            "mustache"
+        ],
+        "behat": [
+            "vendor/bin/behat --config behat.yml"
+        ]
+
+
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
