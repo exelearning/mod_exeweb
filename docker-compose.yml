@@ -46,7 +46,7 @@ services:
         echo 'This is a post-configure command'
         echo 'Forcing upgrade to re-install exe plugin...'
         php admin/cli/upgrade.php --non-interactive
-        php admin/cli/cfg.php --component=exeweb --name=exeonlinebaseuri --set=exelearning-web:8080
+        php admin/cli/cfg.php --component=exeweb --name=exeonlinebaseuri --set=http://${HOST_IP}:8080
         php admin/cli/cfg.php --component=exeweb --name=hmackey1 --set=PLEASE_CHANGEME_API_KEY
     ports:
       - 80:8080
