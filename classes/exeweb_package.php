@@ -66,7 +66,7 @@ class exeweb_package {
      * @param array $filelist
      * @return array
      */
-    public static function validate_file_list(array $filelist) : array {
+    public static function validate_file_list(array $filelist): array {
         $errors = [];
 
         $config = get_config('exeweb');
@@ -167,7 +167,7 @@ class exeweb_package {
         if (empty($contentlist)) {
             return false;
         }
-        $mainfilenames = ['index.html', 'index.htm', ];
+        $mainfilenames = ['index.html', 'index.htm' ];
         $fs = get_file_storage();
         $filepath = '/';
         $firstfile = key($contentlist);

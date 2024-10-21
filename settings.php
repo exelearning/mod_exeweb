@@ -116,7 +116,7 @@ if ($ADMIN->fulltree) {
         new lang_string('popupwidth', 'mod_exeweb'), new lang_string('popupwidthexplain', 'mod_exeweb'), 620, PARAM_INT, 7));
     $settings->add(new admin_setting_configtext('exeweb/popupheight',
         new lang_string('popupheight', 'mod_exeweb'), new lang_string('popupheightexplain', 'mod_exeweb'), 450, PARAM_INT, 7));
-    $options = ['0' => new lang_string('none'), '1' => new lang_string('allfiles'), '2' => new lang_string('htmlfilesonly'), ];
+    $options = ['0' => new lang_string('none'), '1' => new lang_string('allfiles'), '2' => new lang_string('htmlfilesonly') ];
     $settings->add(new admin_setting_configselect('exeweb/filterfiles',
         new lang_string('filterfiles', 'mod_exeweb'), new lang_string('filterfilesexplain', 'mod_exeweb'), 0, $options));
 }

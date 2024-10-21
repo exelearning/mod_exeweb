@@ -48,7 +48,7 @@ class mod_exeweb_external extends external_api {
      * @since Moodle 3.0
      */
     public static function view_exeweb_parameters() {
-        return new external_function_parameters(['exewebid' => new external_value(PARAM_INT, 'exeweb instance id'), ]);
+        return new external_function_parameters(['exewebid' => new external_value(PARAM_INT, 'exeweb instance id') ]);
     }
 
     /**
@@ -65,12 +65,12 @@ class mod_exeweb_external extends external_api {
 
         $params = self::validate_parameters(self::view_exeweb_parameters(),
                                             [
-                                                'exewebid' => $exewebid
+                                                'exewebid' => $exewebid,
                                             ]);
         $warnings = [];
 
         // Request and permission validation.
-        $exeweb = $DB->get_record('exeweb', ['id' => $params['exewebid'], ], '*', MUST_EXIST);
+        $exeweb = $DB->get_record('exeweb', ['id' => $params['exewebid'] ], '*', MUST_EXIST);
         list($course, $cm) = get_course_and_cm_from_instance($exeweb, 'exeweb');
 
         $context = context_module::instance($cm->id);
@@ -131,7 +131,7 @@ class mod_exeweb_external extends external_api {
         $warnings = [];
         $returnedexewebs = [];
 
-        $params = ['courseids' => $courseids, ];
+        $params = ['courseids' => $courseids ];
         $params = self::validate_parameters(self::get_exewebs_by_courses_parameters(), $params);
 
         $mycourses = [];

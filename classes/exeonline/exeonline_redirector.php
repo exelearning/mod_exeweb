@@ -27,7 +27,7 @@
 namespace mod_exeweb\exeonline;
 
 use mod_exeweb\exeonline\token_manager;
-use \moodle_url;
+use moodle_url;
 
 class exeonline_redirector {
 

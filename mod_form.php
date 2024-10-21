@@ -89,8 +89,8 @@ class mod_exeweb_mod_form extends moodleform_mod {
         $mform->addGroup($group, 'typehelpgroup', '', ' ', false);
         $mform->hideIf('typehelpgroup', 'exeorigin', 'noteq', EXEWEB_ORIGIN_EXEONLINE);
         // New local package upload.
-        $filemanageroptions = array();
-        $filemanageroptions['accepted_types'] = ['.zip', ];
+        $filemanageroptions = [];
+        $filemanageroptions['accepted_types'] = ['.zip' ];
         $filemanageroptions['maxbytes'] = 0;
         $filemanageroptions['maxfiles'] = 1;
         $filemanageroptions['subdirs'] = 0;
@@ -125,7 +125,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
         $mform->addHelpButton('showdate', 'showdate', 'exeweb');
 
         if (array_key_exists(RESOURCELIB_DISPLAY_POPUP, $options)) {
-            $mform->addElement('text', 'popupwidth', get_string('popupwidth', 'mod_exeweb'), ['size' => 3, ]);
+            $mform->addElement('text', 'popupwidth', get_string('popupwidth', 'mod_exeweb'), ['size' => 3 ]);
             if (count($options) > 1) {
                 $mform->hideIf('popupwidth', 'display', 'noteq', RESOURCELIB_DISPLAY_POPUP);
             }
@@ -133,7 +133,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
             $mform->setDefault('popupwidth', $config->popupwidth);
             $mform->setAdvanced('popupwidth', true);
 
-            $mform->addElement('text', 'popupheight', get_string('popupheight', 'mod_exeweb'), ['size' => 3, ]);
+            $mform->addElement('text', 'popupheight', get_string('popupheight', 'mod_exeweb'), ['size' => 3 ]);
             if (count($options) > 1) {
                 $mform->hideIf('popupheight', 'display', 'noteq', RESOURCELIB_DISPLAY_POPUP);
             }
@@ -151,7 +151,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
             $mform->setDefault('printintro', $config->printintro);
         }
 
-        $options = ['0' => get_string('none'), '1' => get_string('allfiles'), '2' => get_string('htmlfilesonly'), ];
+        $options = ['0' => get_string('none'), '1' => get_string('allfiles'), '2' => get_string('htmlfilesonly') ];
         $mform->addElement('select', 'filterfiles', get_string('filterfiles', 'mod_exeweb'), $options);
         $mform->setDefault('filterfiles', $config->filterfiles);
         $mform->setAdvanced('filterfiles', true);
@@ -173,7 +173,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
         if ($this->current->instance) {
             $draftitemid = file_get_submitted_draft_itemid('packagefile');
             file_prepare_draft_area($draftitemid, $this->context->id, 'mod_exeweb', 'package',
-                                    false, ['subdirs' => false, 'maxfiles' => 1, ]);
+                                    false, ['subdirs' => false, 'maxfiles' => 1 ]);
             $defaultvalues['packagefile'] = $draftitemid;
         }
         if (!empty($defaultvalues['displayoptions'])) {
@@ -260,7 +260,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
                     $returnto = new moodle_url("/mod/exeweb/view.php", ['id' => $data->coursemodule, 'forceview' => 1]);
                 } else {
                     // Return to course.
-                    $returnto = course_get_url($data->course, $data->coursesection ?? null, array('sr' => $data->sr));
+                    $returnto = course_get_url($data->course, $data->coursesection ?? null, ['sr' => $data->sr]);
                 }
                 // Set this becouse modedit.php expects it.
                 $data->submitbutton = true;

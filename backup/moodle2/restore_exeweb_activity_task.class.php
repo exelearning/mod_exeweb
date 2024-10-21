@@ -53,7 +53,7 @@ class restore_exeweb_activity_task extends restore_activity_task {
     public static function define_decode_contents() {
         $contents = [];
 
-        $contents[] = new restore_decode_content('exeweb', ['intro', ], 'exeweb');
+        $contents[] = new restore_decode_content('exeweb', ['intro' ], 'exeweb');
 
         return $contents;
     }

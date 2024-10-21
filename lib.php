@@ -542,8 +542,8 @@ function exeweb_dndupload_register() {
     return [
         'files' => [
             ['extension' => 'zip',
-            'message' => get_string('dnduploadexeweb', 'mod_exeweb')]
-        ]
+            'message' => get_string('dnduploadexeweb', 'mod_exeweb')],
+        ],
     ];
 }
 
@@ -591,7 +591,7 @@ function exeweb_view($exeweb, $course, $cm, $context) {
     // Trigger course_module_viewed event.
     $params = [
         'context' => $context,
-        'objectid' => $exeweb->id
+        'objectid' => $exeweb->id,
     ];
 
     $event = \mod_exeweb\event\course_module_viewed::create($params);
@@ -664,7 +664,7 @@ function mod_exeweb_core_calendar_provide_event_action(calendar_event $event,
  * @param  array  $args The path (the part after the filearea and before the filename).
  * @return array The itemid and the filepath inside the $args path, for the defined filearea.
  */
-function mod_exeweb_get_path_from_pluginfile(string $filearea, array $args) : array {
+function mod_exeweb_get_path_from_pluginfile(string $filearea, array $args): array {
     // Exeweb never has an itemid (the number represents the revision but it's not stored in database).
     array_shift($args);
 

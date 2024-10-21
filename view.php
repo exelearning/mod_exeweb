@@ -87,7 +87,7 @@ if ($redirect && !$forceview) {
 $renderer = $PAGE->get_renderer('mod_exeweb');
 
 $PAGE->requires->js_call_amd('mod_exeweb/fullscreen', 'init');
-$PAGE->requires->js_call_amd('mod_exeweb/resize', 'init', ['exewebobject', ]);
+$PAGE->requires->js_call_amd('mod_exeweb/resize', 'init', ['exewebobject' ]);
 switch ($displaytype) {
     case RESOURCELIB_DISPLAY_EMBED:
         exeweb_display_embed($exeweb, $cm, $course, $file);

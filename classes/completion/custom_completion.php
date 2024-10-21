@@ -73,7 +73,7 @@ class custom_completion extends activity_custom_completion {
         $displaytypes = [
                 RESOURCELIB_DISPLAY_NEW,
                 RESOURCELIB_DISPLAY_OPEN,
-                RESOURCELIB_DISPLAY_POPUP
+                RESOURCELIB_DISPLAY_POPUP,
         ];
 
         return in_array($display, $displaytypes);

@@ -82,7 +82,7 @@ class search_test extends \advanced_testcase {
             'itemid'    => $record->files,
             'filepath'  => '/',
             'filename'  => 'mainfile',
-            'sortorder' => 1
+            'sortorder' => 1,
         ];
         $fs->create_file_from_string($filerecord, 'Test exeweb file');
 

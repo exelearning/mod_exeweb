@@ -42,7 +42,7 @@ class backup_exeweb_activity_structure_step extends backup_activity_structure_st
         // Build the tree (none).
 
         // Define sources.
-        $exeweb->set_source_table('exeweb', ['id' => backup::VAR_ACTIVITYID, ]);
+        $exeweb->set_source_table('exeweb', ['id' => backup::VAR_ACTIVITYID ]);
 
         // Define id annotations (none).
 

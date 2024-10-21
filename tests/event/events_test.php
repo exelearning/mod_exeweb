@@ -66,7 +66,7 @@ class events_test extends \advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_exeweb\event\course_module_instance_list_viewed', $event);
         $this->assertEquals(\context_course::instance($course->id), $event->get_context());
-        $expected = [$course->id, 'exeweb', 'view all', 'index.php?id='.$course->id, '', ];
+        $expected = [$course->id, 'exeweb', 'view all', 'index.php?id='.$course->id, '' ];
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
     }
@@ -83,7 +83,7 @@ class events_test extends \advanced_testcase {
 
         $params = [
             'context' => \context_module::instance($exeweb->cmid),
-            'objectid' => $exeweb->id
+            'objectid' => $exeweb->id,
         ];
         $event = \mod_exeweb\event\course_module_viewed::create($params);
 

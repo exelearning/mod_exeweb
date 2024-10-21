@@ -31,7 +31,7 @@ $course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
 require_course_login($course, true);
 $PAGE->set_pagelayout('incourse');
 
-$params = ['context' => context_course::instance($course->id), ];
+$params = ['context' => context_course::instance($course->id) ];
 $event = \mod_exeweb\event\course_module_instance_list_viewed::create($params);
 $event->add_record_snapshot('course', $course);
 $event->trigger();
@@ -63,11 +63,11 @@ $table = new html_table();
 $table->attributes['class'] = 'generaltable mod_index';
 
 if ($usesections) {
-    $table->head  = array ($strsectionname, $strname, $strintro);
-    $table->align = array ('center', 'left', 'left');
+    $table->head  = [$strsectionname, $strname, $strintro];
+    $table->align = ['center', 'left', 'left'];
 } else {
-    $table->head  = array ($strlastmodified, $strname, $strintro);
-    $table->align = array ('left', 'left', 'left');
+    $table->head  = [$strlastmodified, $strname, $strintro];
+    $table->align = ['left', 'left', 'left'];
 }
 
 $modinfo = get_fast_modinfo($course);
@@ -97,10 +97,10 @@ foreach ($exewebs as $exeweb) {
     }
 
     $class = $exeweb->visible ? '' : 'class="dimmed"'; // Hidden modules are dimmed.
-    $table->data[] = array (
+    $table->data[] = [
         $printsection,
         "<a $class $extra href=\"view.php?id=$cm->id\">".$icon.format_string($exeweb->name)."</a>",
-        format_module_intro('exeweb', $exeweb, $cm->id));
+        format_module_intro('exeweb', $exeweb, $cm->id)];
 }
 
 echo html_writer::table($table);

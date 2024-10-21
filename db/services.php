@@ -34,7 +34,7 @@ $functions = [
         'description'   => 'Simulate the view.php web interface exeweb: trigger events, completion, etc...',
         'type'          => 'write',
         'capabilities'  => 'mod/exeweb:view',
-        'services'      => [MOODLE_OFFICIAL_MOBILE_SERVICE, ],
+        'services'      => [MOODLE_OFFICIAL_MOBILE_SERVICE ],
     ],
     'mod_exeweb_get_exewebs_by_courses' => [
         'classname'     => 'mod_exeweb_external',
@@ -43,6 +43,6 @@ $functions = [
                             the user can view will be returned.',
         'type'          => 'read',
         'capabilities'  => 'mod/exeweb:view',
-        'services'      => [MOODLE_OFFICIAL_MOBILE_SERVICE, ],
+        'services'      => [MOODLE_OFFICIAL_MOBILE_SERVICE ],
     ],
 ];
