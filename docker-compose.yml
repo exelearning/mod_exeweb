@@ -14,6 +14,7 @@ services:
       APP_ENV: prod
       APP_DEBUG: 0
       XDEBUG_MODE: off
+      APP_SECRET: PLEASE_CHANGEME_API_KEY
       PRE_CONFIGURE_COMMANDS:
       POST_CONFIGURE_COMMANDS: |
         echo "this is a test line 1"
