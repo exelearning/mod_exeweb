@@ -14,22 +14,6 @@ else
     SHELLTYPE := unix
 endif
 
-# Define HOST_IP based on the shell type
-ifeq ($(SHELLTYPE),windows)
-    # For Windows cmd.exe or PowerShell
-    HOST_IP := $(shell for /F "tokens=2 delims=[]" %i in ('ping -n 1 -4 %COMPUTERNAME%') do @echo %i)
-else
-    # For Unix-like shells (Linux, macOS, Cygwin, MSYS)
-    UNAME_S := $(shell uname -s)
-    ifeq ($(UNAME_S),Darwin)
-        # For macOS
-        HOST_IP := $(shell ipconfig getifaddr en0)
-    else
-        # For Linux and other Unix-like systems
-        HOST_IP := $(shell hostname -I | awk '{print $$1}')
-    endif
-endif
-
 # Check if Docker is running
 # This target verifies if Docker is installed and running on the system.
 check-docker:
@@ -56,19 +40,15 @@ else
 	fi
 endif
 
-# Show the host ip address
-ip:
-	@echo "The host ip address is: ${HOST_IP}"
-
 # Start Docker containers in interactive mode
 # This target builds and starts the Docker containers, allowing interaction with the terminal.
 up: check-docker
-	HOST_IP=$(HOST_IP) docker compose up --build
+	docker compose up --build
 
 # Start Docker containers in background mode (daemon)
 # This target builds and starts the Docker containers in the background.
 upd: check-docker
-	HOST_IP=$(HOST_IP) docker compose up -d    
+	docker compose up -d    
 
 # Stop and remove Docker containers
 # This target stops and removes all running Docker containers.
