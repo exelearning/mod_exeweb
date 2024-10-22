@@ -1,41 +1,33 @@
 # Makefile to facilitate the use of Docker in the exelearning-web project
 
-# Get the host IP (works for Unix/macOS, adjust for Windows if needed)
-# HOST_IP = $(shell hostname -I | awk '{print $$1}')
-# Get the host IP using ifconfig (for macOS/Linux)
-HOST_IP = $(shell ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $$2}'
-
-# Detect the operating system
+# Detect the operating system and shell environment
 ifeq ($(OS),Windows_NT)
-	# We are on Windows
-	ifdef MSYSTEM
-		# MSYSTEM is defined, we are in MinGW or MSYS
-		SYSTEM_OS := unix
-	else ifdef CYGWIN
-		# CYGWIN is defined, we are in Cygwin
-		SYSTEM_OS := unix
-	else
-		# Not in MinGW or Cygwin
-		SYSTEM_OS := windows
-	endif
+    # Initially assume Windows shell
+    SHELLTYPE := windows
+    # Check if we are in Cygwin or MSYS (e.g., Git Bash)
+    ifdef MSYSTEM
+        SHELLTYPE := unix
+    else ifdef CYGWIN
+        SHELLTYPE := unix
+    endif
 else
-	# Not Windows, assuming Unix
-	SYSTEM_OS := unix
+    SHELLTYPE := unix
 endif
 
-# Get the host IP based on the operating system
-ifeq ($(SYSTEM_OS),windows)
-	# For Windows, use ipconfig and findstr to extract the IP
-	HOST_IP := $(shell for /F "tokens=2 delims=[]" %i in ('ping -n 1 -4 %COMPUTERNAME%') do @echo %i)
+# Define HOST_IP based on the shell type
+ifeq ($(SHELLTYPE),windows)
+    # For Windows cmd.exe or PowerShell
+    HOST_IP := $(shell for /F "tokens=2 delims=[]" %i in ('ping -n 1 -4 %COMPUTERNAME%') do @echo %i)
 else
-	# For Unix-like systems, use ifconfig or ip (adjust for macOS/Linux)
-	ifeq ($(shell uname), Darwin)
-		# For macOS, use ipconfig
-		HOST_IP := $(shell ipconfig getifaddr en0)
-	else
-		# For Linux, use ifconfig or ip to get the IP address
-		HOST_IP := $(shell hostname -I | cut -d' ' -f1)
-	endif
+    # For Unix-like shells (Linux, macOS, Cygwin, MSYS)
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Darwin)
+        # For macOS
+        HOST_IP := $(shell ipconfig getifaddr en0)
+    else
+        # For Linux and other Unix-like systems
+        HOST_IP := $(shell hostname -I | awk '{print $$1}')
+    endif
 endif
 
 # Check if Docker is running
