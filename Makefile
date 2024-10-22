@@ -17,7 +17,7 @@ endif
 # Check if Docker is running
 # This target verifies if Docker is installed and running on the system.
 check-docker:
-ifeq ($(SYSTEM_OS),windows)
+ifeq ($(SHELLTYPE),windows)
 	@echo "Detected system: Windows (cmd, powershell)"
 	@docker version > NUL 2>&1 || (echo. & echo Error: Docker is not running. Please make sure Docker is installed and running. & echo. & exit 1)
 else
@@ -28,7 +28,7 @@ endif
 # Check if the .env file exists, if not, copy from .env.dist
 # This target ensures that the .env file is present by copying it from .env.dist if it doesn't exist.
 check-env:
-ifeq ($(SYSTEM_OS),windows)
+ifeq ($(SHELLTYPE),windows)
 	@if not exist .env ( \
 		echo The .env file does not exist. Copying from .env.dist... && \
 		copy .env.dist .env \
