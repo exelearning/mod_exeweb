@@ -19,7 +19,7 @@ services:
       POST_CONFIGURE_COMMANDS: |
         echo "this is a test line 1"
         echo "this is a test line 2"
-        php bin/console app:create-user ${TEST_USER_EMAIL} ${TEST_USER_USERNAME} ${TEST_USER_PASSWORD} --no-fail
+        php bin/console app:create-user ${TEST_USER_EMAIL} ${TEST_USER_PASSWORD} ${TEST_USER_USERNAME} --no-fail
 
   moodle:
     image: erseco/alpine-moodle
@@ -38,7 +38,7 @@ services:
       DEBUG: true
       MOODLE_EMAIL:  ${TEST_USER_EMAIL}
       MOODLE_LANGUAGE: es
-      MOODLE_SITENAME: Moodle eXeLearning
+      MOODLE_SITENAME: Moodle-eXeLearning
       MOODLE_USERNAME: ${TEST_USER_USERNAME}
       MOODLE_PASSWORD: ${TEST_USER_PASSWORD}
       PRE_CONFIGURE_COMMANDS: |
