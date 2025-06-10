@@ -260,7 +260,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
                     $returnto = new moodle_url("/mod/exeweb/view.php", ['id' => $data->coursemodule, 'forceview' => 1]);
                 } else {
                     // Return to course.
-                    $returnto = course_get_url($data->course, $data->coursesection ?? null, array('sr' => $data->sr));
+                    $returnto = course_get_url($data->course, null, array(''));
                 }
                 // Set this becouse modedit.php expects it.
                 $data->submitbutton = true;
