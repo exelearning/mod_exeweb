@@ -76,6 +76,10 @@ class exeonline_redirector {
             'pkgtype' => 'webzip',
             'returnurl' => $returnto->out(false),
             'userid' => $USER->id,
+            'provider' => [
+                'name' => get_config('exeweb', 'providername'),
+                'version' => get_config('exeweb', 'providerversion'),
+            ],
         ];
         $jwttoken = token_manager::get_jwt_token($payload);
         $params = [

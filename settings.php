@@ -35,6 +35,17 @@ if ($ADMIN->fulltree) {
         get_string('exeonline:baseuri', 'mod_exeweb'),
         get_string('exeonline:baseuri_desc', 'mod_exeweb'), '', PARAM_RAW_TRIMMED));
 
+    $settings->add(new admin_setting_configtext('exeweb/providername',
+        get_string('exeonline:provider_name', 'mod_exeweb'),
+        get_string('exeonline:provider_name_desc', 'mod_exeweb'), 'Moodle'));
+
+    $moodleversion = substr($CFG->release, 0, 3);
+    $settings->add(new admin_setting_configtext('exeweb/providerversion',
+        get_string('exeonline:provider_version', 'mod_exeweb'),
+        get_string('exeonline:provider_version_desc', 'mod_exeweb')
+            . "<br><code>Current Moodle Version: "
+            . $CFG->release . "</code>", $moodleversion));
+
     $settings->add(new admin_setting_configpasswordunmask('exeweb/hmackey1',
         get_string('exeonline:hmackey1', 'mod_exeweb'),
         get_string('exeonline:hmackey1_desc', 'mod_exeweb'), ''));
