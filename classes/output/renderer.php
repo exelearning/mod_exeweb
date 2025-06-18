@@ -45,7 +45,8 @@ class renderer extends \plugin_renderer_base {
      */
     public function generate_action_bar(\stdClass $cm): string {
         $context = [];
-        if (has_capability('moodle/course:update', context_course::instance($cm->course))) {
+        $hascapability = has_capability('moodle/course:update', context_course::instance($cm->course));
+        if ($hascapability && get_config('exeweb', 'exeonlinebaseuri')) {
             $returnto = new moodle_url("/mod/exeweb/view.php", ['id' => $cm->id, 'forceview' => 1]);
             $context['editaction'] = exeonline_redirector::get_redirection_url($cm->id, $returnto)->out(false);
         }

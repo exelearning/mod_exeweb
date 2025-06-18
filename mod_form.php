@@ -66,7 +66,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
             EXEWEB_ORIGIN_LOCAL => get_string('typelocal', 'mod_exeweb'),
         ];
         $defaulttype = EXEWEB_ORIGIN_LOCAL;
-        if (!empty($config->exeonlinebaseuri) && !empty($config->hmackey1)) {
+        if (!empty($config->exeonlinebaseuri)) {
             if ($editmode) {
                 $exeorigins[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebedit', 'mod_exeweb');
             } else {
