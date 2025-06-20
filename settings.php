@@ -73,10 +73,7 @@ if ($ADMIN->fulltree) {
 
     // The eXeweb package validation rules.
     $mandatoryfilesre = implode("\n", [
-        '/^contentv[\d+]\.xml$/',
-        '/^content\.xsd$/',
-        '/^content\.data$/',
-        '/^[ \w-]*\/{0,1}index\.htm[l]{0,1}$/',
+	'/^content(v\d+)?\.xml$/',
     ]);
     $forbiddenfilesre = implode("\n", [
         '/.*\.php$/',
