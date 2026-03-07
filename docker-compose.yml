@@ -1,9 +1,8 @@
 ---
-version: "3"
 services:
 
   exelearning-web:
-    image: ghcr.io/exelearning/exelearning-web:${EXELEARNING_WEB_CONTAINER_TAG}
+    image: ghcr.io/exelearning/exelearning:${EXELEARNING_WEB_CONTAINER_TAG}
     build: ${EXELEARNING_WEB_SOURCECODE_PATH:-} # If EXELEARNING_WEB__SOURCECODE_PATH is not defined, skip build
     ports:
       - ${APP_PORT}:8080
@@ -22,7 +21,7 @@ services:
         php bin/console app:create-user ${TEST_USER_EMAIL} ${TEST_USER_PASSWORD} ${TEST_USER_USERNAME} --no-fail
 
   moodle:
-    image: erseco/alpine-moodle
+    image: erseco/alpine-moodle:v5.0.5
     restart: unless-stopped
     environment:
       LANG: es_ES.UTF-8
@@ -59,11 +58,14 @@ services:
       - db
 
   db:
-    image: mariadb:10.6.7
+    image: mariadb:latest
     restart: unless-stopped  # Restart the container unless it is stopped manually
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
       MYSQL_DATABASE: moodle
       MYSQL_ROOT_PASSWORD: moodle
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
     volumes:
       - dbdata:/var/lib/mysql
 

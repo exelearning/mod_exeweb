@@ -29,16 +29,15 @@ namespace mod_exeweb;
 class exeweb_package {
 
     /**
-     * Check that a Zip file contains a valid exeweb package
+     * Check that a Zip/ELPX file contains a valid exeweb package.
      *
-     * @param \stored_file $file A Zip file.
+     * @param \stored_file $file A Zip or ELPX file.
      * @return array empty if no issue is found. Array of error message otherwise
      */
     public static function validate_package(\stored_file $file) {
         $errors = [];
 
-        $mimetype = $file->get_mimetype();
-        if ($mimetype !== 'application/zip') {
+        if (!self::is_valid_package_file($file)) {
             $errors['packagefile'] = get_string('badexelearningpackage', 'mod_exeweb');
             return $errors;
         }
@@ -57,6 +56,33 @@ class exeweb_package {
         $errors = self::validate_file_list($filelist);
 
         return $errors;
+    }
+
+    /**
+     * Check if a stored file is a valid package file (ZIP or ELPX).
+     *
+     * ELPX files are ZIP archives with a different extension. Browsers may
+     * report them as application/octet-stream, so we also check the extension.
+     *
+     * @param \stored_file $file
+     * @return bool
+     */
+    public static function is_valid_package_file(\stored_file $file) {
+        $mimetype = $file->get_mimetype();
+        $filename = $file->get_filename();
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+        // Accept ZIP mimetype or ELPX extension (which is a ZIP archive).
+        $validmimes = ['application/zip', 'application/x-zip-compressed', 'application/octet-stream'];
+        $validexts = ['zip', 'elpx'];
+
+        if (in_array($ext, $validexts) && in_array($mimetype, $validmimes)) {
+            return true;
+        }
+        if ($mimetype === 'application/zip') {
+            return true;
+        }
+        return false;
     }
 
 

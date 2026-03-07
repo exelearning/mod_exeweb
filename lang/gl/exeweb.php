@@ -75,7 +75,7 @@ $string['exeweb:onlinetypehelp'] = 'Cando faga clic en calquera dos botóns de g
 $string['exeweb:sendtemplate'] = 'Enviar modelo';
 $string['exeweb:sendtemplate_desc'] = 'Envía o modelo predeterminado a eXeLearning ao crear un novo contido.';
 $string['exeweb:template'] = 'Novo modelo de paquete.';
-$string['exeweb:template_desc'] = 'O .elp subido aquí empregarase como paquete por defecto para os novos contidos. Amosarase ata que sexa substituído polo enviado por eXeLearning. NON descomprima o ficheiro .zip.';
+$string['exeweb:template_desc'] = 'O paquete (.zip ou .elpx) subido aquí empregarase como paquete por defecto para os novos contidos. Amosarase ata que sexa substituído polo enviado por eXeLearning. NON descomprima o paquete.';
 $string['exeweb:editonlineanddisplay'] = 'Ir a eXeLearning e amosar';
 $string['exeweb:editonlineandreturntocourse'] = 'Ir a eXeLearning e volver ao curso';
 $string['filenotfound'] = 'Sentímolo, o ficheiro non se atopa.';
@@ -150,6 +150,24 @@ Se hai varios ficheiros no recurso, amosa o tipo del ficheiro inicial.
 
 Se o tipo de ficheiro é descoñecido para o sistema, nos se amosa.';
 $string['uploadeddate'] = 'Enviado {$a}';
+$string['embeddededitorsettings'] = 'Tipo de editor';
+$string['editormode'] = 'Modo de editor';
+$string['editormodedesc'] = 'Seleccione que editor usar para crear e editar contido eXeLearning. A configuración de conexión online só aplica cando se selecciona o modo "eXeLearning Online".';
+$string['editormodeonline'] = 'eXeLearning Online (servidor remoto)';
+$string['editormodeembedded'] = 'Editor integrado (embebido)';
+$string['embeddednotinstalled'] = 'Os ficheiros do editor integrado non están instalados. Execute "make build-editor" para xeralos.';
+$string['editembedded'] = 'Editar con eXeLearning';
+$string['editembedded_integrated'] = 'Integrado';
+$string['editembedded_help'] = 'Abre o editor eXeLearning integrado para editar o contido directamente dentro de Moodle.';
+$string['editormissing'] = 'O editor integrado eXeLearning non está instalado. Contacte co administrador.';
+$string['editorreaderror'] = 'Non se puideron ler os ficheiros do editor integrado eXeLearning. Comprobe os permisos dos ficheiros e contacte co administrador.';
+$string['embeddedtypehelp'] = 'Crearase a actividade e poderá editala usando o editor eXeLearning integrado dende a páxina de visualización da actividade.';
+$string['saving'] = 'Gardando...';
+$string['savedsuccess'] = 'Cambios gardados correctamente';
+$string['savetomoodle'] = 'Gardar en Moodle';
+$string['savingwait'] = 'Por favor, agarde mentres se garda o ficheiro.';
+$string['unsavedchanges'] = 'Ten cambios sen gardar. Está seguro de que desexa pechar?';
+$string['typeembedded'] = 'Crear con eXeLearning (editor integrado)';
 $string['typeexewebcreate'] = 'Crear con eXeLearning';
 $string['typeexewebedit'] = 'Editar con eXeLearning';
 $string['typelocal'] = 'Paquete enviado';

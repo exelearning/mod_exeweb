@@ -26,6 +26,8 @@ use mod_exeweb\exeweb_package;
 define('EXEWEB_ORIGIN_LOCAL', 'local');
 /** EXEWEB_ORIGIN_EXEONLINE = exeonline */
 define('EXEWEB_ORIGIN_EXEONLINE', 'exeonline');
+/** EXEWEB_ORIGIN_EMBEDDED = embedded */
+define('EXEWEB_ORIGIN_EMBEDDED', 'embedded');
 
 /**
  * List of features supported in Exeweb module
@@ -124,20 +126,25 @@ function exeweb_add_instance($data, $mform) {
     $DB->set_field('course_modules', 'instance', $data->id, ['id' => $cmid]);
     $context = context_module::instance($cmid);
 
-    if ($data->exeorigin === EXEWEB_ORIGIN_EXEONLINE) {
-        // We are going to set a template file so activity is complete event if exelearning failure.
+    if ($data->exeorigin === EXEWEB_ORIGIN_EXEONLINE || $data->exeorigin === EXEWEB_ORIGIN_EMBEDDED) {
+        // We are going to set a template file so activity is complete even if exelearning failure.
         $fs = get_file_storage();
         $templatename = get_config('exeweb', 'template');
         $templatefile = false;
+        $templateext = 'zip';
+        if (! empty($templatename)) {
+            $templateext = strtolower(pathinfo($templatename, PATHINFO_EXTENSION)) ?: 'zip';
+        }
+        $packagefilename = 'default_package.' . $templateext;
         $fileinfo = [
             'contextid' => $context->id,
             'component' => 'mod_exeweb',
             'filearea' => 'package',
             'itemid' => $data->revision,
             'filepath' => '/',
-            'filename' => 'default_package.zip',
+            'filename' => $packagefilename,
             'userid' => $USER->id,
-            'source' => 'default_package.zip',
+            'source' => $packagefilename,
             'author' => fullname($USER),
             'license' => 'unknown',
         ];
@@ -200,6 +207,7 @@ function exeweb_update_instance($data, $mform) {
             $data->entryname = $mainfile->get_filename();
         }
     }
+    // For embedded origin, package is saved via AJAX from the editor - nothing to do here.
     $DB->update_record('exeweb', $data);
 
     $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
@@ -233,6 +241,7 @@ function exeweb_set_display_options($data) {
     if (!empty($data->showdate)) {
         $displayoptions['showdate'] = 1;
     }
+    $displayoptions['teachermodevisible'] = !empty($data->teachermodevisible) ? 1 : 0;
     $data->displayoptions = serialize($displayoptions);
 }
 
@@ -446,6 +455,22 @@ function exeweb_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
         return false;
     }
 
+    if ($filearea === 'package') {
+        // Serve package files (needed for embedded editor to download the ELP).
+        if (!has_capability('moodle/course:manageactivities', $context)) {
+            return false;
+        }
+        $revision = array_shift($args);
+        $fs = get_file_storage();
+        $relativepath = implode('/', $args);
+        $fullpath = "/$context->id/mod_exeweb/package/$revision/$relativepath";
+        if (!$file = $fs->get_file_by_hash(sha1($fullpath))) {
+            return false;
+        }
+        send_stored_file($file, null, 0, $forcedownload, $options);
+        return;
+    }
+
     if ($filearea !== 'content') {
         // Intro is handled automatically in pluginfile.php.
         return false;
@@ -542,7 +567,9 @@ function exeweb_dndupload_register() {
     return [
         'files' => [
             ['extension' => 'zip',
-            'message' => get_string('dnduploadexeweb', 'mod_exeweb')]
+            'message' => get_string('dnduploadexeweb', 'mod_exeweb')],
+            ['extension' => 'elpx',
+            'message' => get_string('dnduploadexeweb', 'mod_exeweb')],
         ]
     ];
 }
@@ -656,6 +683,57 @@ function mod_exeweb_core_calendar_provide_event_action(calendar_event $event,
     );
 }
 
+
+/**
+ * Check if the embedded static editor is available.
+ *
+ * Checks both the admin editor mode setting and the existence of the editor files.
+ *
+ * @return bool True if the editor mode is 'embedded' and dist/static/index.html exists.
+ */
+function exeweb_embedded_editor_available() {
+    global $CFG;
+    $mode = get_config('exeweb', 'editormode');
+    if ($mode === false) {
+        $mode = 'online';
+    }
+    return ($mode === 'embedded') && file_exists($CFG->dirroot . '/mod/exeweb/dist/static/index.html');
+}
+
+/**
+ * Check if the online eXeLearning editor is available.
+ *
+ * Checks that the editor mode is not 'embedded' and that the online base URI is configured.
+ *
+ * @return bool True if online editor mode is active and base URI is configured.
+ */
+function exeweb_online_editor_available() {
+    $mode = get_config('exeweb', 'editormode');
+    if ($mode === false) {
+        $mode = 'online';
+    }
+    return ($mode !== 'embedded') && !empty(get_config('exeweb', 'exeonlinebaseuri'));
+}
+
+/**
+ * Get the URL for the package file of an exeweb instance.
+ *
+ * @param stdClass $exeweb The exeweb record.
+ * @param context_module $context The module context.
+ * @return moodle_url|null The URL to the package file, or null if not found.
+ */
+function exeweb_get_package_url($exeweb, $context) {
+    $fs = get_file_storage();
+    $files = $fs->get_area_files($context->id, 'mod_exeweb', 'package', false, 'sortorder DESC, id ASC', false);
+    $package = reset($files);
+    if (!$package) {
+        return null;
+    }
+    return moodle_url::make_pluginfile_url(
+        $context->id, 'mod_exeweb', 'package', $exeweb->revision,
+        $package->get_filepath(), $package->get_filename()
+    );
+}
 
 /**
  * Given an array with a file path, it returns the itemid and the filepath for the defined filearea.

@@ -61,16 +61,25 @@ class mod_exeweb_mod_form extends moodleform_mod {
         $mform->setExpanded('packagehdr', true);
 
         $editmode = !empty($this->_instance);
-        // Package types.
+        // Package types - show only options relevant to the admin editor mode setting.
         $exeorigins = [
             EXEWEB_ORIGIN_LOCAL => get_string('typelocal', 'mod_exeweb'),
         ];
         $defaulttype = EXEWEB_ORIGIN_LOCAL;
-        if (!empty($config->exeonlinebaseuri)) {
+        if (exeweb_embedded_editor_available()) {
             if ($editmode) {
-                $exeorigins[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebedit', 'mod_exeweb');
+                $exeorigins[EXEWEB_ORIGIN_EMBEDDED] = get_string('typeexewebedit', 'mod_exeweb');
             } else {
-                $exeorigins[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebcreate', 'mod_exeweb');
+                $exeorigins[EXEWEB_ORIGIN_EMBEDDED] = get_string('typeembedded', 'mod_exeweb');
+                $defaulttype = EXEWEB_ORIGIN_EMBEDDED;
+            }
+        } else if (exeweb_online_editor_available()) {
+            if ($editmode) {
+                $exeorigins[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebedit', 'mod_exeweb')
+                    . ' (Online)';
+            } else {
+                $exeorigins[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebcreate', 'mod_exeweb')
+                    . ' (Online)';
                 $defaulttype = EXEWEB_ORIGIN_EXEONLINE;
             }
         }
@@ -80,7 +89,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
         $mform->setDefault('exeorigin', $defaulttype);
         $mform->setType('exeorigin', PARAM_ALPHA);
         $mform->addHelpButton('exeorigin', 'exeorigin', 'exeweb');
-        // Workarround to hide static element.
+        // Workaround to hide static element.
         $group = [];
         $staticelement = $mform->createElement('static', 'onlinetypehelp', '',
                                                 get_string('exeweb:onlinetypehelp', 'mod_exeweb'));
@@ -88,16 +97,25 @@ class mod_exeweb_mod_form extends moodleform_mod {
         $group[] = $staticelement;
         $mform->addGroup($group, 'typehelpgroup', '', ' ', false);
         $mform->hideIf('typehelpgroup', 'exeorigin', 'noteq', EXEWEB_ORIGIN_EXEONLINE);
+        // Help text for embedded editor.
+        $embeddedgroup = [];
+        $embeddedelement = $mform->createElement('static', 'embeddedtypehelp', '',
+                                                get_string('embeddedtypehelp', 'mod_exeweb'));
+        $embeddedelement->updateAttributes(['class' => 'font-weight-bold']);
+        $embeddedgroup[] = $embeddedelement;
+        $mform->addGroup($embeddedgroup, 'embeddedtypehelpgroup', '', ' ', false);
+        $mform->hideIf('embeddedtypehelpgroup', 'exeorigin', 'noteq', EXEWEB_ORIGIN_EMBEDDED);
         // New local package upload.
         $filemanageroptions = array();
-        $filemanageroptions['accepted_types'] = ['.zip', ];
+        $filemanageroptions['accepted_types'] = ['.zip', '.elpx'];
         $filemanageroptions['maxbytes'] = 0;
         $filemanageroptions['maxfiles'] = 1;
         $filemanageroptions['subdirs'] = 0;
 
         $mform->addElement('filepicker', 'packagefile', get_string('package', 'mod_exeweb'), null, $filemanageroptions);
         $mform->addHelpButton('packagefile', 'package', 'exeweb');
-        $mform->hideIf('packagefile', 'exeorigin', 'noteq', EXEWEB_ORIGIN_LOCAL);
+        $mform->hideIf('packagefile', 'exeorigin', 'eq', EXEWEB_ORIGIN_EXEONLINE);
+        $mform->hideIf('packagefile', 'exeorigin', 'eq', EXEWEB_ORIGIN_EMBEDDED);
         // End of package section.
 
         // -------------------------------------------------------
@@ -150,6 +168,12 @@ class mod_exeweb_mod_form extends moodleform_mod {
             $mform->hideIf('printintro', 'display', 'eq', RESOURCELIB_DISPLAY_NEW);
             $mform->setDefault('printintro', $config->printintro);
         }
+
+        $mform->addElement('advcheckbox', 'teachermodevisible',
+            get_string('teachermodevisible', 'exeweb'));
+        $mform->addHelpButton('teachermodevisible', 'teachermodevisible', 'exeweb');
+        $mform->setDefault('teachermodevisible', 1);
+
 
         $options = ['0' => get_string('none'), '1' => get_string('allfiles'), '2' => get_string('htmlfilesonly'), ];
         $mform->addElement('select', 'filterfiles', get_string('filterfiles', 'mod_exeweb'), $options);
@@ -204,6 +228,11 @@ class mod_exeweb_mod_form extends moodleform_mod {
             } else {
                 $defaultvalues['showdate'] = 0;
             }
+            if (array_key_exists('teachermodevisible', $displayoptions)) {
+                $defaultvalues['teachermodevisible'] = (int) $displayoptions['teachermodevisible'];
+            } else {
+                $defaultvalues['teachermodevisible'] = 1;
+            }
         }
     }
 
@@ -234,7 +263,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
                 }
 
             }
-        } else if ($type !== EXEWEB_ORIGIN_EXEONLINE) {
+        } else if ($type !== EXEWEB_ORIGIN_EXEONLINE && $type !== EXEWEB_ORIGIN_EMBEDDED) {
             $errors['exeorigin'] = get_string('invalidpackage', 'mod_exeweb');
         }
 

@@ -57,6 +57,10 @@ function exeweb_display_embed($exeweb, $cm, $course, $file) {
 
     exeweb_print_header($exeweb, $cm, $course);
 
+    if (!exeweb_is_teacher_mode_visible($exeweb)) {
+        exeweb_require_teacher_mode_hider_for_iframe('exewebobject');
+    }
+
     echo $PAGE->get_renderer('mod_exeweb')->generate_embed_general($cm, $moodleurl, $title, $clicktoopen);
 
     echo $OUTPUT->footer();
@@ -83,6 +87,9 @@ function exeweb_display_frame($exeweb, $cm, $course, $file) {
         $PAGE->set_pagelayout('frametop');
         $PAGE->activityheader->set_description(exeweb_get_intro($exeweb, $cm, true));
         exeweb_print_header($exeweb, $cm, $course);
+        if (!exeweb_is_teacher_mode_visible($exeweb)) {
+            exeweb_require_teacher_mode_hider_for_content_frame();
+        }
         echo $OUTPUT->footer();
         die;
 
@@ -121,6 +128,67 @@ EOF;
 /**
  * Internal function - create click to open text with link.
  */
+
+/**
+ * Check whether teacher mode toggler should be visible for this activity.
+ *
+ * @param stdClass $exeweb
+ * @return bool
+ */
+function exeweb_is_teacher_mode_visible($exeweb) {
+    $options = empty($exeweb->displayoptions) ? [] : (array) unserialize_array($exeweb->displayoptions);
+    if (!array_key_exists('teachermodevisible', $options)) {
+        return true;
+    }
+    return !empty($options['teachermodevisible']);
+}
+
+/**
+ * Inject CSS into the embedded iframe to hide the teacher mode toggler.
+ *
+ * @param string $iframeid
+ * @return void
+ */
+function exeweb_require_teacher_mode_hider_for_iframe(string $iframeid): void {
+    global $PAGE;
+
+    $iframeidjson = json_encode($iframeid);
+    $cssjson = json_encode('#teacher-mode-toggler-wrapper { visibility: hidden !important; }');
+
+    $js = "(function(){"
+        . "var iframe=document.getElementById(" . $iframeidjson . ");"
+        . "if(!iframe){return;}"
+        . "var css=" . $cssjson . ";"
+        . "var inject=function(){try{if(!iframe.contentDocument){return;}"
+        . "var d=iframe.contentDocument;var st=d.createElement('style');st.textContent=css;"
+        . "(d.head||d.documentElement).appendChild(st);}catch(e){}};"
+        . "iframe.addEventListener('load', inject);inject();"
+        . "})();";
+
+    $PAGE->requires->js_init_code($js);
+}
+
+/**
+ * Inject CSS into the frame content document to hide teacher mode toggler.
+ *
+ * @return void
+ */
+function exeweb_require_teacher_mode_hider_for_content_frame(): void {
+    global $PAGE;
+
+    $cssjson = json_encode('#teacher-mode-toggler-wrapper { visibility: hidden !important; }');
+    $js = "(function(){"
+        . "var css=" . $cssjson . ";"
+        . "var inject=function(){try{if(!window.parent||!window.parent.frames||!window.parent.frames[1]){return;}"
+        . "var frameWin=window.parent.frames[1];if(!frameWin.document){return;}"
+        . "var d=frameWin.document;var st=d.createElement('style');st.textContent=css;"
+        . "(d.head||d.documentElement).appendChild(st);}catch(e){}};"
+        . "window.addEventListener('load', inject);setTimeout(inject, 300);"
+        . "})();";
+
+    $PAGE->requires->js_init_code($js);
+}
+
 function exeweb_get_clicktoopen($file, $revision, $extra='') {
     global $CFG;
 

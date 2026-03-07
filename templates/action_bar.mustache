@@ -13,25 +13,33 @@
 }}
 {{!
     @template mod_exeweb/action_bar
-    Actions bar for the user reports page UI.
-    Classes required for JS:
-    * none
-    Data attributes required for JS:
-    * none
+    Actions bar for the activity view page.
     Context variables required for this template:
-    * action
-    Example context (json):
-    {
-        "editaction": "http://localhost:51235/edit_ode?...."
-    }
-}}
+    * editaction - URL for eXeLearning Online editing (mutually exclusive with editorurl)
+    * editorurl - URL for embedded editor bootstrap page (mutually exclusive with editaction)
+    * saveurl - URL for embedded editor save endpoint
+    * packageurl - URL of current package to open
+    * sesskey - Moodle sesskey
+    * cmid - Course module ID
+    * activityname - Activity name for modal title}}
 <div class="d-flex flex-row-reverse pb-2">
     <button id="toggleFullscreen" class="btn-fullscreen ml-2"
             title="{{#str}}player:toogleFullscreen, mod_exeweb{{/str}}">
         <span class="sr-only">{{#str}}player:toogleFullscreen, mod_exeweb{{/str}}</span>
     </button>
+    {{#editorurl}}
+    <button id="editembedded" class="btn btn-primary mr-1"
+        data-action="mod_exeweb/editor-open"
+        data-cmid="{{cmid}}"
+        data-editorurl="{{{editorurl}}}"
+        data-saveurl="{{{saveurl}}}"
+        data-packageurl="{{{packageurl}}}"
+        data-sesskey="{{sesskey}}"
+        data-activityname="{{activityname}}">
+        {{#str}}typeexewebedit, mod_exeweb{{/str}}
+    </button>
+    {{/editorurl}}
     {{#editaction}}
-
     <button id="editonexe" class="btn btn-secondary mr-1" data-action="mod_exeweb/link-edit"
         onclick="window.open('{{{editaction}}}','_self')">
         {{#str}}typeexewebedit, mod_exeweb{{/str}}

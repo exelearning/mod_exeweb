@@ -75,7 +75,7 @@ $string['exeweb:onlinetypehelp'] = 'Cuando haga clic en cualquiera de los botone
 $string['exeweb:sendtemplate'] = 'Enviar plantilla';
 $string['exeweb:sendtemplate_desc'] = 'Envía la plantilla predeterminada a eXeLearning al crear un nuevo contenido.';
 $string['exeweb:template'] = 'Nueva plantilla de paquete.';
-$string['exeweb:template_desc'] = 'El elp subido aquí se utilizará como paquete por defecto para los nuevos contenidos. Se mostrará hasta que sea sustituido por el enviado por eXeLearning. NO descomprima el zip.';
+$string['exeweb:template_desc'] = 'El paquet (.zip o .elpx) pujat aquí es farà servir com a paquet per defecte per a les noves activitats. Es mostrarà fins que sigui substituït pel enviat per eXeLearning. NO descomprimiu el paquet.';
 $string['exeweb:editonlineanddisplay'] = 'Ir a eXeLearning y mostrar';
 $string['exeweb:editonlineandreturntocourse'] = 'Ir a eXeLearning y volver al curso';
 $string['filenotfound'] = 'Lo sentimos, el archivo no se ha encontrado.';
@@ -151,6 +151,24 @@ Si hay varios archivos en el recurso, se muestra el tipo del archivo inicial.
 
 Si el tipo de archivo es desconocido para el sistema, no se muestra.';
 $string['uploadeddate'] = 'Subido {$a}';
+$string['embeddededitorsettings'] = 'Tipus d\'editor';
+$string['editormode'] = 'Mode d\'editor';
+$string['editormodedesc'] = 'Seleccioneu quin editor voleu utilitzar per crear i editar contingut eXeLearning. La configuració de connexió online només s\'aplica quan es selecciona el mode "eXeLearning Online".';
+$string['editormodeonline'] = 'eXeLearning Online (servidor remot)';
+$string['editormodeembedded'] = 'Editor integrat (incrustat)';
+$string['embeddednotinstalled'] = 'Els fitxers de l\'editor integrat no estan instal·lats. Executeu "make build-editor" per generar-los.';
+$string['editembedded'] = 'Editar amb eXeLearning';
+$string['editembedded_integrated'] = 'Integrat';
+$string['editembedded_help'] = 'Obre l\'editor eXeLearning integrat per editar el contingut directament dins de Moodle.';
+$string['editormissing'] = 'L\'editor integrat eXeLearning no està instal·lat. Contacteu amb l\'administrador.';
+$string['editorreaderror'] = 'No s\'han pogut llegir els fitxers de l\'editor integrat eXeLearning. Comproveu els permisos dels fitxers i contacteu amb l\'administrador.';
+$string['embeddedtypehelp'] = 'Es crearà l\'activitat i podreu editar-la amb l\'editor eXeLearning integrat des de la pàgina de visualització de l\'activitat.';
+$string['saving'] = 'Desant...';
+$string['savedsuccess'] = 'Canvis desats correctament';
+$string['savetomoodle'] = 'Desar a Moodle';
+$string['savingwait'] = 'Si us plau, espereu mentre es desa l\'arxiu.';
+$string['unsavedchanges'] = 'Teniu canvis sense desar. Esteu segurs que voleu tancar?';
+$string['typeembedded'] = 'Crear amb eXeLearning (editor integrat)';
 $string['typeexewebcreate'] = 'Crear con eXeLearning';
 $string['typeexewebedit'] = 'Editar con eXeLearning';
 $string['typelocal'] = 'Paquete subido';

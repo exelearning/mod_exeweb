@@ -75,7 +75,7 @@ $string['exeweb:onlinetypehelp'] = 'Cuando haga clic en cualquiera de los botone
 $string['exeweb:sendtemplate'] = 'Enviar plantilla';
 $string['exeweb:sendtemplate_desc'] = 'Envía la plantilla predeterminada a eXeLearning al crear un nuevo contenido.';
 $string['exeweb:template'] = 'Nueva plantilla de paquete.';
-$string['exeweb:template_desc'] = 'El elp subido aquí se utilizará como paquete por defecto para los nuevos contenidos. Se mostrará hasta que sea sustituido por el enviado por eXeLearning. NO descomprima el zip.';
+$string['exeweb:template_desc'] = 'El paquete (.zip o .elpx) subido aquí se utilizará como paquete por defecto para los nuevos contenidos. Se mostrará hasta que sea sustituido por el enviado por eXeLearning. NO descomprima el paquete.';
 $string['exeweb:editonlineanddisplay'] = 'Ir a eXeLearning y mostrar';
 $string['exeweb:editonlineandreturntocourse'] = 'Ir a eXeLearning y volver al curso';
 $string['filenotfound'] = 'Lo sentimos, el archivo no se ha encontrado.';
@@ -129,10 +129,11 @@ $string['exewebdetails_sizedate'] = '{$a->size} {$a->date}';
 $string['exewebdetails_typedate'] = '{$a->type} {$a->date}';
 $string['exewebdetails_sizetypedate'] = '{$a->size} {$a->type} {$a->date}';
 $string['exeorigin'] = 'Tipo';
-$string['exeorigin_help'] = 'Este ajuste determina cómo se incluye el paquete en el curso. Hay dos opciones:
+$string['exeorigin_help'] = 'Este ajuste determina cómo se incluye el paquete en el curso. Las opciones pueden incluir:
 
 * Paquete subido - Permite elegir el zip creado con eXeLearning por medio del selector de archivos.
-* Crear/Editar con eXeLearning - Crea la actividad y te lleva a eXeLearning para editar el contenido. Al terminar, eXeLearning lo enviará de vuelta a Moodle.';
+* Crear con eXeLearning (editor integrado) - Crea la actividad usando el editor integrado. Podrá editarla directamente desde la página de visualización de la actividad.
+* Crear/Editar con eXeLearning (Online) - Crea la actividad y te lleva a eXeLearning Online para editar el contenido. Al terminar, eXeLearning lo enviará de vuelta a Moodle.';
 $string['exeweb:exportexeweb'] = 'Exportar recurso';
 $string['exeweb:view'] = 'Ver recurso';
 $string['search:activity'] = 'Fichero';
@@ -151,6 +152,27 @@ Si hay varios archivos en el recurso, se muestra el tipo del archivo inicial.
 
 Si el tipo de archivo es desconocido para el sistema, no se muestra.';
 $string['uploadeddate'] = 'Subido {$a}';
+$string['embeddededitorsettings'] = 'Tipo de editor';
+$string['editormode'] = 'Modo de editor';
+$string['editormodedesc'] = 'Seleccione qué editor usar para crear y editar contenido eXeLearning. La configuración de conexión online solo aplica cuando se selecciona el modo "eXeLearning Online".';
+$string['editormodeonline'] = 'eXeLearning Online (servidor remoto)';
+$string['editormodeembedded'] = 'Editor integrado (embebido)';
+$string['embeddednotinstalled'] = 'Los archivos del editor integrado no están instalados. Ejecute "make build-editor" para generarlos.';
+$string['editembedded'] = 'Editar con eXeLearning';
+$string['editembedded_integrated'] = 'Integrado';
+$string['editembedded_help'] = 'Abre el editor eXeLearning integrado para editar el contenido directamente dentro de Moodle.';
+$string['editormissing'] = 'El editor integrado eXeLearning no está instalado. Contacte con el administrador.';
+$string['editorreaderror'] = 'No se pudieron leer los archivos del editor integrado eXeLearning. Compruebe los permisos de los archivos y contacte con el administrador.';
+$string['embeddedtypehelp'] = 'Se creará la actividad y podrá editarla usando el editor eXeLearning integrado desde la página de visualización de la actividad.';
+$string['saving'] = 'Guardando...';
+$string['savedsuccess'] = 'Cambios guardados correctamente';
+$string['savetomoodle'] = 'Guardar en Moodle';
+$string['savingwait'] = 'Por favor, espere mientras se guarda el archivo.';
+$string['unsavedchanges'] = 'Tiene cambios sin guardar. ¿Está seguro de que desea cerrar?';
+$string['typeembedded'] = 'Crear con eXeLearning (editor integrado)';
 $string['typeexewebcreate'] = 'Crear con eXeLearning';
 $string['typeexewebedit'] = 'Editar con eXeLearning';
 $string['typelocal'] = 'Paquete subido';
+
+$string['teachermodevisible'] = 'Mostrar el selector de capa docente';
+$string['teachermodevisible_help'] = 'Si se desactiva, se ocultará el selector de capa docente dentro del recurso incrustado.';

@@ -75,7 +75,7 @@ $string['exeweb:onlinetypehelp'] = 'Cuando haga clic en cualquiera de los botone
 $string['exeweb:sendtemplate'] = 'Enviar plantilla';
 $string['exeweb:sendtemplate_desc'] = 'Envía la plantilla predeterminada a eXeLearning al crear un nuevo contenido.';
 $string['exeweb:template'] = 'Nueva plantilla de paquete.';
-$string['exeweb:template_desc'] = 'El elp subido aquí se utilizará como paquete por defecto para los nuevos contenidos. Se mostrará hasta que sea sustituido por el enviado por eXeLearning. NO descomprima el zip.';
+$string['exeweb:template_desc'] = 'El paquete (.zip o .elpx) subido aquí se utilizará como paquete por defecto para los nuevos contenidos. Se mostrará hasta que sea sustituido por el enviado por eXeLearning. NO descomprima el paquete.';
 $string['exeweb:editonlineanddisplay'] = 'Ir a eXeLearning y mostrar';
 $string['exeweb:editonlineandreturntocourse'] = 'Ir a eXeLearning y volver al curso';
 $string['filenotfound'] = 'Lo sentimos, el archivo no se ha encontrado.';
@@ -151,6 +151,24 @@ Si hay varios archivos en el recurso, se muestra el tipo del archivo inicial.
 
 Si el tipo de archivo es desconocido para el sistema, no se muestra.';
 $string['uploadeddate'] = 'Subido {$a}';
+$string['embeddededitorsettings'] = 'Editore mota';
+$string['editormode'] = 'Editore modua';
+$string['editormodedesc'] = 'Aukeratu zein editore erabili eXeLearning edukia sortu eta editatzeko. Online konexio-ezarpenak soilik aplikatzen dira "eXeLearning Online" modua hautatzen denean.';
+$string['editormodeonline'] = 'eXeLearning Online (urruneko zerbitzaria)';
+$string['editormodeembedded'] = 'Editore txertatua (integratua)';
+$string['embeddednotinstalled'] = 'Editore txertatuaren fitxategiak ez daude instalatuta. Exekutatu "make build-editor" sortzeko.';
+$string['editembedded'] = 'Editatu eXeLearning-ekin';
+$string['editembedded_integrated'] = 'Integratua';
+$string['editembedded_help'] = 'Ireki eXeLearning editore txertatua edukia zuzenean Moodle-n editatzeko.';
+$string['editormissing'] = 'eXeLearning editore txertatua ez dago instalatuta. Jarri harremanetan administratzailearekin.';
+$string['editorreaderror'] = 'Ezin izan dira eXeLearning editore txertatuaren fitxategiak irakurri. Egiaztatu fitxategien baimenak eta jarri harremanetan administratzailearekin.';
+$string['embeddedtypehelp'] = 'Jarduera sortuko da eta eXeLearning editore txertatuarekin editatu ahal izango duzu jardueraren ikuspegi-orritik.';
+$string['saving'] = 'Gordetzen...';
+$string['savedsuccess'] = 'Aldaketak ondo gorde dira';
+$string['savetomoodle'] = 'Moodle-n gorde';
+$string['savingwait'] = 'Mesedez, itxaron fitxategia gordetzen den bitartean.';
+$string['unsavedchanges'] = 'Gorde gabeko aldaketak dituzu. Ziur zaude itxi nahi duzula?';
+$string['typeembedded'] = 'Sortu eXeLearning-ekin (editore txertatua)';
 $string['typeexewebcreate'] = 'Crear con eXeLearning';
 $string['typeexewebedit'] = 'Editar con eXeLearning';
 $string['typelocal'] = 'Paquete subido';

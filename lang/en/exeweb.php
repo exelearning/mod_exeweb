@@ -75,7 +75,7 @@ $string['exeweb:onlinetypehelp'] = 'When you click on either save buttons at the
 $string['exeweb:sendtemplate'] = 'Send template';
 $string['exeweb:sendtemplate_desc'] = 'Sends default template to eXeLearning when creating a new activity.';
 $string['exeweb:template'] = 'New package template.';
-$string['exeweb:template_desc'] = 'Package ulpoaded here will be used as default package for new activities. It will be shown until replaced by the one sent by eXeLearning. Do NOT unzip the package.';
+$string['exeweb:template_desc'] = 'Package (.zip or .elpx) uploaded here will be used as default package for new activities. It will be shown until replaced by the one sent by eXeLearning. Do NOT unzip the package.';
 $string['exeweb:editonlineanddisplay'] = 'Edit on eXeLearning and display';
 $string['exeweb:editonlineandreturntocourse'] = 'Edit on eXeLearning and return to course';
 $string['filenotfound'] = 'File not found, sorry.';
@@ -129,10 +129,11 @@ $string['exewebdetails_sizedate'] = '{$a->size} {$a->date}';
 $string['exewebdetails_typedate'] = '{$a->type} {$a->date}';
 $string['exewebdetails_sizetypedate'] = '{$a->size} {$a->type} {$a->date}';
 $string['exeorigin'] = 'Type';
-$string['exeorigin_help'] = 'This setting determines how the package is included in the course. There are two options:
+$string['exeorigin_help'] = 'This setting determines how the package is included in the course. Options may include:
 
 * Uploaded package - Enables a zipped eXeLearning website to be chosen via the file picker.
-* Create/Edit with eXeLearning - Creates the activity and takes you to eXeLearning to edit the package. When done, eXeLearning will send the newly created package back to Moodle.';
+* Create with eXeLearning (embedded editor) - Creates the activity using the embedded editor. You can then edit it directly from the activity view page.
+* Create/Edit with eXeLearning (Online) - Creates the activity and takes you to eXeLearning Online to edit the package. When done, eXeLearning will send the newly created package back to Moodle.';
 $string['exeweb:exportexeweb'] = 'Export';
 $string['exeweb:view'] = 'View';
 $string['search:activity'] = 'File';
@@ -151,6 +152,27 @@ If there are multiple files in this content, the start file type is displayed.
 
 If the file type is not known, it will not be displayed.';
 $string['uploadeddate'] = 'Uploaded {$a}';
+$string['embeddededitorsettings'] = 'Editor type';
+$string['editormode'] = 'Editor mode';
+$string['editormodedesc'] = 'Select which editor to use for creating and editing eXeLearning content. Online connection settings only apply when "eXeLearning Online" mode is selected.';
+$string['editormodeonline'] = 'eXeLearning Online (remote server)';
+$string['editormodeembedded'] = 'Integrated editor (embedded)';
+$string['embeddednotinstalled'] = 'The embedded editor files are not installed. Run "make build-editor" to build them.';
+$string['editembedded'] = 'Edit with eXeLearning';
+$string['editembedded_integrated'] = 'Integrated';
+$string['editembedded_help'] = 'Open the embedded eXeLearning editor to edit the content directly within Moodle.';
+$string['editormissing'] = 'The eXeLearning embedded editor is not installed. Please contact your administrator.';
+$string['editorreaderror'] = 'Could not read the eXeLearning embedded editor files. Please check file permissions and contact your administrator.';
+$string['embeddedtypehelp'] = 'The activity will be created and you can then edit it using the embedded eXeLearning editor from the activity view page.';
+$string['saving'] = 'Saving...';
+$string['savedsuccess'] = 'Changes saved successfully';
+$string['savetomoodle'] = 'Save to Moodle';
+$string['savingwait'] = 'Please wait while the file is being saved.';
+$string['unsavedchanges'] = 'You have unsaved changes. Are you sure you want to close?';
+$string['typeembedded'] = 'Create with eXeLearning (embedded editor)';
 $string['typeexewebcreate'] = 'Create with eXeLearning';
 $string['typeexewebedit'] = 'Edit with eXeLearning';
 $string['typelocal'] = 'Uploaded package';
+
+$string['teachermodevisible'] = 'Show teacher layer selector';
+$string['teachermodevisible_help'] = 'If disabled, the teacher layer selector inside the embedded resource is hidden.';

@@ -27,9 +27,46 @@ defined('MOODLE_INTERNAL') || die;
 if ($ADMIN->fulltree) {
     require_once("$CFG->libdir/resourcelib.php");
 
-    // Connection settings.
+    // Editor mode setting.
+    $editoravailable = file_exists($CFG->dirroot . '/mod/exeweb/dist/static/index.html');
+    $settings->add(new admin_setting_heading('exeweb/embeddededitorsettings',
+        get_string('embeddededitorsettings', 'mod_exeweb'), ''));
+
+    $editormodedesc = get_string('editormodedesc', 'mod_exeweb');
+    if (!$editoravailable) {
+        $editormodedesc .= '<br><strong>' . get_string('embeddednotinstalled', 'mod_exeweb') . '</strong>';
+    }
+    $editormodes = [
+        'online' => get_string('editormodeonline', 'mod_exeweb'),
+        'embedded' => get_string('editormodeembedded', 'mod_exeweb'),
+    ];
+    $settings->add(new admin_setting_configselect('exeweb/editormode',
+        get_string('editormode', 'mod_exeweb'), $editormodedesc,
+        'online', $editormodes));
+
+    // Connection settings (only relevant for online mode).
+    // Inline JS to hide/show connection settings based on editor mode selection.
+    $connectionsettingsdesc = '<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var modeSelect = document.getElementById("id_s_exeweb_editormode");
+        if (!modeSelect) return;
+        var connectionIds = [
+            "admin-connectionsettings", "admin-exeonlinebaseuri", "admin-providername",
+            "admin-providerversion", "admin-hmackey1", "admin-tokenexpiration"
+        ];
+        function toggleConnectionSettings() {
+            var show = (modeSelect.value === "online");
+            connectionIds.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.style.display = show ? "" : "none";
+            });
+        }
+        modeSelect.addEventListener("change", toggleConnectionSettings);
+        toggleConnectionSettings();
+    });
+    </script>';
     $settings->add(new admin_setting_heading('exeweb/connectionsettings',
-        get_string('exeonline:connectionsettings', 'mod_exeweb'), ''));
+        get_string('exeonline:connectionsettings', 'mod_exeweb'), $connectionsettingsdesc));
 
     $settings->add(new admin_setting_configtext('exeweb/exeonlinebaseuri',
         get_string('exeonline:baseuri', 'mod_exeweb'),
@@ -56,7 +93,7 @@ if ($ADMIN->fulltree) {
 
     // Exeweb default template.
     $filemanageroptions = [
-        'accepted_types' => ['.zip'],
+        'accepted_types' => ['.zip', '.elpx'],
         'maxbytes' => 0,
         'maxfiles' => 1,
         'subdirs' => 0,
