@@ -165,9 +165,9 @@ function exeweb_add_instance($data, $mform) {
     }
 
     $contentslist = exeweb_package::expand_package($package);
-    $mainfile = exeweb_package::get_mainfile($contentslist, $package->get_contextid());
+    $mainfile = exeweb_package::get_mainfile($contentslist, $package->get_contextid(), $package->get_itemid());
     if ($mainfile !== false) {
-        file_set_sortorder($context->id, 'mod_exeweb', 'content', 0, $mainfile->get_filepath(), $mainfile->get_filename(), 1);
+        file_set_sortorder($context->id, 'mod_exeweb', 'content', $package->get_itemid(), $mainfile->get_filepath(), $mainfile->get_filename(), 1);
         $data->entrypath = $mainfile->get_filepath();
         $data->entryname = $mainfile->get_filename();
         $DB->update_record('exeweb', $data);
@@ -199,9 +199,9 @@ function exeweb_update_instance($data, $mform) {
         $data->revision++;
         $package = exeweb_package::save_draft_file($data);
         $contentslist = exeweb_package::expand_package($package);
-        $mainfile = exeweb_package::get_mainfile($contentslist, $package->get_contextid());
+        $mainfile = exeweb_package::get_mainfile($contentslist, $package->get_contextid(), $package->get_itemid());
         if ($mainfile !== false) {
-            file_set_sortorder($package->get_contextid(), 'mod_exeweb', 'content', 0,
+            file_set_sortorder($package->get_contextid(), 'mod_exeweb', 'content', $package->get_itemid(),
                                 $mainfile->get_filepath(), $mainfile->get_filename(), 1);
             $data->entrypath = $mainfile->get_filepath();
             $data->entryname = $mainfile->get_filename();
@@ -286,7 +286,7 @@ function exeweb_get_coursemodule_info($coursemodule) {
     $context = context_module::instance($coursemodule->id);
 
     if (!$exeweb = $DB->get_record('exeweb', ['id' => $coursemodule->instance],
-            'id, name, display, displayoptions, revision, intro, introformat')) {
+            'id, name, display, displayoptions, revision, entrypath, entryname, intro, introformat')) {
         return null;
     }
 
@@ -318,7 +318,7 @@ function exeweb_get_coursemodule_info($coursemodule) {
     // add some file details as well to be used later by exeweb_get_optional_details() without retriving.
     // Do not store filedetails if this is a reference - they will still need to be retrieved every time.
     if (($filedetails = exeweb_get_file_details($exeweb, $coursemodule)) && empty($filedetails['isref'])) {
-        $displayoptions = (array) unserialize_array($exeweb->displayoptions);
+        $displayoptions = empty($exeweb->displayoptions) ? [] : (array) unserialize_array($exeweb->displayoptions);
         $displayoptions['filedetails'] = $filedetails;
         $info->customdata['displayoptions'] = serialize($displayoptions);
     } else {
@@ -339,11 +339,14 @@ function exeweb_cm_info_view(cm_info $cm) {
     global $CFG;
     require_once($CFG->dirroot . '/mod/exeweb/locallib.php');
 
-    $exeweb = (object) ['displayoptions' => $cm->customdata['displayoptions']];
-    $details = exeweb_get_optional_details($exeweb, $cm);
-    if ($details) {
-        $cm->set_after_link(' ' . html_writer::tag('span', $details,
-                ['class' => 'exeweblinkdetails']));
+    $customdata = $cm->customdata;
+    if (is_array($customdata) && isset($customdata['displayoptions'])) {
+        $exeweb = (object) ['displayoptions' => $customdata['displayoptions']];
+        $details = exeweb_get_optional_details($exeweb, $cm);
+        if ($details) {
+            $cm->set_after_link(' ' . html_writer::tag('span', $details,
+                    ['class' => 'exeweblinkdetails']));
+        }
     }
 }
 

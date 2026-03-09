@@ -84,7 +84,7 @@ try {
     $mainfile = false;
     try {
         $contentslist = exeweb_package::expand_package($newpackage);
-        $mainfile = exeweb_package::get_mainfile($contentslist, $newpackage->get_contextid());
+        $mainfile = exeweb_package::get_mainfile($contentslist, $newpackage->get_contextid(), $newpackage->get_itemid());
     } catch (Throwable $e) {
         /* ELPX may not include a web entrypoint; ignore content extraction errors. */
     }
@@ -94,7 +94,7 @@ try {
             $context->id,
             'mod_exeweb',
             'content',
-            0,
+            $newpackage->get_itemid(),
             $mainfile->get_filepath(),
             $mainfile->get_filename(),
             1

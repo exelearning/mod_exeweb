@@ -277,11 +277,12 @@ function exeweb_get_file_details($exeweb, $cm) {
     if (!empty($options['showsize']) || !empty($options['showtype']) || !empty($options['showdate'])) {
         $context = context_module::instance($cm->id);
         $fs = get_file_storage();
-        $mainfile = $fs->get_file($context->id, 'mod_exeweb', 'content', 0, $exeweb->entrypath, $exeweb->entryname);
+        $revision = $exeweb->revision ?? 0;
+        $mainfile = $fs->get_file($context->id, 'mod_exeweb', 'content', $revision, $exeweb->entrypath, $exeweb->entryname);
 
         if (!empty($options['showsize'])) {
             $filedetails['size'] = 0;
-            $files = $fs->get_area_files($context->id, 'mod_exeweb', 'content', 0, 'id', false);
+            $files = $fs->get_area_files($context->id, 'mod_exeweb', 'content', $revision, 'id', false);
             foreach ($files as $file) {
                 // This will also synchronize the file size for external files if needed.
                 $filedetails['size'] += $file->get_filesize();

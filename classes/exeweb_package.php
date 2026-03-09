@@ -189,7 +189,7 @@ class exeweb_package {
      * @param integer $contextid
      * @return \stored_file|boolean
      */
-    public static function get_mainfile(array $contentlist, int $contextid) {
+    public static function get_mainfile(array $contentlist, int $contextid, int $itemid = 0) {
         if (empty($contentlist)) {
             return false;
         }
@@ -202,7 +202,7 @@ class exeweb_package {
         }
         // Find main file and set it.
         foreach ($mainfilenames as $item) {
-            $mainfile = $fs->get_file($contextid, 'mod_exeweb', 'content', 0, $filepath, $item);
+            $mainfile = $fs->get_file($contextid, 'mod_exeweb', 'content', $itemid, $filepath, $item);
             if ($mainfile !== false) {
                 return $mainfile;
             }
