@@ -87,12 +87,6 @@ $PAGE->set_url($pageurl);
 $PAGE->set_title(format_string($exeweb->name));
 $PAGE->set_heading($course->fullname);
 
-// Verify the embedded editor is available.
-$editorpath = $CFG->dirroot . '/mod/exeweb/dist/static/index.html';
-if (!file_exists($editorpath)) {
-    exeweb_editor_error_page($id, get_string('editormissing', 'mod_exeweb'));
-}
-
 // Build the package URL for the editor to import.
 $packageurl = exeweb_get_package_url($exeweb, $context);
 
@@ -104,8 +98,14 @@ $saveurl = new moodle_url('/mod/exeweb/editor/save.php');
 // Direct access to dist/static/ can fail on servers that block .zip, .md, etc.
 $editorbaseurl = $CFG->wwwroot . '/mod/exeweb/editor/static.php/' . $cm->id;
 
-// Read the editor template.
-$html = @file_get_contents($editorpath);
+// Read the editor template from the local dist build when available, or fall
+// back to the remote static deployment otherwise.
+$editorindexsource = exeweb_get_embedded_editor_index_source();
+if (exeweb_embedded_editor_uses_local_assets()) {
+    $html = @file_get_contents($editorindexsource);
+} else {
+    $html = download_file_content($editorindexsource);
+}
 if ($html === false || empty($html)) {
     exeweb_editor_error_page($id, get_string('editorreaderror', 'mod_exeweb'));
 }

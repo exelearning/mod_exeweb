@@ -10,6 +10,9 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * AJAX endpoint for saving packages from the embedded eXeLearning editor.
@@ -125,9 +128,10 @@ try {
     if ($newpackage) {
         $newpackage->delete();
     }
+    debugging('mod_exeweb editor save failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage(),
+        'error' => get_string('error'),
     ]);
 }

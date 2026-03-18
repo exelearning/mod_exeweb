@@ -573,7 +573,7 @@ function exeweb_dndupload_register() {
             'message' => get_string('dnduploadexeweb', 'mod_exeweb')],
             ['extension' => 'elpx',
             'message' => get_string('dnduploadexeweb', 'mod_exeweb')],
-        ]
+        ],
     ];
 }
 
@@ -621,7 +621,7 @@ function exeweb_view($exeweb, $course, $cm, $context) {
     // Trigger course_module_viewed event.
     $params = [
         'context' => $context,
-        'objectid' => $exeweb->id
+        'objectid' => $exeweb->id,
     ];
 
     $event = \mod_exeweb\event\course_module_viewed::create($params);
@@ -688,19 +688,77 @@ function mod_exeweb_core_calendar_provide_event_action(calendar_event $event,
 
 
 /**
+ * Get the remote base URL used for the embedded editor fallback.
+ *
+ * @return string
+ */
+function exeweb_get_embedded_editor_remote_base_url(): string {
+    // Production static editor URL.
+    return 'https://app.exelearning.net/';
+    // Nightly (uncomment to use development/nightly builds):
+    // return 'https://static.exelearning.dev/';
+}
+
+/**
+ * Get the local dist/static directory for the embedded editor.
+ *
+ * @return string
+ */
+function exeweb_get_embedded_editor_local_static_dir(): string {
+    global $CFG;
+
+    return $CFG->dirroot . '/mod/exeweb/dist/static';
+}
+
+/**
+ * Check whether the embedded editor local dist assets are available.
+ *
+ * @return bool
+ */
+function exeweb_embedded_editor_uses_local_assets(): bool {
+    $staticdir = exeweb_get_embedded_editor_local_static_dir();
+    $indexpath = $staticdir . '/index.html';
+
+    return is_dir($staticdir) && is_readable($indexpath);
+}
+
+/**
+ * Get the source URL for a fallback embedded editor asset.
+ *
+ * @param string $filepath Relative asset path.
+ * @return string
+ */
+function exeweb_get_embedded_editor_remote_asset_url(string $filepath = ''): string {
+    return rtrim(exeweb_get_embedded_editor_remote_base_url(), '/') . '/' . ltrim($filepath, '/');
+}
+
+/**
+ * Get the source used to read the embedded editor index HTML.
+ *
+ * @return string
+ */
+function exeweb_get_embedded_editor_index_source(): string {
+    if (exeweb_embedded_editor_uses_local_assets()) {
+        return exeweb_get_embedded_editor_local_static_dir() . '/index.html';
+    }
+
+    return exeweb_get_embedded_editor_remote_asset_url('index.html');
+}
+
+/**
  * Check if the embedded static editor is available.
  *
- * Checks both the admin editor mode setting and the existence of the editor files.
+ * Checks the admin editor mode setting. When local dist assets are unavailable,
+ * the editor falls back to the remote static deployment.
  *
- * @return bool True if the editor mode is 'embedded' and dist/static/index.html exists.
+ * @return bool True if the editor mode is 'embedded'.
  */
 function exeweb_embedded_editor_available() {
-    global $CFG;
     $mode = get_config('exeweb', 'editormode');
     if ($mode === false) {
         $mode = 'online';
     }
-    return ($mode === 'embedded') && file_exists($CFG->dirroot . '/mod/exeweb/dist/static/index.html');
+    return $mode === 'embedded';
 }
 
 /**
@@ -745,7 +803,7 @@ function exeweb_get_package_url($exeweb, $context) {
  * @param  array  $args The path (the part after the filearea and before the filename).
  * @return array The itemid and the filepath inside the $args path, for the defined filearea.
  */
-function mod_exeweb_get_path_from_pluginfile(string $filearea, array $args) : array {
+function mod_exeweb_get_path_from_pluginfile(string $filearea, array $args): array {
     // Exeweb never has an itemid (the number represents the revision but it's not stored in database).
     array_shift($args);
 

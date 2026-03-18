@@ -258,6 +258,105 @@ class lib_test extends \advanced_testcase {
     }
 
     /**
+     * Test that local embedded editor assets are preferred when available.
+     *
+     * @return void
+     */
+    public function test_embedded_editor_index_source_prefers_local_assets(): void {
+        $this->resetAfterTest();
+        set_config('editormode', 'embedded', 'exeweb');
+
+        $this->with_local_editor_assets(function () {
+            $this->assertTrue(exeweb_embedded_editor_available());
+            $this->assertTrue(exeweb_embedded_editor_uses_local_assets());
+            $this->assertSame(
+                exeweb_get_embedded_editor_local_static_dir() . '/index.html',
+                exeweb_get_embedded_editor_index_source()
+            );
+        });
+    }
+
+    /**
+     * Test that embedded editor assets fall back to the remote deployment.
+     *
+     * @return void
+     */
+    public function test_embedded_editor_index_source_falls_back_to_remote(): void {
+        $this->resetAfterTest();
+        set_config('editormode', 'embedded', 'exeweb');
+
+        $this->with_local_editor_assets_disabled(function () {
+            $this->assertTrue(exeweb_embedded_editor_available());
+            $this->assertFalse(exeweb_embedded_editor_uses_local_assets());
+            $this->assertSame(
+                'https://app.exelearning.net/index.html',
+                exeweb_get_embedded_editor_index_source()
+            );
+            $this->assertSame(
+                'https://app.exelearning.net/assets/app.js',
+                exeweb_get_embedded_editor_remote_asset_url('assets/app.js')
+            );
+        });
+    }
+
+    /**
+     * Run a callback while ensuring local editor assets exist.
+     *
+     * @param callable $callback
+     * @return void
+     */
+    private function with_local_editor_assets(callable $callback): void {
+        $staticdir = exeweb_get_embedded_editor_local_static_dir();
+        $indexpath = $staticdir . '/index.html';
+        $createdindex = false;
+
+        if (!is_dir($staticdir)) {
+            mkdir($staticdir, 0777, true);
+        }
+
+        if (!is_file($indexpath)) {
+            file_put_contents($indexpath, '<!doctype html><html><head></head><body></body></html>');
+            $createdindex = true;
+        }
+
+        try {
+            $callback();
+        } finally {
+            if ($createdindex && is_file($indexpath)) {
+                unlink($indexpath);
+            }
+            if ($createdindex && is_dir($staticdir)) {
+                @rmdir($staticdir);
+                @rmdir(dirname($staticdir));
+            }
+        }
+    }
+
+    /**
+     * Run a callback while ensuring local editor assets are unavailable.
+     *
+     * @param callable $callback
+     * @return void
+     */
+    private function with_local_editor_assets_disabled(callable $callback): void {
+        $staticdir = exeweb_get_embedded_editor_local_static_dir();
+        $backupdir = $staticdir . '_backup_' . uniqid('', true);
+        $renamed = false;
+
+        if (is_dir($staticdir)) {
+            $renamed = rename($staticdir, $backupdir);
+        }
+
+        try {
+            $callback();
+        } finally {
+            if ($renamed && is_dir($backupdir)) {
+                rename($backupdir, $staticdir);
+            }
+        }
+    }
+
+    /**
      * Creates an action event.
      *
      * @param int $courseid The course id.

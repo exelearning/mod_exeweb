@@ -28,14 +28,10 @@ if ($ADMIN->fulltree) {
     require_once("$CFG->libdir/resourcelib.php");
 
     // Editor mode setting.
-    $editoravailable = file_exists($CFG->dirroot . '/mod/exeweb/dist/static/index.html');
     $settings->add(new admin_setting_heading('exeweb/embeddededitorsettings',
         get_string('embeddededitorsettings', 'mod_exeweb'), ''));
 
     $editormodedesc = get_string('editormodedesc', 'mod_exeweb');
-    if (!$editoravailable) {
-        $editormodedesc .= '<br><strong>' . get_string('embeddednotinstalled', 'mod_exeweb') . '</strong>';
-    }
     $editormodes = [
         'online' => get_string('editormodeonline', 'mod_exeweb'),
         'embedded' => get_string('editormodeembedded', 'mod_exeweb'),
@@ -110,7 +106,7 @@ if ($ADMIN->fulltree) {
 
     // The eXeweb package validation rules.
     $mandatoryfilesre = implode("\n", [
-	'/^content(v\d+)?\.xml$/',
+    '/^content(v\d+)?\.xml$/',
     ]);
     $forbiddenfilesre = implode("\n", [
         '/.*\.php$/',
@@ -161,7 +157,7 @@ if ($ADMIN->fulltree) {
         new lang_string('popupwidth', 'mod_exeweb'), new lang_string('popupwidthexplain', 'mod_exeweb'), 620, PARAM_INT, 7));
     $settings->add(new admin_setting_configtext('exeweb/popupheight',
         new lang_string('popupheight', 'mod_exeweb'), new lang_string('popupheightexplain', 'mod_exeweb'), 450, PARAM_INT, 7));
-    $options = ['0' => new lang_string('none'), '1' => new lang_string('allfiles'), '2' => new lang_string('htmlfilesonly'), ];
+    $options = ['0' => new lang_string('none'), '1' => new lang_string('allfiles'), '2' => new lang_string('htmlfilesonly') ];
     $settings->add(new admin_setting_configselect('exeweb/filterfiles',
         new lang_string('filterfiles', 'mod_exeweb'), new lang_string('filterfilesexplain', 'mod_exeweb'), 0, $options));
 }
