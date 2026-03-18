@@ -1,0 +1,45 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ateeducacion/moodle-playground/refs/heads/main/assets/blueprints/blueprint-schema.json",
+  "preferredVersions": { "php": "8.3", "moodle": "5.0" },
+  "landingPage": "/my/",
+  "constants": {
+    "ADMIN_USER": "admin",
+    "ADMIN_PASS": "password",
+    "ADMIN_EMAIL": "admin@example.com"
+  },
+  "steps": [
+    {
+      "step": "installMoodle",
+      "options": {
+        "adminUser": "{{ADMIN_USER}}",
+        "adminPass": "{{ADMIN_PASS}}",
+        "adminEmail": "{{ADMIN_EMAIL}}",
+        "siteName": "eXeLearning Web Demo",
+        "locale": "es",
+        "timezone": "Europe/Madrid"
+      }
+    },
+    { "step": "login", "username": "{{ADMIN_USER}}" },
+    {
+      "step": "installMoodlePlugin",
+      "pluginType": "mod",
+      "pluginName": "exeweb",
+      "url": "https://github.com/exelearning/mod_exeweb/archive/refs/heads/main.zip"
+    },
+    { "step": "createCategory", "name": "Test Courses" },
+    {
+      "step": "createCourse",
+      "fullname": "eXeLearning Web Test Course",
+      "shortname": "EXEWEB01",
+      "category": "Test Courses",
+      "summary": "Test course for the eXeLearning Web plugin."
+    },
+    {
+      "step": "enrolUser",
+      "username": "{{ADMIN_USER}}",
+      "course": "EXEWEB01",
+      "role": "editingteacher"
+    },
+    { "step": "setLandingPage", "path": "/my/" }
+  ]
+}
