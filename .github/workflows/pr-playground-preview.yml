@@ -22,30 +22,8 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Build blueprint from repo template
-        id: blueprint
-        uses: actions/github-script@v7
+      - uses: ateeducacion/action-moodle-playground-pr-preview@main
         with:
-          script: |
-            const fs = require('fs');
-            const blueprint = JSON.parse(fs.readFileSync('blueprint.json', 'utf8'));
-
-            const headRepo = context.payload.pull_request.head.repo.full_name;
-            const branch = context.payload.pull_request.head.ref;
-            const pluginUrl = `https://github.com/${headRepo}/archive/refs/heads/${branch}.zip`;
-
-            for (const step of blueprint.steps) {
-              if (step.step === 'installMoodlePlugin' && step.pluginName === 'exeweb') {
-                step.url = pluginUrl;
-              }
-            }
-
-            return JSON.stringify(blueprint);
-          result-encoding: string
-
-      - name: Post Moodle Playground preview
-        uses: ateeducacion/action-moodle-playground-pr-preview@main
-        with:
+          blueprint-file: blueprint.json
           mode: comment
-          blueprint: ${{ steps.blueprint.outputs.result }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
