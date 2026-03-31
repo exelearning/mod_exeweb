@@ -17,4 +17,5 @@ composer.json
 composer.lock
 composer.phar
 CLAUDE.md
+AGENTS.md
 mod_exeweb-*.zip

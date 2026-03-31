@@ -40,6 +40,11 @@ if ($ADMIN->fulltree) {
         get_string('editormode', 'mod_exeweb'), $editormodedesc,
         'online', $editormodes));
 
+    $settings->add(new \mod_exeweb\admin\admin_setting_embeddededitor(
+        get_string('embeddededitorstatus', 'mod_exeweb'),
+        ''
+    ));
+
     // Connection settings (only relevant for online mode).
     // Inline JS to hide/show connection settings based on editor mode selection.
     $connectionsettingsdesc = '<script>
@@ -51,11 +56,13 @@ if ($ADMIN->fulltree) {
             "admin-providerversion", "admin-hmackey1", "admin-tokenexpiration"
         ];
         function toggleConnectionSettings() {
-            var show = (modeSelect.value === "online");
+            var mode = modeSelect.value;
             connectionIds.forEach(function(id) {
                 var el = document.getElementById(id);
-                if (el) el.style.display = show ? "" : "none";
+                if (el) el.style.display = (mode === "online") ? "" : "none";
             });
+            var embeddedWidget = document.querySelector(".mod_exeweb-admin-embedded-editor-setting");
+            if (embeddedWidget) embeddedWidget.style.display = (mode === "embedded") ? "" : "none";
         }
         modeSelect.addEventListener("change", toggleConnectionSettings);
         toggleConnectionSettings();

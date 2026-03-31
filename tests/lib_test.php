@@ -277,25 +277,18 @@ class lib_test extends \advanced_testcase {
     }
 
     /**
-     * Test that embedded editor assets fall back to the remote deployment.
+     * Test that embedded editor index source returns null when no local assets exist.
      *
      * @return void
      */
-    public function test_embedded_editor_index_source_falls_back_to_remote(): void {
+    public function test_embedded_editor_index_source_returns_null_when_unavailable(): void {
         $this->resetAfterTest();
         set_config('editormode', 'embedded', 'exeweb');
 
         $this->with_local_editor_assets_disabled(function () {
             $this->assertTrue(exeweb_embedded_editor_available());
             $this->assertFalse(exeweb_embedded_editor_uses_local_assets());
-            $this->assertSame(
-                'https://app.exelearning.net/index.html',
-                exeweb_get_embedded_editor_index_source()
-            );
-            $this->assertSame(
-                'https://app.exelearning.net/assets/app.js',
-                exeweb_get_embedded_editor_remote_asset_url('assets/app.js')
-            );
+            $this->assertNull(exeweb_get_embedded_editor_index_source());
         });
     }
 

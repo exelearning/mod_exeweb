@@ -688,70 +688,52 @@ function mod_exeweb_core_calendar_provide_event_action(calendar_event $event,
 
 
 /**
- * Get the remote base URL used for the embedded editor fallback.
+ * Get the local directory for the active embedded editor source.
  *
- * @return string
- */
-function exeweb_get_embedded_editor_remote_base_url(): string {
-    // Production static editor URL.
-    return 'https://app.exelearning.net/';
-    // Nightly (uncomment to use development/nightly builds):
-    // return 'https://static.exelearning.dev/';
-}
-
-/**
- * Get the local dist/static directory for the embedded editor.
+ * Returns the resolved active directory (moodledata or bundled) according
+ * to the source precedence policy. Falls back to the bundled path if no
+ * local source is available (preserves backward compatibility).
  *
- * @return string
+ * @return string Absolute path to the active editor directory.
  */
 function exeweb_get_embedded_editor_local_static_dir(): string {
-    global $CFG;
-
-    return $CFG->dirroot . '/mod/exeweb/dist/static';
+    $dir = \mod_exeweb\local\embedded_editor_source_resolver::get_active_dir();
+    if ($dir !== null) {
+        return $dir;
+    }
+    // Fallback: return bundled path even if not present (preserves old behavior for callers).
+    return \mod_exeweb\local\embedded_editor_source_resolver::get_bundled_dir();
 }
 
 /**
- * Check whether the embedded editor local dist assets are available.
+ * Check whether any local embedded editor assets are available.
+ *
+ * Returns true if either the admin-installed (moodledata) or bundled
+ * editor passes integrity validation.
  *
  * @return bool
  */
 function exeweb_embedded_editor_uses_local_assets(): bool {
-    $staticdir = exeweb_get_embedded_editor_local_static_dir();
-    $indexpath = $staticdir . '/index.html';
-
-    return is_dir($staticdir) && is_readable($indexpath);
-}
-
-/**
- * Get the source URL for a fallback embedded editor asset.
- *
- * @param string $filepath Relative asset path.
- * @return string
- */
-function exeweb_get_embedded_editor_remote_asset_url(string $filepath = ''): string {
-    return rtrim(exeweb_get_embedded_editor_remote_base_url(), '/') . '/' . ltrim($filepath, '/');
+    return \mod_exeweb\local\embedded_editor_source_resolver::has_local_source();
 }
 
 /**
  * Get the source used to read the embedded editor index HTML.
  *
- * @return string
+ * Returns a filesystem path when a local source is available, or null otherwise.
+ *
+ * @return string|null Path to index.html, or null if no source is available.
  */
-function exeweb_get_embedded_editor_index_source(): string {
-    if (exeweb_embedded_editor_uses_local_assets()) {
-        return exeweb_get_embedded_editor_local_static_dir() . '/index.html';
-    }
-
-    return exeweb_get_embedded_editor_remote_asset_url('index.html');
+function exeweb_get_embedded_editor_index_source(): ?string {
+    return \mod_exeweb\local\embedded_editor_source_resolver::get_index_source();
 }
 
 /**
  * Check if the embedded static editor is available.
  *
- * Checks the admin editor mode setting. When local dist assets are unavailable,
- * the editor falls back to the remote static deployment.
+ * Checks the admin editor mode setting and that local editor assets exist.
  *
- * @return bool True if the editor mode is 'embedded'.
+ * @return bool True if the editor mode is 'embedded' and local assets are installed.
  */
 function exeweb_embedded_editor_available() {
     $mode = get_config('exeweb', 'editormode');

@@ -17,7 +17,7 @@ This plugin version is tested for:
 
 ## Installation
 
-> **Important:** It is recommended to install from a [release ZIP](https://github.com/exelearning/mod_exeweb/releases), which includes the embedded editor pre-built for optimal performance. If you clone the repository directly or install without the `dist/static/` directory, the embedded editor will still work but will load its assets remotely from `https://app.exelearning.net/`, which requires an internet connection and may be slower.
+> **Important:** It is recommended to install from a [release ZIP](https://github.com/exelearning/mod_exeweb/releases), which includes the embedded editor pre-built for optimal performance. If the release ZIP does not include the editor, or if you want to install a newer version, administrators can download it from GitHub Releases via the _Manage embedded editor_ page in the plugin settings.
 
 ### Installing via uploaded ZIP file
 
@@ -67,6 +67,24 @@ Go to the URL:
 
   * Forbidden files RE list: *exeweb | forbiddenfileslist*
     * A forbidden files list can be configurad here. Enter each forbidden file as a PHP regular expression (RE) on a new line.
+
+## Embedded Editor Management
+
+The plugin supports two editor sources with the following precedence:
+
+1. **Admin-installed** (moodledata): Downloaded from GitHub Releases via the admin management page. Stored under `moodledata/mod_exeweb/embedded_editor/`.
+2. **Bundled** (plugin): Included in the plugin release ZIP at `dist/static/`.
+
+An admin-installed version always takes precedence over the bundled version. If neither source is available, the embedded editor cannot be used.
+
+### Managing the editor
+
+1. Go to _Site administration > Plugins > Activity modules > eXeLearning (website)_.
+2. The settings page shows the current editor status and active source.
+3. Click _Manage embedded editor_ to access the management page.
+4. From there you can install, update, repair, or remove the editor.
+
+The management page requires the `moodle/site:config` and `mod/exeweb:manageembeddededitor` capabilities.
 
 ## Development
 

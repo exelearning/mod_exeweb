@@ -115,44 +115,28 @@ $contenttype = isset($mimetypes[$ext]) ? $mimetypes[$ext] : 'application/octet-s
 // Release session lock early so parallel requests are not blocked.
 \core\session\manager::write_close();
 
-if (exeweb_embedded_editor_uses_local_assets()) {
-    $staticdir = exeweb_get_embedded_editor_local_static_dir();
-    $filepath = realpath($staticdir . '/' . $file);
-    $staticroot = realpath($staticdir);
-
-    // Ensure the resolved path is within the static directory.
-    if ($filepath === false || $staticroot === false || strpos($filepath, $staticroot) !== 0) {
-        send_header_404();
-        die('File not found');
-    }
-
-    if (!is_file($filepath)) {
-        send_header_404();
-        die('File not found');
-    }
-
-    header('Content-Type: ' . $contenttype);
-    header('Content-Length: ' . filesize($filepath));
-    header('Cache-Control: public, max-age=604800'); // Cache for 1 week.
-    header('X-Frame-Options: SAMEORIGIN');
-
-    if (basename($file) === 'preview-sw.js') {
-        header('Service-Worker-Allowed: /');
-    }
-
-    readfile($filepath);
-    exit;
+if (!exeweb_embedded_editor_uses_local_assets()) {
+    send_header_404();
+    die('Editor assets not installed');
 }
 
-$remoteurl = exeweb_get_embedded_editor_remote_asset_url($file);
-$content = download_file_content($remoteurl);
-if ($content === false || $content === null) {
+$staticdir = exeweb_get_embedded_editor_local_static_dir();
+$filepath = realpath($staticdir . '/' . $file);
+$staticroot = realpath($staticdir);
+
+// Ensure the resolved path is within the static directory.
+if ($filepath === false || $staticroot === false || strpos($filepath, $staticroot) !== 0) {
     send_header_404();
-    die('Could not retrieve editor asset: ' . $file);
+    die('File not found');
+}
+
+if (!is_file($filepath)) {
+    send_header_404();
+    die('File not found');
 }
 
 header('Content-Type: ' . $contenttype);
-header('Content-Length: ' . strlen($content));
+header('Content-Length: ' . filesize($filepath));
 header('Cache-Control: public, max-age=604800'); // Cache for 1 week.
 header('X-Frame-Options: SAMEORIGIN');
 
@@ -160,4 +144,4 @@ if (basename($file) === 'preview-sw.js') {
     header('Service-Worker-Allowed: /');
 }
 
-echo $content;
+readfile($filepath);
