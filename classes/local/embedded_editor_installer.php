@@ -35,6 +35,12 @@ namespace mod_exeweb\local;
  */
 class embedded_editor_installer {
 
+    /** @var string Base URL for the GitHub proxy service. */
+    const GITHUB_PROXY_BASE_URL = 'https://github-proxy.exelearning.dev/';
+
+    /** @var string Repository that publishes the static editor releases. */
+    const GITHUB_RELEASES_REPOSITORY = 'exelearning/exelearning';
+
     /** @var string GitHub Atom feed for published releases. */
     const GITHUB_RELEASES_FEED_URL = 'https://github.com/exelearning/exelearning/releases.atom';
 
@@ -156,6 +162,34 @@ class embedded_editor_installer {
     }
 
     /**
+     * Detect whether the plugin is running inside Moodle Playground.
+     *
+     * @return bool
+     */
+    private function is_playground_environment(): bool {
+        global $CFG;
+
+        $path = parse_url($CFG->wwwroot ?? '', PHP_URL_PATH) ?: '';
+        return preg_match('#/(?:moodle-playground|playground)(?:/|$)#', $path) === 1;
+    }
+
+    /**
+     * Build a proxied releases Atom feed URL when running in Moodle Playground.
+     *
+     * @return string
+     */
+    private function get_releases_feed_url(): string {
+        if (!$this->is_playground_environment()) {
+            return self::GITHUB_RELEASES_FEED_URL;
+        }
+
+        return self::GITHUB_PROXY_BASE_URL . '?' . http_build_query([
+            'repo' => self::GITHUB_RELEASES_REPOSITORY,
+            'atom' => 'releases',
+        ], '', '&', PHP_QUERY_RFC3986);
+    }
+
+    /**
      * Extract the latest release version from a GitHub releases Atom feed body.
      *
      * Uses the first <entry> because the feed is ordered newest-first. The
@@ -204,7 +238,7 @@ class embedded_editor_installer {
             ],
         ]);
 
-        $response = $curl->get(self::GITHUB_RELEASES_FEED_URL);
+        $response = $curl->get($this->get_releases_feed_url());
         if ($curl->get_errno()) {
             throw new \moodle_exception('editorgithubconnecterror', 'mod_exeweb', '', $curl->error);
         }
@@ -314,7 +348,16 @@ class embedded_editor_installer {
      */
     public function get_asset_url(string $version): string {
         $filename = self::ASSET_PREFIX . $version . '.zip';
-        return 'https://github.com/exelearning/exelearning/releases/download/v' . $version . '/' . $filename;
+
+        if (!$this->is_playground_environment()) {
+            return 'https://github.com/exelearning/exelearning/releases/download/v' . $version . '/' . $filename;
+        }
+
+        return self::GITHUB_PROXY_BASE_URL . '?' . http_build_query([
+            'repo' => self::GITHUB_RELEASES_REPOSITORY,
+            'release' => 'v' . $version,
+            'asset' => $filename,
+        ], '', '&', PHP_QUERY_RFC3986);
     }
 
     /**
