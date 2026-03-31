@@ -37,24 +37,21 @@ class embedded_editor_installer_test extends \advanced_testcase {
 
     /**
      * Test get_asset_url constructs the correct URL.
+     *
+     * @runInSeparateProcess
      */
     public function test_get_asset_url_in_playground(): void {
-        global $CFG;
-
-        $originalwwwroot = $CFG->wwwroot;
-        $CFG->wwwroot = 'https://ateeducacion.github.io/moodle-playground';
-
-        try {
-            $installer = new embedded_editor_installer();
-
-            $url = $installer->get_asset_url('4.0.0');
-            $this->assertEquals(
-                'https://github-proxy.exelearning.dev/?repo=exelearning%2Fexelearning&release=v4.0.0&asset=exelearning-static-v4.0.0.zip',
-                $url
-            );
-        } finally {
-            $CFG->wwwroot = $originalwwwroot;
+        if (!defined('MOODLE_PLAYGROUND')) {
+            define('MOODLE_PLAYGROUND', true);
         }
+
+        $installer = new embedded_editor_installer();
+
+        $url = $installer->get_asset_url('4.0.0');
+        $this->assertEquals(
+            'https://github-proxy.exelearning.dev/?repo=exelearning%2Fexelearning&release=v4.0.0&asset=exelearning-static-v4.0.0.zip',
+            $url
+        );
     }
 
     /**

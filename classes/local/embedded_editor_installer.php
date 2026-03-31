@@ -164,17 +164,20 @@ class embedded_editor_installer {
     /**
      * Detect whether the plugin is running inside Moodle Playground.
      *
+     * The playground defines MOODLE_PLAYGROUND in the generated config.php so
+     * plugins can switch behavior explicitly without inferring it from wwwroot.
+     *
      * @return bool
      */
     private function is_playground_environment(): bool {
-        global $CFG;
-
-        $path = parse_url($CFG->wwwroot ?? '', PHP_URL_PATH) ?: '';
-        return preg_match('#/(?:moodle-playground|playground)(?:/|$)#', $path) === 1;
+        return defined('MOODLE_PLAYGROUND') && MOODLE_PLAYGROUND;
     }
 
     /**
      * Build a proxied releases Atom feed URL when running in Moodle Playground.
+     *
+     * Outside Playground we use GitHub directly so the plugin does not depend on
+     * the proxy in standard Moodle installations.
      *
      * @return string
      */
@@ -349,6 +352,8 @@ class embedded_editor_installer {
     public function get_asset_url(string $version): string {
         $filename = self::ASSET_PREFIX . $version . '.zip';
 
+        // Standard Moodle installs should use GitHub directly. Playground uses
+        // the proxy because PHP-in-WASM requests are more constrained there.
         if (!$this->is_playground_environment()) {
             return 'https://github.com/exelearning/exelearning/releases/download/v' . $version . '/' . $filename;
         }
