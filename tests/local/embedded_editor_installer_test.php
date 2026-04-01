@@ -44,12 +44,16 @@ class embedded_editor_installer_test extends \advanced_testcase {
         if (!defined('MOODLE_PLAYGROUND')) {
             define('MOODLE_PLAYGROUND', true);
         }
+        if (!defined('MOODLE_PLAYGROUND_PROXY_URL')) {
+            define('MOODLE_PLAYGROUND_PROXY_URL',
+                'http://localhost:8080/playground/main/php83-cgi/__playground_proxy__');
+        }
 
         $installer = new embedded_editor_installer();
 
         $url = $installer->get_asset_url('4.0.0');
         $this->assertEquals(
-            'https://github-proxy.exelearning.dev/?repo=exelearning%2Fexelearning&release=v4.0.0&asset=exelearning-static-v4.0.0.zip',
+            'http://localhost:8080/playground/main/php83-cgi/__playground_proxy__?repo=exelearning%2Fexelearning&release=v4.0.0&asset=exelearning-static-v4.0.0.zip',
             $url
         );
     }

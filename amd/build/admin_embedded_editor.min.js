@@ -16,9 +16,9 @@
 /**
  * AMD module for the admin embedded editor settings widget.
  *
- * Handles AJAX calls to install, update, repair, and uninstall the
- * admin-managed embedded eXeLearning editor, with progress feedback
- * and polling for long-running operations.
+ * All install/update flows go through the plugin's AJAX endpoints. In Moodle
+ * Playground, PHP fetches remote assets through the same-origin proxy exposed
+ * by the runtime config.
  *
  * @module     mod_exeweb/admin_embedded_editor
  * @copyright  2025 eXeLearning
@@ -45,9 +45,19 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     };
 
     /**
+     * Return runtime configuration derived from PHP context.
+     *
+     * @param {Object} config Configuration object passed from PHP.
+     * @returns {Object}
+     */
+    var getRuntimeConfig = function(config) {
+        return config || {};
+    };
+
+    /**
      * Return the latest-version UI elements used by the widget.
      *
-     * @param {jQuery} container - The widget container.
+     * @param {jQuery} container The widget container.
      * @returns {{spinnerEl: jQuery, textEl: jQuery}}
      */
     var getLatestVersionElements = function(container) {
@@ -60,7 +70,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     /**
      * Disable all action buttons in the widget.
      *
-     * @param {jQuery} container - The widget container.
+     * @param {jQuery} container The widget container.
      */
     var disableButtons = function(container) {
         container.find('[data-action]').prop('disabled', true);
@@ -69,8 +79,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     /**
      * Enable action buttons based on current status data.
      *
-     * @param {jQuery} container - The widget container.
-     * @param {Object} statusData - Status object from get_status response.
+     * @param {jQuery} container The widget container.
+     * @param {Object} statusData Status object from get_status response.
      */
     var enableButtons = function(container, statusData) {
         container.find('.mod_exeweb-btn-install').prop('disabled', true).hide();
@@ -91,7 +101,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     /**
      * Show the progress bar area and hide the result area.
      *
-     * @param {jQuery} container - The widget container.
+     * @param {jQuery} container The widget container.
      */
     var showProgress = function(container) {
         container.find('.mod_exeweb-progress-container').show();
@@ -101,7 +111,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     /**
      * Hide the progress bar area.
      *
-     * @param {jQuery} container - The widget container.
+     * @param {jQuery} container The widget container.
      */
     var hideProgress = function(container) {
         container.find('.mod_exeweb-progress-container').hide();
@@ -119,9 +129,9 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     /**
      * Set the progress bar visual state.
      *
-     * @param {jQuery} container - The widget container.
-     * @param {string} state - One of 'active', 'success', or 'error'.
-     * @param {string} [message] - Optional message to display below the bar.
+     * @param {jQuery} container The widget container.
+     * @param {string} state One of active, success, or error.
+     * @param {string} message Optional message to display below the bar.
      */
     var setProgressState = function(container, state, message) {
         var bar = container.find('.mod_exeweb-progress-container .progress-bar');
@@ -139,19 +149,15 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             bar.addClass('bg-danger');
         }
 
-        if (message !== undefined) {
-            msgEl.text(message);
-        } else {
-            msgEl.text('');
-        }
+        msgEl.text(message || '');
     };
 
     /**
      * Render the latest-version text, optionally with an update badge.
      *
-     * @param {jQuery} textEl - Target element.
-     * @param {string} text - Main text to show.
-     * @param {string|null} badgeText - Optional badge label.
+     * @param {jQuery} textEl Target element.
+     * @param {string} text Main text to show.
+     * @param {string|null} badgeText Optional badge label.
      */
     var setLatestVersionText = function(textEl, text, badgeText) {
         if (badgeText) {
@@ -164,7 +170,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     /**
      * Fetch the latest-version prefix label.
      *
-     * @param {string} version - Version string.
+     * @param {string} version Version string.
      * @returns {Promise<string>}
      */
     var getLatestVersionLabel = function(version) {
@@ -180,7 +186,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     /**
      * Fetch the optional update-available badge label.
      *
-     * @param {Object} statusData - Status object from get_status response.
+     * @param {Object} statusData Status object from get_status response.
      * @returns {Promise<string|null>}
      */
     var getLatestVersionBadgeLabel = function(statusData) {
@@ -200,8 +206,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     /**
      * Update the latest version area in the DOM.
      *
-     * @param {jQuery} container - The widget container.
-     * @param {Object} statusData - Status object from get_status response.
+     * @param {jQuery} container The widget container.
+     * @param {Object} statusData Status object from get_status response.
      */
     var updateLatestVersionArea = function(container, statusData) {
         var elements = getLatestVersionElements(container);
@@ -230,8 +236,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     /**
      * Update all DOM elements based on a get_status response.
      *
-     * @param {jQuery} container - The widget container.
-     * @param {Object} statusData - Status object from get_status response.
+     * @param {jQuery} container The widget container.
+     * @param {Object} statusData Status object from get_status response.
      */
     var updateStatus = function(container, statusData) {
         updateLatestVersionArea(container, statusData);
@@ -241,25 +247,25 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     /**
      * Show a result message in the result area.
      *
-     * @param {jQuery} container - The widget container.
-     * @param {string} message - The message text.
-     * @param {string} type - Bootstrap alert type: 'success', 'danger', or 'warning'.
+     * @param {jQuery} container The widget container.
+     * @param {string} message The message text.
+     * @param {string} type Bootstrap alert type.
      */
     var showResultMessage = function(container, message, type) {
         var resultArea = container.find('.mod_exeweb-result-area');
         var msgEl = container.find('.mod_exeweb-result-message');
 
         msgEl.removeClass('alert-success alert-danger alert-warning')
-             .addClass('alert-' + type)
-             .text(message);
+            .addClass('alert-' + type)
+            .text(message);
         resultArea.show();
     };
 
     /**
      * Call get_status via AJAX and return a Promise.
      *
-     * @param {boolean} checklatest - Whether to query GitHub for the latest version.
-     * @returns {Promise} Resolves with the status data object.
+     * @param {boolean} checklatest Whether to query GitHub for the latest version.
+     * @returns {Promise}
      */
     var callGetStatus = function(checklatest) {
         var requests = Ajax.call([{
@@ -272,8 +278,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     /**
      * Call execute_action via AJAX and return a Promise.
      *
-     * @param {string} action - One of: install, update, repair, uninstall.
-     * @returns {Promise} Resolves with the action result object.
+     * @param {string} action One of install, update, repair, uninstall.
+     * @returns {Promise}
      */
     var callExecuteAction = function(action) {
         var requests = Ajax.call([{
@@ -284,14 +290,15 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     };
 
     /**
-     * Refresh widget status from the server.
+     * Refresh widget status from the server and optionally enrich latest version.
      *
-     * @param {jQuery} container - The widget container.
-     * @param {boolean} checklatest - Whether latest GitHub version should be queried.
+     * @param {jQuery} container The widget container.
+     * @param {boolean} checklatest Whether latest version should be queried.
+     * @param {Object} runtimeConfig Runtime config.
      * @returns {Promise<Object>}
      */
-    var refreshStatus = function(container, checklatest) {
-        return callGetStatus(checklatest).then(function(statusData) {
+    var refreshStatus = function(container, checklatest, runtimeConfig) {
+        return callGetStatus(!!checklatest).then(function(statusData) {
             updateStatus(container, statusData);
             return statusData;
         });
@@ -300,14 +307,10 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     /**
      * Begin a polling loop after an action timeout.
      *
-     * Polls get_status every POLL_INTERVAL_MS milliseconds. Stops when:
-     * - installing === false (operation done)
-     * - install_stale === true (stale lock, show warning)
-     * - MAX_POLL_ITERATIONS exceeded (timeout)
-     *
-     * @param {jQuery} container - The widget container.
+     * @param {jQuery} container The widget container.
+     * @param {Object} runtimeConfig Runtime config.
      */
-    var startPolling = function(container) {
+    var startPolling = function(container, runtimeConfig) {
         var iterations = 0;
 
         var poll = function() {
@@ -318,7 +321,6 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                     setProgressState(container, 'error', msg);
                     showResultMessage(container, msg, 'danger');
                     Notification.addNotification({message: msg, type: 'error'});
-                    return msg;
                 }).catch(function() {
                     var msg = 'Timeout';
                     setProgressState(container, 'error', msg);
@@ -327,7 +329,6 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                 });
                 callGetStatus(false).then(function(statusData) {
                     enableButtons(container, statusData);
-                    return statusData;
                 }).catch(function() {
                     container.find('[data-action]').prop('disabled', false);
                 });
@@ -340,7 +341,6 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                         setProgressState(container, 'error', msg);
                         showResultMessage(container, msg, 'warning');
                         Notification.addNotification({message: msg, type: 'warning'});
-                        return msg;
                     }).catch(function() {
                         var msg = 'Error';
                         setProgressState(container, 'error', msg);
@@ -351,81 +351,72 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                 }
 
                 if (!statusData.installing) {
-                    // Operation finished.
                     setProgressState(container, 'success');
                     hideProgress(container);
-                    refreshStatus(container, true).then(function(freshStatus) {
-                        return freshStatus;
-                    }).catch(function() {
+                    refreshStatus(container, true, runtimeConfig).catch(function() {
                         updateStatus(container, statusData);
                     });
                     return;
                 }
 
-                // Still installing — continue polling.
                 Str.get_string('stillworking', 'mod_exeweb').then(function(msg) {
                     setProgressState(container, 'active', msg);
-                    return msg;
                 }).catch(function() {
                     setProgressState(container, 'active');
                 });
 
-                setTimeout(poll, POLL_INTERVAL_MS);
-                return statusData;
+                window.setTimeout(poll, POLL_INTERVAL_MS);
             }).catch(function() {
-                // On poll error, just try again unless we've hit the limit.
-                setTimeout(poll, POLL_INTERVAL_MS);
+                window.setTimeout(poll, POLL_INTERVAL_MS);
             });
         };
 
         Str.get_string('operationtakinglong', 'mod_exeweb').then(function(msg) {
             setProgressState(container, 'active', msg);
-            return msg;
         }).catch(function() {
             setProgressState(container, 'active');
         });
 
-        setTimeout(poll, POLL_INTERVAL_MS);
+        window.setTimeout(poll, POLL_INTERVAL_MS);
     };
 
     /**
-     * Execute an action (install/update/repair/uninstall) via AJAX.
+     * Execute an action via AJAX or the Playground upload flow.
      *
-     * Handles the full lifecycle: disable buttons, show progress, call AJAX,
-     * set up timeout/polling, and refresh status on completion.
-     *
-     * @param {jQuery} container - The widget container.
-     * @param {string} action - The action to perform.
+     * @param {jQuery} container The widget container.
+     * @param {string} action The action to perform.
+     * @param {Object} runtimeConfig Runtime config.
      */
-    var executeAction = function(container, action) {
+    var executeAction = function(container, action, runtimeConfig) {
         disableButtons(container);
         showProgress(container);
         setProgressState(container, 'active');
 
         var timeoutHandle = null;
         var timedOut = false;
+        var actionPromise = null;
 
-        timeoutHandle = setTimeout(function() {
+        timeoutHandle = window.setTimeout(function() {
             timedOut = true;
-            startPolling(container);
+            startPolling(container, runtimeConfig);
         }, ACTION_TIMEOUT_MS);
 
-        callExecuteAction(action).then(function(result) {
+        actionPromise = callExecuteAction(action);
+
+        actionPromise.then(function(result) {
             if (timedOut) {
-                // Polling has already taken over — ignore late AJAX result.
                 return result;
             }
-            clearTimeout(timeoutHandle);
+            window.clearTimeout(timeoutHandle);
 
             setProgressState(container, 'success');
             var message = result.message || 'Done.';
             showResultMessage(container, message, 'success');
             Notification.addNotification({message: message, type: 'success'});
 
-            refreshStatus(container, true).then(function(statusData) {
+            refreshStatus(container, true, runtimeConfig).then(function() {
                 hideProgress(container);
                 reloadPage();
-                return statusData;
             }).catch(function() {
                 hideProgress(container);
                 reloadPage();
@@ -436,7 +427,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             if (timedOut) {
                 return;
             }
-            clearTimeout(timeoutHandle);
+            window.clearTimeout(timeoutHandle);
 
             setProgressState(container, 'error');
             var message = (err && err.message) ? err.message : 'An error occurred.';
@@ -445,7 +436,6 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
 
             callGetStatus(false).then(function(statusData) {
                 enableButtons(container, statusData);
-                return statusData;
             }).catch(function() {
                 container.find('[data-action]').prop('disabled', false);
             });
@@ -453,12 +443,13 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     };
 
     /**
-     * Handle a button click — confirm for uninstall, then dispatch executeAction.
+     * Handle a button click.
      *
-     * @param {jQuery} container - The widget container.
-     * @param {string} action - The action string from data-action.
+     * @param {jQuery} container The widget container.
+     * @param {string} action The action string from data-action.
+     * @param {Object} runtimeConfig Runtime config.
      */
-    var handleActionClick = function(container, action) {
+    var handleActionClick = function(container, action, runtimeConfig) {
         if (action === 'uninstall') {
             Str.get_strings([
                 {key: 'confirmuninstalltitle', component: 'mod_exeweb'},
@@ -472,33 +463,26 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                     strings[2],
                     strings[3],
                     function() {
-                        executeAction(container, action);
+                        executeAction(container, action, runtimeConfig);
                     }
                 );
-                return strings;
             }).catch(function() {
-                // Fallback to native confirm if string fetch fails.
                 if (window.confirm(container.attr('data-confirm-uninstall') || '')) {
-                    executeAction(container, action);
+                    executeAction(container, action, runtimeConfig);
                 }
             });
         } else {
-            executeAction(container, action);
+            executeAction(container, action, runtimeConfig);
         }
     };
 
     /**
      * Initialise the widget.
      *
-     * Called from PHP via js_call_amd. Fetches the latest version from GitHub
-     * and sets up button click handlers.
-     *
-     * @param {Object} config - Configuration object passed from PHP.
+     * @param {Object} config Configuration object passed from PHP.
      */
     var init = function(config) {
-        // config is reserved for future use (e.g. widgetId for multiple widgets).
-        void config;
-
+        var runtimeConfig = getRuntimeConfig(config || {});
         var container = getContainer();
         if (!container.length) {
             return;
@@ -508,22 +492,18 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
         elements.spinnerEl.show();
         elements.textEl.hide();
 
-        // Fetch full status on load so the widget can expose update availability.
-        refreshStatus(container, true).then(function(statusData) {
-            return statusData;
-        }).catch(function() {
+        refreshStatus(container, true, runtimeConfig).catch(function() {
             elements.spinnerEl.hide();
             elements.textEl.show();
         });
 
-        // Delegate click handler for all action buttons.
         container.on('click', '[data-action]', function(e) {
             e.preventDefault();
             var action = $(this).data('action');
             if (!action) {
                 return;
             }
-            handleActionClick(container, action);
+            handleActionClick(container, action, runtimeConfig);
         });
     };
 

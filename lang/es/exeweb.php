@@ -246,3 +246,6 @@ $string['typelocal'] = 'Paquete subido';
 
 $string['teachermodevisible'] = 'Mostrar el selector de capa docente';
 $string['teachermodevisible_help'] = 'Si se desactiva, se ocultará el selector de capa docente dentro del recurso incrustado.';
+
+$string['editoruploadmissingfile'] = 'No se ha subido ningún archivo ZIP del editor.';
+$string['editoruploadfailed'] = 'No se pudo subir el paquete del editor: {$a}';

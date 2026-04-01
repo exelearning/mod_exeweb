@@ -18,8 +18,9 @@
  * Admin setting widget for the embedded eXeLearning editor.
  *
  * Renders a status card with action buttons inside the admin settings page.
- * All GitHub/network I/O is deferred to AMD JavaScript; PHP only provides
- * locally-cached state.
+ * Network I/O is executed through the plugin's AJAX services. In Moodle
+ * Playground those services fetch through the same-origin proxy exposed by the
+ * runtime config.
  *
  * @package    mod_exeweb
  * @copyright  2025 eXeLearning
@@ -76,7 +77,7 @@ class admin_setting_embeddededitor extends \admin_setting {
      *
      * Reads locally-cached state only (no GitHub API call). The AMD module
      * mod_exeweb/admin_embedded_editor is initialised with a JS context
-     * object so it can populate the "latest version" area and wire up buttons.
+     * object so it can wire up action buttons and the "latest version" area.
      *
      * @param mixed  $data  Current setting value (unused).
      * @param string $query Admin search query string (unused).
@@ -116,7 +117,7 @@ class admin_setting_embeddededitor extends \admin_setting {
             'can_uninstall'            => $canuninstall,
         ];
 
-        // JS context passed to AMD init (strings not needed here; AMD fetches them).
+        // JS context passed to AMD init.
         $jscontext = [
             'sesskey'      => sesskey(),
             'activesource' => $status->active_source,

@@ -35,9 +35,6 @@ namespace mod_exeweb\local;
  */
 class embedded_editor_installer {
 
-    /** @var string Base URL for the GitHub proxy service. */
-    const GITHUB_PROXY_BASE_URL = 'https://github-proxy.exelearning.dev/';
-
     /** @var string Repository that publishes the static editor releases. */
     const GITHUB_RELEASES_REPOSITORY = 'exelearning/exelearning';
 
@@ -100,6 +97,26 @@ class embedded_editor_installer {
     }
 
     /**
+     * Install a specific version from a ZIP file already available on disk.
+     *
+     * @param string $zippath Absolute path to a local ZIP file.
+     * @param string $version Version string (without leading 'v').
+     * @return array Associative array with 'version' and 'installed_at' keys.
+     * @throws \moodle_exception On any failure.
+     */
+    public function install_from_local_zip(string $zippath, string $version): array {
+        $this->acquire_lock();
+
+        try {
+            $result = $this->install_from_zip_path($zippath, $version, false);
+        } finally {
+            $this->release_lock();
+        }
+
+        return $result;
+    }
+
+    /**
      * Internal install logic, called within a lock.
      *
      * @param string|null $version Specific version to install, or null for latest.
@@ -116,39 +133,9 @@ class embedded_editor_installer {
         }
 
         $asseturl = $this->get_asset_url($version);
-
         $tmpfile = $this->download_to_temp($asseturl);
 
-        try {
-            $this->validate_zip($tmpfile);
-        } catch (\moodle_exception $e) {
-            $this->cleanup_temp_file($tmpfile);
-            throw $e;
-        }
-
-        $tmpdir = null;
-        try {
-            $tmpdir = $this->extract_to_temp($tmpfile);
-            $this->cleanup_temp_file($tmpfile);
-
-            $sourcedir = $this->normalize_extraction($tmpdir);
-            $this->validate_editor_contents($sourcedir);
-            $this->safe_install($sourcedir);
-        } catch (\moodle_exception $e) {
-            $this->cleanup_temp_file($tmpfile);
-            if ($tmpdir !== null) {
-                $this->cleanup_temp_dir($tmpdir);
-            }
-            throw $e;
-        }
-
-        $this->cleanup_temp_dir($tmpdir);
-        $this->store_metadata($version);
-
-        return [
-            'version' => $version,
-            'installed_at' => self::get_installed_at(),
-        ];
+        return $this->install_from_zip_path($tmpfile, $version, true);
     }
 
     /**
@@ -174,6 +161,25 @@ class embedded_editor_installer {
     }
 
     /**
+     * Build the same-origin playground proxy base URL.
+     *
+     * Moodle Playground exposes a scoped internal proxy URL in config.php so
+     * PHP can fetch remote resources through the browser using a same-origin
+     * endpoint.
+     *
+     * @return string
+     */
+    private function get_playground_proxy_base_url(): string {
+        global $CFG;
+
+        if (defined('MOODLE_PLAYGROUND_PROXY_URL') && MOODLE_PLAYGROUND_PROXY_URL !== '') {
+            return MOODLE_PLAYGROUND_PROXY_URL;
+        }
+
+        return rtrim($CFG->wwwroot, '/') . '/__playground_proxy__';
+    }
+
+    /**
      * Build a proxied releases Atom feed URL when running in Moodle Playground.
      *
      * Outside Playground we use GitHub directly so the plugin does not depend on
@@ -186,7 +192,7 @@ class embedded_editor_installer {
             return self::GITHUB_RELEASES_FEED_URL;
         }
 
-        return self::GITHUB_PROXY_BASE_URL . '?' . http_build_query([
+        return $this->get_playground_proxy_base_url() . '?' . http_build_query([
             'repo' => self::GITHUB_RELEASES_REPOSITORY,
             'atom' => 'releases',
         ], '', '&', PHP_QUERY_RFC3986);
@@ -352,13 +358,11 @@ class embedded_editor_installer {
     public function get_asset_url(string $version): string {
         $filename = self::ASSET_PREFIX . $version . '.zip';
 
-        // Standard Moodle installs should use GitHub directly. Playground uses
-        // the proxy because PHP-in-WASM requests are more constrained there.
         if (!$this->is_playground_environment()) {
             return 'https://github.com/exelearning/exelearning/releases/download/v' . $version . '/' . $filename;
         }
 
-        return self::GITHUB_PROXY_BASE_URL . '?' . http_build_query([
+        return $this->get_playground_proxy_base_url() . '?' . http_build_query([
             'repo' => self::GITHUB_RELEASES_REPOSITORY,
             'release' => 'v' . $version,
             'asset' => $filename,
@@ -416,6 +420,57 @@ class embedded_editor_installer {
         if ($header !== "PK\x03\x04") {
             throw new \moodle_exception('editorinvalidzip', 'mod_exeweb');
         }
+    }
+
+
+    /**
+     * Install the editor from a ZIP file path.
+     *
+     * @param string $zippath Path to the ZIP file.
+     * @param string $version Version string without leading 'v'.
+     * @param bool $cleanupzip Whether to remove the ZIP file afterwards.
+     * @return array Associative array with 'version' and 'installed_at' keys.
+     * @throws \moodle_exception If validation or installation fails.
+     */
+    private function install_from_zip_path(string $zippath, string $version, bool $cleanupzip): array {
+        try {
+            $this->validate_zip($zippath);
+        } catch (\moodle_exception $e) {
+            if ($cleanupzip) {
+                $this->cleanup_temp_file($zippath);
+            }
+            throw $e;
+        }
+
+        $tmpdir = null;
+        try {
+            $tmpdir = $this->extract_to_temp($zippath);
+            if ($cleanupzip) {
+                $this->cleanup_temp_file($zippath);
+            }
+
+            $sourcedir = $this->normalize_extraction($tmpdir);
+            $this->validate_editor_contents($sourcedir);
+            $this->safe_install($sourcedir);
+        } catch (\moodle_exception $e) {
+            if ($cleanupzip) {
+                $this->cleanup_temp_file($zippath);
+            }
+            if ($tmpdir !== null) {
+                $this->cleanup_temp_dir($tmpdir);
+            }
+            throw $e;
+        }
+
+        if ($tmpdir !== null) {
+            $this->cleanup_temp_dir($tmpdir);
+        }
+        $this->store_metadata($version);
+
+        return [
+            'version' => $version,
+            'installed_at' => self::get_installed_at(),
+        ];
     }
 
     /**

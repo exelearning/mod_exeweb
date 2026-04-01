@@ -248,3 +248,6 @@ $string['editorinstalledsuccess'] = 'Editor installed successfully';
 $string['editoruninstalledsuccess'] = 'Editor uninstalled successfully';
 $string['editorupdatedsuccess'] = 'Editor updated successfully';
 $string['editorrepairsuccess'] = 'Editor repaired successfully';
+
+$string['editoruploadmissingfile'] = 'No editor ZIP file was uploaded.';
+$string['editoruploadfailed'] = 'Failed to upload the editor package: {$a}';

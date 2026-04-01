@@ -126,7 +126,7 @@ class manage_embedded_editor extends external_api {
      * @param string $action The action that was performed.
      * @return string The localised success message.
      */
-    private static function get_action_success_string(string $action): string {
+    public static function get_action_success_string(string $action): string {
         $map = [
             'install'   => 'editorinstalledsuccess',
             'update'    => 'editorupdatedsuccess',
