@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/ateeducacion/moodle-playground/refs/heads/main/assets/blueprints/blueprint-schema.json",
   "preferredVersions": { "php": "8.3", "moodle": "5.0" },
-  "landingPage": "/my/",
+  "landingPage": "/course/view.php?id=2",
   "constants": {
     "ADMIN_USER": "admin",
     "ADMIN_PASS": "password",
@@ -35,11 +35,38 @@
       "summary": "Test course for the eXeLearning Web plugin."
     },
     {
+      "step": "createUser",
+      "username": "student",
+      "password": "password",
+      "email": "student@example.com",
+      "firstname": "Demo",
+      "lastname": "Student"
+    },
+    {
       "step": "enrolUser",
       "username": "{{ADMIN_USER}}",
       "course": "EXEWEB01",
       "role": "editingteacher"
     },
-    { "step": "setLandingPage", "path": "/my/" }
+    {
+      "step": "enrolUser",
+      "username": "student",
+      "course": "EXEWEB01",
+      "role": "student"
+    },
+    {
+      "step": "createSection",
+      "course": "EXEWEB01",
+      "name": "Example Web Activities"
+    },
+    {
+      "step": "addModule",
+      "module": "exeweb",
+      "course": "EXEWEB01",
+      "section": 1,
+      "name": "Sample eXeLearning Web Content",
+      "intro": "This is a sample web content package created with eXeLearning. Click to view."
+    },
+    { "step": "setLandingPage", "path": "/course/view.php?id=2" }
   ]
 }
