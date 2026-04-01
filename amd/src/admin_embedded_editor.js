@@ -159,6 +159,62 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     };
 
     /**
+     * Escape HTML special characters in plain text.
+     *
+     * @param {string} value Plain text.
+     * @returns {string}
+     */
+    var escapeHtml = function(value) {
+        return $('<div>').text(value || '').html();
+    };
+
+    /**
+     * Update the primary status summary shown on the left of the header row.
+     *
+     * @param {jQuery} container The widget container.
+     * @param {Object} statusData Status object from get_status response.
+     */
+    var updateStatusSummary = function(container, statusData) {
+        var summaryEl = container.find('.mod_exeweb-status-primary');
+        if (!summaryEl.length) {
+            return;
+        }
+
+        Str.get_strings([
+            {key: 'editormoodledatasource', component: 'mod_exeweb'},
+            {key: 'editorinstalledat', component: 'mod_exeweb'},
+            {key: 'editorbundledsource', component: 'mod_exeweb'},
+            {key: 'editorbundleddesc', component: 'mod_exeweb'},
+            {key: 'noeditorinstalled', component: 'mod_exeweb'},
+            {key: 'editornotinstalleddesc', component: 'mod_exeweb'},
+        ]).then(function(strings) {
+            var html = '';
+
+            if (statusData.active_source === 'moodledata') {
+                html += '<span class="badge badge-success bg-success mr-2 me-2">' + escapeHtml(strings[0]) + '</span>';
+                if (statusData.moodledata_version) {
+                    html += '<span class="font-weight-bold fw-bold mr-2 me-2">v' +
+                        escapeHtml(statusData.moodledata_version) + '</span>';
+                }
+                if (statusData.moodledata_installed_at) {
+                    html += '<span class="text-muted small">' + escapeHtml(strings[1]) + ' ' +
+                        escapeHtml(statusData.moodledata_installed_at) + '</span>';
+                }
+            } else if (statusData.active_source === 'bundled') {
+                html += '<span class="badge badge-info bg-info mr-2 me-2">' + escapeHtml(strings[2]) + '</span>';
+                html += '<span class="text-muted small">' + escapeHtml(strings[3]) + '</span>';
+            } else {
+                html += '<span class="badge badge-danger bg-danger mr-2 me-2">' + escapeHtml(strings[4]) + '</span>';
+                html += '<span class="text-muted small">' + escapeHtml(strings[5]) + '</span>';
+            }
+
+            summaryEl.html(html);
+        }).catch(function() {
+            // Keep the current markup if the strings cannot be loaded.
+        });
+    };
+
+    /**
      * Fetch the latest-version prefix label.
      *
      * @param {string} version Version string.
@@ -231,6 +287,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
      * @param {Object} statusData Status object from get_status response.
      */
     var updateStatus = function(container, statusData) {
+        updateStatusSummary(container, statusData);
         updateLatestVersionArea(container, statusData);
         enableButtons(container, statusData);
     };

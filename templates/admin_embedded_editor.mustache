@@ -64,37 +64,39 @@
 
             {{! Status section }}
             <div class="d-flex align-items-center mb-3">
-                {{#active_source_moodledata}}
-                    <span class="badge badge-success bg-success mr-2 me-2">
-                        {{#str}} editormoodledatasource, mod_exeweb {{/str}}
-                    </span>
-                    {{#moodledata_version}}
-                        <span class="font-weight-bold fw-bold mr-2 me-2">v{{moodledata_version}}</span>
-                    {{/moodledata_version}}
-                    {{#moodledata_installed_at}}
-                        <span class="text-muted small">
-                            {{#str}} editorinstalledat, mod_exeweb {{/str}} {{moodledata_installed_at}}
+                <span class="mod_exeweb-status-primary">
+                    {{#active_source_moodledata}}
+                        <span class="badge badge-success bg-success mr-2 me-2">
+                            {{#str}} editormoodledatasource, mod_exeweb {{/str}}
                         </span>
-                    {{/moodledata_installed_at}}
-                {{/active_source_moodledata}}
+                        {{#moodledata_version}}
+                            <span class="font-weight-bold fw-bold mr-2 me-2">v{{moodledata_version}}</span>
+                        {{/moodledata_version}}
+                        {{#moodledata_installed_at}}
+                            <span class="text-muted small">
+                                {{#str}} editorinstalledat, mod_exeweb {{/str}} {{moodledata_installed_at}}
+                            </span>
+                        {{/moodledata_installed_at}}
+                    {{/active_source_moodledata}}
 
-                {{#active_source_bundled}}
-                    <span class="badge badge-info bg-info mr-2 me-2">
-                        {{#str}} editorbundledsource, mod_exeweb {{/str}}
-                    </span>
-                    <span class="text-muted small">
-                        {{#str}} editorbundleddesc, mod_exeweb {{/str}}
-                    </span>
-                {{/active_source_bundled}}
+                    {{#active_source_bundled}}
+                        <span class="badge badge-info bg-info mr-2 me-2">
+                            {{#str}} editorbundledsource, mod_exeweb {{/str}}
+                        </span>
+                        <span class="text-muted small">
+                            {{#str}} editorbundleddesc, mod_exeweb {{/str}}
+                        </span>
+                    {{/active_source_bundled}}
 
-                {{#active_source_none}}
-                    <span class="badge badge-danger bg-danger mr-2 me-2">
-                        {{#str}} noeditorinstalled, mod_exeweb {{/str}}
-                    </span>
-                    <span class="text-muted small">
-                        {{#str}} editornotinstalleddesc, mod_exeweb {{/str}}
-                    </span>
-                {{/active_source_none}}
+                    {{#active_source_none}}
+                        <span class="badge badge-danger bg-danger mr-2 me-2">
+                            {{#str}} noeditorinstalled, mod_exeweb {{/str}}
+                        </span>
+                        <span class="text-muted small">
+                            {{#str}} editornotinstalleddesc, mod_exeweb {{/str}}
+                        </span>
+                    {{/active_source_none}}
+                </span>
 
                 {{! Latest version area — JS populates after actions }}
                 <span class="mod_exeweb-latest-version-area ml-2 ms-2">
