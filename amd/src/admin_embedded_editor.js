@@ -118,15 +118,6 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     };
 
     /**
-     * Reload the current page after a short delay so users can see success state.
-     */
-    var reloadPage = function() {
-        window.setTimeout(function() {
-            window.location.reload();
-        }, 800);
-    };
-
-    /**
      * Set the progress bar visual state.
      *
      * @param {jQuery} container The widget container.
@@ -416,10 +407,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
 
             refreshStatus(container, true, runtimeConfig).then(function() {
                 hideProgress(container);
-                reloadPage();
             }).catch(function() {
                 hideProgress(container);
-                reloadPage();
             });
 
             return result;
