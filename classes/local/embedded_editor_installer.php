@@ -149,53 +149,16 @@ class embedded_editor_installer {
     }
 
     /**
-     * Detect whether the plugin is running inside Moodle Playground.
+     * Build the GitHub releases Atom feed URL.
      *
-     * The playground defines MOODLE_PLAYGROUND in the generated config.php so
-     * plugins can switch behavior explicitly without inferring it from wwwroot.
-     *
-     * @return bool
-     */
-    private function is_playground_environment(): bool {
-        return defined('MOODLE_PLAYGROUND') && MOODLE_PLAYGROUND;
-    }
-
-    /**
-     * Build the same-origin playground proxy base URL.
-     *
-     * Moodle Playground exposes a scoped internal proxy URL in config.php so
-     * PHP can fetch remote resources through the browser using a same-origin
-     * endpoint.
-     *
-     * @return string
-     */
-    private function get_playground_proxy_base_url(): string {
-        global $CFG;
-
-        if (defined('MOODLE_PLAYGROUND_PROXY_URL') && MOODLE_PLAYGROUND_PROXY_URL !== '') {
-            return MOODLE_PLAYGROUND_PROXY_URL;
-        }
-
-        return rtrim($CFG->wwwroot, '/') . '/__playground_proxy__';
-    }
-
-    /**
-     * Build a proxied releases Atom feed URL when running in Moodle Playground.
-     *
-     * Outside Playground we use GitHub directly so the plugin does not depend on
-     * the proxy in standard Moodle installations.
+     * Moodle Playground now supports direct outbound PHP requests to the
+     * eXeLearning GitHub feed through the configured php-wasm networking
+     * fallback, so the plugin no longer needs a playground-specific URL.
      *
      * @return string
      */
     private function get_releases_feed_url(): string {
-        if (!$this->is_playground_environment()) {
-            return self::GITHUB_RELEASES_FEED_URL;
-        }
-
-        return $this->get_playground_proxy_base_url() . '?' . http_build_query([
-            'repo' => self::GITHUB_RELEASES_REPOSITORY,
-            'atom' => 'releases',
-        ], '', '&', PHP_QUERY_RFC3986);
+        return self::GITHUB_RELEASES_FEED_URL;
     }
 
     /**
@@ -358,15 +321,7 @@ class embedded_editor_installer {
     public function get_asset_url(string $version): string {
         $filename = self::ASSET_PREFIX . $version . '.zip';
 
-        if (!$this->is_playground_environment()) {
-            return 'https://github.com/exelearning/exelearning/releases/download/v' . $version . '/' . $filename;
-        }
-
-        return $this->get_playground_proxy_base_url() . '?' . http_build_query([
-            'repo' => self::GITHUB_RELEASES_REPOSITORY,
-            'release' => 'v' . $version,
-            'asset' => $filename,
-        ], '', '&', PHP_QUERY_RFC3986);
+        return 'https://github.com/exelearning/exelearning/releases/download/v' . $version . '/' . $filename;
     }
 
     /**

@@ -36,29 +36,6 @@ defined('MOODLE_INTERNAL') || die();
 class embedded_editor_installer_test extends \advanced_testcase {
 
     /**
-     * Test get_asset_url constructs the correct URL.
-     *
-     * @runInSeparateProcess
-     */
-    public function test_get_asset_url_in_playground(): void {
-        if (!defined('MOODLE_PLAYGROUND')) {
-            define('MOODLE_PLAYGROUND', true);
-        }
-        if (!defined('MOODLE_PLAYGROUND_PROXY_URL')) {
-            define('MOODLE_PLAYGROUND_PROXY_URL',
-                'http://localhost:8080/playground/main/php83-cgi/__playground_proxy__');
-        }
-
-        $installer = new embedded_editor_installer();
-
-        $url = $installer->get_asset_url('4.0.0');
-        $this->assertEquals(
-            'http://localhost:8080/playground/main/php83-cgi/__playground_proxy__?repo=exelearning%2Fexelearning&release=v4.0.0&asset=exelearning-static-v4.0.0.zip',
-            $url
-        );
-    }
-
-    /**
      * Test get_asset_url constructs the correct direct URL outside Playground.
      */
     public function test_get_asset_url(): void {
