@@ -17,8 +17,8 @@
  * AMD module for the admin embedded editor settings widget.
  *
  * All install/update flows go through the plugin's AJAX endpoints. In Moodle
- * Playground, PHP fetches remote assets through the same-origin proxy exposed
- * by the runtime config.
+ * Playground, outbound requests are handled by the PHP WASM networking layer
+ * configured by the runtime.
  *
  * @module     mod_exeweb/admin_embedded_editor
  * @copyright  2025 eXeLearning

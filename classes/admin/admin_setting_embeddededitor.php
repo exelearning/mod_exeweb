@@ -19,8 +19,8 @@
  *
  * Renders a status card with action buttons inside the admin settings page.
  * Network I/O is executed through the plugin's AJAX services. In Moodle
- * Playground those services fetch through the same-origin proxy exposed by the
- * runtime config.
+ * Playground, outbound requests are handled by the PHP WASM networking layer
+ * configured by the runtime.
  *
  * @package    mod_exeweb
  * @copyright  2025 eXeLearning
