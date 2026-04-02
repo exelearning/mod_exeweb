@@ -26,6 +26,12 @@
       "pluginName": "exeweb",
       "url": "https://github.com/exelearning/mod_exeweb/archive/refs/heads/main.zip"
     },
+    {
+      "step": "setConfig",
+      "name": "editormode",
+      "value": "embedded",
+      "plugin": "exeweb"
+    },
     { "step": "createCategory", "name": "Test Courses" },
     {
       "step": "createCourse",
@@ -64,8 +70,38 @@
       "module": "exeweb",
       "course": "EXEWEB01",
       "section": 1,
-      "name": "Sample eXeLearning Web Content",
-      "intro": "This is a sample web content package created with eXeLearning. Click to view."
+      "name": "Test Content",
+      "intro": "Sample eXeLearning web content for testing.",
+      "exeorigin": "local",
+      "revision": 0
+    },
+    {
+      "step": "addModule",
+      "module": "exeweb",
+      "course": "EXEWEB01",
+      "section": 1,
+      "name": "Propiedades",
+      "intro": "Example content demonstrating eXeLearning properties.",
+      "exeorigin": "local",
+      "revision": 0
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/test-content.elpx",
+      "data": {
+        "url": "https://raw.githubusercontent.com/exelearning/wp-exelearning/refs/heads/main/tests/fixtures/test-content.elpx"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/propiedades.elpx",
+      "data": {
+        "url": "https://raw.githubusercontent.com/exelearning/wp-exelearning/refs/heads/main/tests/fixtures/propiedades.elpx"
+      }
+    },
+    {
+      "step": "runPhpCode",
+      "code": "<?php\ndefine('CLI_SCRIPT', true);\nrequire('/www/moodle/config.php');\nrequire_once($CFG->dirroot . '/mod/exeweb/lib.php');\nrequire_once($CFG->dirroot . '/mod/exeweb/locallib.php');\n\n$course = $DB->get_record('course', ['shortname' => 'EXEWEB01'], '*', MUST_EXIST);\n$modules = [\n    'Test Content' => '/tmp/test-content.elpx',\n    'Propiedades' => '/tmp/propiedades.elpx',\n];\n\nforeach ($modules as $modname => $filepath) {\n    $exeweb = $DB->get_record('exeweb', ['course' => $course->id, 'name' => $modname]);\n    if (!$exeweb || !file_exists($filepath)) continue;\n\n    $cm = get_coursemodule_from_instance('exeweb', $exeweb->id, $course->id);\n    $context = context_module::instance($cm->id);\n    $fs = get_file_storage();\n\n    $newrevision = (int)$exeweb->revision + 1;\n    $filename = basename($filepath);\n\n    $fileinfo = [\n        'contextid' => $context->id,\n        'component' => 'mod_exeweb',\n        'filearea' => 'package',\n        'itemid' => $newrevision,\n        'filepath' => '/',\n        'filename' => $filename,\n        'userid' => 2,\n        'source' => $filename,\n        'author' => 'Admin User',\n        'license' => 'unknown',\n    ];\n\n    $newpackage = $fs->create_file_from_pathname($fileinfo, $filepath);\n\n    try {\n        $contentslist = \\mod_exeweb\\exeweb_package::expand_package($newpackage);\n        $mainfile = \\mod_exeweb\\exeweb_package::get_mainfile($contentslist, $context->id, $newrevision);\n        if ($mainfile) {\n            $exeweb->entrypath = $mainfile->get_filepath();\n            $exeweb->entryname = $mainfile->get_filename();\n        }\n    } catch (Throwable $e) {}\n\n    $exeweb->exeorigin = 'local';\n    $exeweb->revision = $newrevision;\n    $exeweb->timemodified = time();\n    $DB->update_record('exeweb', $exeweb);\n}\necho json_encode(['ok' => true]);"
     },
     { "step": "setLandingPage", "path": "/course/view.php?id=2" }
   ]

@@ -35,5 +35,10 @@ jobs:
       - uses: ateeducacion/action-moodle-playground-pr-preview@main
         with:
           blueprint-file: blueprint.pr.json
-          mode: comment
+          mode: append-to-description
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          extra-text: >
+            ⚠️ The embedded eXeLearning editor is not included in this preview.
+            You can install it from **Modules > eXeLearning Web > Configure**
+            using the "Download & Install Editor" button.
+            All other module features (ELPX upload, viewer, preview) work normally.
