@@ -34,8 +34,8 @@ require_once($CFG->dirroot . '/mod/exeweb/lib.php');
  * @param int $cmid Course module ID.
  * @param string $message The error message to display.
  */
-function exeweb_editor_error_page(int $cmid, string $message): void {
-    $escapedmessage = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+function exeweb_editor_error_page(int $cmid, string $message, bool $allowhtml = false): void {
+    $escapedmessage = $allowhtml ? clean_text($message) : htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
     header('Content-Type: text/html; charset=utf-8');
     echo <<<HTML
 <!DOCTYPE html>
@@ -101,7 +101,12 @@ $editorbaseurl = $CFG->wwwroot . '/mod/exeweb/editor/static.php/' . $cm->id;
 // Read the editor template from the local installation (moodledata or bundled).
 $editorindexsource = exeweb_get_embedded_editor_index_source();
 if ($editorindexsource === null) {
-    exeweb_editor_error_page($id, get_string('embeddednotinstalled', 'mod_exeweb'));
+    if (is_siteadmin()) {
+        $settingsurl = new moodle_url('/admin/settings.php', ['section' => 'modsettingexeweb']);
+        exeweb_editor_error_page($id, get_string('embeddednotinstalledadmin', 'mod_exeweb', $settingsurl->out()), true);
+    } else {
+        exeweb_editor_error_page($id, get_string('embeddednotinstalledcontactadmin', 'mod_exeweb'));
+    }
 }
 $html = @file_get_contents($editorindexsource);
 if ($html === false || empty($html)) {
