@@ -81,6 +81,7 @@
       "intro": "Sample eXeLearning web content for testing.",
       "exeorigin": "local",
       "revision": 1,
+      "display": 1,
       "files": [
         {
           "filearea": "package",
@@ -101,6 +102,7 @@
       "intro": "Example content demonstrating eXeLearning properties.",
       "exeorigin": "local",
       "revision": 1,
+      "display": 1,
       "files": [
         {
           "filearea": "package",
