@@ -125,19 +125,13 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
      * @param {string} message Optional message to display below the bar.
      */
     var setProgressState = function(container, state, message) {
-        var bar = container.find('.mod_exeweb-progress-container .progress-bar');
         var msgEl = container.find('.mod_exeweb-progress-message');
-
-        bar.removeClass('bg-success bg-danger progress-bar-striped progress-bar-animated');
-        bar.css('width', '100%');
-        bar.attr('aria-valuenow', 100);
+        var spinnerEl = container.find('.mod_exeweb-progress-container .spinner-border');
 
         if (state === 'active') {
-            bar.addClass('progress-bar-striped progress-bar-animated');
-        } else if (state === 'success') {
-            bar.addClass('bg-success');
-        } else if (state === 'error') {
-            bar.addClass('bg-danger');
+            spinnerEl.show();
+        } else {
+            spinnerEl.hide();
         }
 
         msgEl.text(message || '');
@@ -436,9 +430,25 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
      * @param {Object} runtimeConfig Runtime config.
      */
     var executeAction = function(container, action, runtimeConfig) {
+        var clickedBtn = container.find('[data-action="' + action + '"]');
+        var originalBtnHtml = clickedBtn.html();
+
+        // Choose the right lang strings for the button and spinner message.
+        var btnStringKey = (action === 'uninstall') ? 'editoruninstalling' : 'editorinstalling';
+        var msgStringKey = (action === 'uninstall') ? 'editoruninstallingmessage' : 'editordownloadingmessage';
+
+        Str.get_strings([
+            {key: btnStringKey, component: 'mod_exeweb'},
+            {key: msgStringKey, component: 'mod_exeweb'},
+        ]).then(function(strings) {
+            clickedBtn.html(strings[0]);
+            setProgressState(container, 'active', strings[1]);
+        }).catch(function() {
+            setProgressState(container, 'active');
+        });
+
         disableButtons(container);
         showProgress(container);
-        setProgressState(container, 'active');
 
         var timeoutHandle = null;
         var timedOut = false;
@@ -457,15 +467,14 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             }
             window.clearTimeout(timeoutHandle);
 
-            setProgressState(container, 'success');
+            clickedBtn.html(originalBtnHtml);
+            hideProgress(container);
             var message = result.message || 'Done.';
             showResultMessage(container, message, 'success');
             Notification.addNotification({message: message, type: 'success'});
 
-            refreshStatus(container, true, runtimeConfig).then(function() {
-                hideProgress(container);
-            }).catch(function() {
-                hideProgress(container);
+            refreshStatus(container, true, runtimeConfig).catch(function() {
+                // Keep current state.
             });
 
             return result;
@@ -475,7 +484,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             }
             window.clearTimeout(timeoutHandle);
 
-            setProgressState(container, 'error');
+            clickedBtn.html(originalBtnHtml);
+            hideProgress(container);
             var message = (err && err.message) ? err.message : 'An error occurred.';
             showResultMessage(container, message, 'danger');
             Notification.addNotification({message: message, type: 'error'});
