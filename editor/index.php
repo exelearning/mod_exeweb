@@ -31,10 +31,9 @@ require_once($CFG->dirroot . '/mod/exeweb/lib.php');
 /**
  * Output a visible error page inside the editor iframe.
  *
- * @param int $cmid Course module ID.
  * @param string $message The error message to display.
  */
-function exeweb_editor_error_page(int $cmid, string $message): void {
+function exeweb_editor_error_page(string $message): void {
     $escapedmessage = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
     header('Content-Type: text/html; charset=utf-8');
     echo <<<HTML
@@ -102,14 +101,14 @@ $editorbaseurl = $CFG->wwwroot . '/mod/exeweb/editor/static.php/' . $cm->id;
 $editorindexsource = exeweb_get_embedded_editor_index_source();
 if ($editorindexsource === null) {
     if (is_siteadmin()) {
-        exeweb_editor_error_page($id, get_string('embeddednotinstalledadmin', 'mod_exeweb'));
+        exeweb_editor_error_page(get_string('embeddednotinstalledadmin', 'mod_exeweb'));
     } else {
-        exeweb_editor_error_page($id, get_string('embeddednotinstalledcontactadmin', 'mod_exeweb'));
+        exeweb_editor_error_page(get_string('embeddednotinstalledcontactadmin', 'mod_exeweb'));
     }
 }
 $html = @file_get_contents($editorindexsource);
 if ($html === false || empty($html)) {
-    exeweb_editor_error_page($id, get_string('editorreaderror', 'mod_exeweb'));
+    exeweb_editor_error_page(get_string('editorreaderror', 'mod_exeweb'));
 }
 
 // Inject <base> tag pointing directly to the static directory.
