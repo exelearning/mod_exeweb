@@ -27,9 +27,49 @@ defined('MOODLE_INTERNAL') || die;
 if ($ADMIN->fulltree) {
     require_once("$CFG->libdir/resourcelib.php");
 
-    // Connection settings.
+    // Editor mode setting.
+    $settings->add(new admin_setting_heading('exeweb/embeddededitorsettings',
+        get_string('embeddededitorsettings', 'mod_exeweb'), ''));
+
+    $editormodedesc = get_string('editormodedesc', 'mod_exeweb');
+    $editormodes = [
+        'online' => get_string('editormodeonline', 'mod_exeweb'),
+        'embedded' => get_string('editormodeembedded', 'mod_exeweb'),
+    ];
+    $settings->add(new admin_setting_configselect('exeweb/editormode',
+        get_string('editormode', 'mod_exeweb'), $editormodedesc,
+        'online', $editormodes));
+
+    $settings->add(new \mod_exeweb\admin\admin_setting_embeddededitor(
+        get_string('embeddededitorstatus', 'mod_exeweb'),
+        ''
+    ));
+
+    // Connection settings (only relevant for online mode).
+    // Inline JS to hide/show connection settings based on editor mode selection.
+    $connectionsettingsdesc = '<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var modeSelect = document.getElementById("id_s_exeweb_editormode");
+        if (!modeSelect) return;
+        var connectionIds = [
+            "admin-connectionsettings", "admin-exeonlinebaseuri", "admin-providername",
+            "admin-providerversion", "admin-hmackey1", "admin-tokenexpiration"
+        ];
+        function toggleConnectionSettings() {
+            var mode = modeSelect.value;
+            connectionIds.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.style.display = (mode === "online") ? "" : "none";
+            });
+            var embeddedWidget = document.querySelector(".mod_exeweb-admin-embedded-editor-setting");
+            if (embeddedWidget) embeddedWidget.style.display = (mode === "embedded") ? "" : "none";
+        }
+        modeSelect.addEventListener("change", toggleConnectionSettings);
+        toggleConnectionSettings();
+    });
+    </script>';
     $settings->add(new admin_setting_heading('exeweb/connectionsettings',
-        get_string('exeonline:connectionsettings', 'mod_exeweb'), ''));
+        get_string('exeonline:connectionsettings', 'mod_exeweb'), $connectionsettingsdesc));
 
     $settings->add(new admin_setting_configtext('exeweb/exeonlinebaseuri',
         get_string('exeonline:baseuri', 'mod_exeweb'),
@@ -56,7 +96,7 @@ if ($ADMIN->fulltree) {
 
     // Exeweb default template.
     $filemanageroptions = [
-        'accepted_types' => ['.zip'],
+        'accepted_types' => ['.zip', '.elpx'],
         'maxbytes' => 0,
         'maxfiles' => 1,
         'subdirs' => 0,
@@ -73,7 +113,7 @@ if ($ADMIN->fulltree) {
 
     // The eXeweb package validation rules.
     $mandatoryfilesre = implode("\n", [
-	'/^content(v\d+)?\.xml$/',
+    '/^content(v\d+)?\.xml$/',
     ]);
     $forbiddenfilesre = implode("\n", [
         '/.*\.php$/',
@@ -124,7 +164,7 @@ if ($ADMIN->fulltree) {
         new lang_string('popupwidth', 'mod_exeweb'), new lang_string('popupwidthexplain', 'mod_exeweb'), 620, PARAM_INT, 7));
     $settings->add(new admin_setting_configtext('exeweb/popupheight',
         new lang_string('popupheight', 'mod_exeweb'), new lang_string('popupheightexplain', 'mod_exeweb'), 450, PARAM_INT, 7));
-    $options = ['0' => new lang_string('none'), '1' => new lang_string('allfiles'), '2' => new lang_string('htmlfilesonly'), ];
+    $options = ['0' => new lang_string('none'), '1' => new lang_string('allfiles'), '2' => new lang_string('htmlfilesonly') ];
     $settings->add(new admin_setting_configselect('exeweb/filterfiles',
         new lang_string('filterfiles', 'mod_exeweb'), new lang_string('filterfilesexplain', 'mod_exeweb'), 0, $options));
 }

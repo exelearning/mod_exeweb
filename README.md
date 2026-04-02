@@ -1,5 +1,7 @@
 # eXeLearning web sites for Moodle
 
+[![Preview in Moodle Playground](https://raw.githubusercontent.com/ateeducacion/action-moodle-playground-pr-preview/refs/heads/main/assets/playground-preview-button.svg)](https://ateeducacion.github.io/moodle-playground/?blueprint-url=https://raw.githubusercontent.com/exelearning/mod_exeweb/refs/heads/main/blueprint.json)
+
 Activity-type module to create and edit web sites with eXeLearning (online).
 
 You need the eXeLearning online version installed (ws28 or higher) and access to its configuration files to run
@@ -13,22 +15,25 @@ This plugin version is tested for:
 * Moodle 3.11.10+ (Build: 20221007)
 * Moodle 3.9.2+ (Build: 20200929)
 
-## Installing via uploaded ZIP file ##
+## Installation
 
-1. Log in to your Moodle site as an admin and go to _Site administration >
+> **Important:** It is recommended to install from a [release ZIP](https://github.com/exelearning/mod_exeweb/releases), which includes the embedded editor pre-built for optimal performance. If the release ZIP does not include the editor, or if you want to install a newer version, administrators can download it from GitHub Releases via the _Manage embedded editor_ page in the plugin settings.
+
+### Installing via uploaded ZIP file
+
+1. Download the latest ZIP from [Releases](https://github.com/exelearning/mod_exeweb/releases).
+2. Log in to your Moodle site as an admin and go to _Site administration >
    Plugins > Install plugins_.
-2. Upload the ZIP file with the plugin code. You should only be prompted to add
+3. Upload the ZIP file with the plugin code. You should only be prompted to add
    extra details if your plugin type is not automatically detected.
-3. Check the plugin validation report and finish the installation.
+4. Check the plugin validation report and finish the installation.
 
-## Installing manually ##
+### Installing manually
 
-The plugin can be also installed by putting the contents of this directory to
-
-    {your/moodle/dirroot}/mod/exeweb
-
-Afterwards, log in to your Moodle site as an admin and go to _Site administration >
-Notifications_ to complete the installation.
+1. Download and extract the latest ZIP from [Releases](https://github.com/exelearning/mod_exeweb/releases).
+2. Place the extracted contents in `{your/moodle/dirroot}/mod/exeweb`.
+3. Log in to your Moodle site as an admin and go to _Site administration >
+   Notifications_ to complete the installation.
 
 Alternatively, you can run
 
@@ -61,108 +66,29 @@ Go to the URL:
     * A mandatory files list can be configurad here. Enter each mandatory file as a PHP regular expression (RE) on a new line.
 
   * Forbidden files RE list: *exeweb | forbiddenfileslist*
-
     * A forbidden files list can be configurad here. Enter each forbidden file as a PHP regular expression (RE) on a new line.
 
+## Embedded Editor Management
 
-## Development using Makefile
+The plugin supports two editor sources with the following precedence:
 
-To facilitate development, a `Makefile` is included to simplify Docker-based workflows.
+1. **Admin-installed** (moodledata): Downloaded from GitHub Releases via the admin management page. Stored under `moodledata/mod_exeweb/embedded_editor/`.
+2. **Bundled** (plugin): Included in the plugin release ZIP at `dist/static/`.
 
-### Requirements
+An admin-installed version always takes precedence over the bundled version. If neither source is available, the embedded editor cannot be used.
 
-- Docker
-- Docker Compose
+### Managing the editor
 
-### Available Commands
+1. Go to _Site administration > Plugins > Activity modules > eXeLearning (website)_.
+2. The settings page shows the current editor status and active source.
+3. Click _Manage embedded editor_ to access the management page.
+4. From there you can install, update, repair, or remove the editor.
 
-- **Pull the latest images**:  
-  To pull the latest Docker images from the registry, use:
+The management page requires the `moodle/site:config` and `mod/exeweb:manageembeddededitor` capabilities.
 
-  ```bash
-  make pull
-  ```
-  > **Note**: Docker need to be logged in ghcr.io *([more info...])(https://docs.github.com/es/packages/working-with-a-github-packages-registry/working-with-the-container-registry)*
+## Development
 
-- **Start the development environment**:  
-  To start the Docker containers in interactive mode, run:
-
-  ```bash
-  make up
-  ```
-
-  To start the containers in the background (daemon mode), run:
-
-  ```bash
-  make upd
-  ```
-
-- **Build the Docker containers**:  
-  You can build the Docker containers using the following command. This will also check if the `EXELEARNING_WEB_SOURCECODE_PATH` is defined in the `.env` file:
-
-  ```bash
-  make build
-  ```
-
-  > **Note**: If `EXELEARNING_WEB_SOURCECODE_PATH` is not defined, the build will fail and display an error message.
-
-- **Access a shell in the Moodle container**:  
-  To open a shell inside the running Moodle container, use:
-
-  ```bash
-  make shell
-  ```
-
-- **Stop and remove containers**:  
-  To stop and remove the running Docker containers, run:
-
-  ```bash
-  make down
-  ```
-
-- **Clean up the environment**:  
-  To stop and remove all Docker containers, volumes, and orphaned containers, run:
-
-  ```bash
-  make clean
-  ```
-
-### Environment Variables
-
-You can configure various settings using the `.env` file. If this file does not exist, it will be automatically generated by copying from `.env.dist`. Key variables to configure:
-
-- `EXELEARNING_WEB_SOURCECODE_PATH`: Define the path to the eXeLearning source code if you want to work with a local version.
-- `APP_PORT`: Define the port on which the application will run.
-- `APP_SECRET`: Set a secret key for the application.
-
-### Example Workflow
-
-1. Ensure you have Docker running and properly configured.
-2. Define your environment variables in the `.env` file or copy from `.env.dist`.
-3. Pull the latest Docker images:
-
-    ```bash
-    make pull
-    ```
-
-4. Start the environment:
-
-    ```bash
-    make up
-    ```
-
-5. Build the environment if necessary:
-
-    ```bash
-    make build
-    ```
-
-6. Once development is complete, stop and clean up the environment:
-
-    ```bash
-    make down
-    make clean
-    ```
+For development setup, build instructions, and contributing guidelines, see [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## About
 
