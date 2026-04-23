@@ -268,6 +268,7 @@ $string['stylesupload_label'] = 'Style ZIP package';
 $string['stylesupload_submit'] = 'Upload style';
 $string['stylesupload_hint'] = 'Maximum file size: {$a}. Only .zip packages containing a valid config.xml are accepted.';
 $string['stylesupload_success'] = 'Style "{$a}" installed.';
+$string['stylesupload_success_many'] = 'Installed: {$a}';
 $string['stylesupload_failed'] = 'Style upload failed.';
 $string['stylesupload_missing'] = 'The uploaded file is missing or unreadable.';
 $string['stylesupload_empty'] = 'The uploaded file is empty.';

@@ -26,6 +26,7 @@ require('../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
 use mod_exeweb\local\styles_service;
+use mod_exeweb\form\styles_upload_form;
 
 admin_externalpage_setup('mod_exeweb_styles');
 
@@ -37,37 +38,11 @@ $action = optional_param('action', '', PARAM_ALPHA);
 $returnurl = new moodle_url('/mod/exeweb/admin/styles.php');
 
 // --------------------------------------------------------------------
-// Actions.
+// Toggle/delete actions still use GET + sesskey (simple URL handlers).
 // --------------------------------------------------------------------
 if ($action !== '') {
     require_sesskey();
     switch ($action) {
-        case 'upload':
-            $uploaded = $_FILES['style_zip'] ?? null;
-            if (!is_array($uploaded) || (int) $uploaded['error'] !== UPLOAD_ERR_OK) {
-                redirect($returnurl, get_string('stylesupload_failed', 'mod_exeweb'), null,
-                    \core\output\notification::NOTIFY_ERROR);
-            }
-            if (!is_uploaded_file($uploaded['tmp_name'])) {
-                redirect($returnurl, get_string('stylesupload_failed', 'mod_exeweb'), null,
-                    \core\output\notification::NOTIFY_ERROR);
-            }
-            try {
-                $entry = styles_service::install_from_zip(
-                    $uploaded['tmp_name'],
-                    clean_param($uploaded['name'] ?? '', PARAM_FILE)
-                );
-                redirect($returnurl,
-                    get_string('stylesupload_success', 'mod_exeweb', s($entry['title'])),
-                    null,
-                    \core\output\notification::NOTIFY_SUCCESS
-                );
-            } catch (\moodle_exception $e) {
-                redirect($returnurl, $e->getMessage(), null,
-                    \core\output\notification::NOTIFY_ERROR);
-            }
-            break;
-
         case 'toggleuploaded':
             $slug = required_param('slug', PARAM_TEXT);
             $enabled = (bool) required_param('enabled', PARAM_INT);
@@ -95,6 +70,23 @@ if ($action !== '') {
 }
 
 // --------------------------------------------------------------------
+// Upload form using Moodle's filemanager (drag-and-drop, multi-file).
+// --------------------------------------------------------------------
+$form = new styles_upload_form($returnurl->out(false));
+
+if ($formdata = $form->get_data()) {
+    $draftitemid = $formdata->styles_zip ?? null;
+    $summary = process_uploaded_style_drafts($draftitemid);
+    $msg = build_upload_summary_message($summary);
+    $level = empty($summary['errors'])
+        ? \core\output\notification::NOTIFY_SUCCESS
+        : (empty($summary['installed'])
+            ? \core\output\notification::NOTIFY_ERROR
+            : \core\output\notification::NOTIFY_WARNING);
+    redirect($returnurl, $msg, null, $level);
+}
+
+// --------------------------------------------------------------------
 // Render.
 // --------------------------------------------------------------------
 echo $OUTPUT->header();
@@ -107,38 +99,8 @@ if (get_config('exeweb', 'editormode') !== 'embedded') {
 
 echo html_writer::tag('p', get_string('stylesmanager_intro', 'mod_exeweb'));
 
-// Upload form.
-echo html_writer::start_tag('form', [
-    'method' => 'post',
-    'action' => $returnurl->out(false),
-    'enctype' => 'multipart/form-data',
-    'class' => 'mt-3 mb-4',
-]);
-echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'upload']);
-echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
-echo html_writer::tag('label',
-    get_string('stylesupload_label', 'mod_exeweb'),
-    ['for' => 'style_zip', 'class' => 'd-block mb-1']
-);
-echo html_writer::empty_tag('input', [
-    'type' => 'file',
-    'id' => 'style_zip',
-    'name' => 'style_zip',
-    'accept' => '.zip,application/zip,application/x-zip-compressed',
-    'required' => 'required',
-]);
-echo ' ';
-echo html_writer::empty_tag('input', [
-    'type' => 'submit',
-    'class' => 'btn btn-primary',
-    'value' => get_string('stylesupload_submit', 'mod_exeweb'),
-]);
-echo html_writer::tag('p',
-    get_string('stylesupload_hint', 'mod_exeweb',
-        display_size(styles_service::get_max_zip_size())),
-    ['class' => 'text-muted small mt-2']
-);
-echo html_writer::end_tag('form');
+echo $OUTPUT->heading(get_string('stylesupload_label', 'mod_exeweb'), 3);
+$form->display();
 
 // Uploaded styles table.
 $uploaded = styles_service::list_uploaded_styles();
@@ -228,3 +190,67 @@ if (empty($builtins)) {
 }
 
 echo $OUTPUT->footer();
+
+// --------------------------------------------------------------------
+// Helpers.
+// --------------------------------------------------------------------
+
+/**
+ * Consume every ZIP in the given draft filearea, extract it to
+ * moodledata/mod_exeweb/styles/<slug>/, record it in the registry, and
+ * delete the draft file.
+ *
+ * @param int|null $draftitemid Draft item id from the filemanager.
+ * @return array{installed: string[], errors: string[]}
+ */
+function process_uploaded_style_drafts(?int $draftitemid): array {
+    global $USER;
+    $summary = ['installed' => [], 'errors' => []];
+    if (!$draftitemid) {
+        return $summary;
+    }
+    $usercontext = \context_user::instance($USER->id);
+    $fs = get_file_storage();
+    $files = $fs->get_area_files($usercontext->id, 'user', 'draft', $draftitemid, 'id', false);
+    if (empty($files)) {
+        return $summary;
+    }
+    $tmpdir = make_request_directory();
+    foreach ($files as $file) {
+        $filename = $file->get_filename();
+        $tmppath = $tmpdir . '/' . clean_param($filename, PARAM_FILE);
+        try {
+            $file->copy_content_to($tmppath);
+            $entry = \mod_exeweb\local\styles_service::install_from_zip($tmppath, $filename);
+            $summary['installed'][] = $entry['title'] ?? $entry['name'];
+        } catch (\moodle_exception $e) {
+            $summary['errors'][] = $filename . ': ' . $e->getMessage();
+        } finally {
+            if (is_file($tmppath)) {
+                @unlink($tmppath);
+            }
+            $file->delete();
+        }
+    }
+    return $summary;
+}
+
+/**
+ * Compose the redirect message for the upload summary.
+ *
+ * @param array{installed: string[], errors: string[]} $summary
+ * @return string
+ */
+function build_upload_summary_message(array $summary): string {
+    $parts = [];
+    if (!empty($summary['installed'])) {
+        $parts[] = get_string('stylesupload_success_many', 'mod_exeweb', implode(', ', $summary['installed']));
+    }
+    if (!empty($summary['errors'])) {
+        $parts[] = implode("\n", $summary['errors']);
+    }
+    if (empty($parts)) {
+        return get_string('stylesupload_failed', 'mod_exeweb');
+    }
+    return implode("\n\n", $parts);
+}
