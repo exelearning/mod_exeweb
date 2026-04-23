@@ -24,6 +24,20 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+// Register the styles management admin page so it is reachable from
+// `/admin/settings.php` and from a dedicated link below.
+if ($hassiteconfig) {
+    $ADMIN->add(
+        'modsettingsexeweb',
+        new admin_externalpage(
+            'mod_exeweb_styles',
+            get_string('stylesmanager', 'mod_exeweb'),
+            new moodle_url('/mod/exeweb/admin/styles.php'),
+            ['moodle/site:config', 'mod/exeweb:manageembeddededitor']
+        )
+    );
+}
+
 if ($ADMIN->fulltree) {
     require_once("$CFG->libdir/resourcelib.php");
 
@@ -45,6 +59,28 @@ if ($ADMIN->fulltree) {
         ''
     ));
 
+    // Link to the styles management page (shown only for embedded mode
+    // via the existing admin/editormode JS toggle below).
+    $styleslinkurl = new moodle_url('/mod/exeweb/admin/styles.php');
+    $styleslink = '<div class="mod_exeweb-admin-styles-link">'
+        . '<a class="btn btn-secondary" href="' . $styleslinkurl->out(false) . '">'
+        . get_string('stylesmanager', 'mod_exeweb') . '</a>'
+        . '<p class="text-muted small mt-1 mb-0">'
+        . get_string('stylesmanager_hint', 'mod_exeweb') . '</p>'
+        . '</div>';
+    $settings->add(new admin_setting_heading(
+        'exeweb/stylesmanagerlink',
+        get_string('stylesmanager', 'mod_exeweb'),
+        $styleslink
+    ));
+
+    $settings->add(new admin_setting_configcheckbox(
+        'exeweb/stylesblockimport',
+        get_string('stylesblockimport', 'mod_exeweb'),
+        get_string('stylesblockimport_desc', 'mod_exeweb'),
+        1
+    ));
+
     // Connection settings (only relevant for online mode).
     // Inline JS to hide/show connection settings based on editor mode selection.
     $connectionsettingsdesc = '<script>
@@ -63,6 +99,8 @@ if ($ADMIN->fulltree) {
             });
             var embeddedWidget = document.querySelector(".mod_exeweb-admin-embedded-editor-setting");
             if (embeddedWidget) embeddedWidget.style.display = (mode === "embedded") ? "" : "none";
+            var stylesRow = document.getElementById("admin-stylesmanagerlink");
+            if (stylesRow) stylesRow.style.display = (mode === "embedded") ? "" : "none";
         }
         modeSelect.addEventListener("change", toggleConnectionSettings);
         toggleConnectionSettings();
