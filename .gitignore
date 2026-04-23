@@ -8,3 +8,10 @@ phpmd-rules.xml
 /vendor/
 /composer.lock
 /composer.phar
+
+# Built static editor files
+dist/static/
+
+# Local editor checkout fetched during build
+exelearning/
+.omc/

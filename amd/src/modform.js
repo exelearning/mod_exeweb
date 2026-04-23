@@ -14,9 +14,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Javascript helper function for mod_exeweb module.
+ * Javascript helper function for mod_exeweb module form.
  *
- * @module      mod_exeweb/resize
+ * @module      mod_exeweb/modform
  * @copyright   2023 3&Punt
  * @author      Juan Carrera <juan@treipunt.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -55,6 +55,21 @@ const initialize = () => {
             getString('exeweb:editonlineandreturntocourse', 'mod_exeweb')
                 .then((label) => {
                     Log.debug('Label buttton course: ', label);
+                    buttonCourse.value = label;
+                    return;
+                })
+                .catch();
+
+        } else if (e.target.value == 'embedded') {
+            getString('savechangesanddisplay', 'core')
+                .then((label) => {
+                    buttonDisplay.value = label;
+                    return;
+                })
+                .catch();
+
+            getString('savechangesandreturntocourse', 'core')
+                .then((label) => {
                     buttonCourse.value = label;
                     return;
                 })

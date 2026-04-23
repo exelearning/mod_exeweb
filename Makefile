@@ -1,4 +1,11 @@
-# Makefile to facilitate the use of Docker in the exelearning-web project
+# Makefile for mod_exeweb Moodle plugin
+
+# Define SED_INPLACE based on the operating system
+ifeq ($(shell uname), Darwin)
+  SED_INPLACE = sed -i ''
+else
+  SED_INPLACE = sed -i
+endif
 
 # Detect the operating system and shell environment
 ifeq ($(OS),Windows_NT)
@@ -42,12 +49,12 @@ endif
 
 # Start Docker containers in interactive mode
 # This target builds and starts the Docker containers, allowing interaction with the terminal.
-up: check-docker check-env
+up: check-docker check-env build-editor
 	docker compose up
 
 # Start Docker containers in background mode (daemon)
 # This target builds and starts the Docker containers in the background.
-upd: check-docker check-env
+upd: check-docker check-env build-editor
 	docker compose up -d    
 
 # Stop and remove Docker containers
@@ -102,24 +109,136 @@ phpmd:
 # Run Behat tests using Composer
 behat:
 	composer behat
+# -------------------------------------------------------
+# Embedded static editor build targets
+# -------------------------------------------------------
+
+EDITOR_SUBMODULE_PATH = exelearning
+EDITOR_DIST_PATH = dist/static
+EDITOR_REPO_DEFAULT = https://github.com/exelearning/exelearning.git
+EDITOR_REF_DEFAULT = main
+
+# Check if bun is installed
+check-bun:
+	@command -v bun > /dev/null 2>&1 || (echo "Error: bun is not installed. Please install bun: https://bun.sh" && exit 1)
+
+# Fetch editor source code from remote repository (branch/tag, shallow clone)
+fetch-editor-source:
+	@set -e; \
+	get_env() { \
+		if [ -f .env ]; then \
+			grep -E "^$$1=" .env | tail -n1 | cut -d '=' -f2-; \
+		fi; \
+	}; \
+	REPO_URL="$${EXELEARNING_EDITOR_REPO_URL:-$$(get_env EXELEARNING_EDITOR_REPO_URL)}"; \
+	REF="$${EXELEARNING_EDITOR_REF:-$$(get_env EXELEARNING_EDITOR_REF)}"; \
+	REF_TYPE="$${EXELEARNING_EDITOR_REF_TYPE:-$$(get_env EXELEARNING_EDITOR_REF_TYPE)}"; \
+	if [ -z "$$REPO_URL" ]; then REPO_URL="$(EDITOR_REPO_DEFAULT)"; fi; \
+	if [ -z "$$REF" ]; then REF="$${EXELEARNING_EDITOR_DEFAULT_BRANCH:-$$(get_env EXELEARNING_EDITOR_DEFAULT_BRANCH)}"; fi; \
+	if [ -z "$$REF" ]; then REF="$(EDITOR_REF_DEFAULT)"; fi; \
+	if [ -z "$$REF_TYPE" ]; then REF_TYPE="auto"; fi; \
+	echo "Fetching editor source from $$REPO_URL (ref=$$REF, type=$$REF_TYPE)"; \
+	rm -rf $(EDITOR_SUBMODULE_PATH); \
+	git init -q $(EDITOR_SUBMODULE_PATH); \
+	git -C $(EDITOR_SUBMODULE_PATH) remote add origin "$$REPO_URL"; \
+	case "$$REF_TYPE" in \
+		tag) \
+			git -C $(EDITOR_SUBMODULE_PATH) fetch --depth 1 origin "refs/tags/$$REF:refs/tags/$$REF"; \
+			git -C $(EDITOR_SUBMODULE_PATH) checkout -q "tags/$$REF"; \
+			;; \
+		branch) \
+			git -C $(EDITOR_SUBMODULE_PATH) fetch --depth 1 origin "$$REF"; \
+			git -C $(EDITOR_SUBMODULE_PATH) checkout -q FETCH_HEAD; \
+			;; \
+		auto) \
+			if git -C $(EDITOR_SUBMODULE_PATH) fetch --depth 1 origin "refs/tags/$$REF:refs/tags/$$REF" > /dev/null 2>&1; then \
+				echo "Resolved $$REF as tag"; \
+				git -C $(EDITOR_SUBMODULE_PATH) checkout -q "tags/$$REF"; \
+			else \
+				echo "Resolved $$REF as branch"; \
+				git -C $(EDITOR_SUBMODULE_PATH) fetch --depth 1 origin "$$REF"; \
+				git -C $(EDITOR_SUBMODULE_PATH) checkout -q FETCH_HEAD; \
+			fi; \
+			;; \
+		*) \
+			echo "Error: EXELEARNING_EDITOR_REF_TYPE must be one of: auto, branch, tag"; \
+			exit 1; \
+			;; \
+	esac
+
+# Build static editor to dist/static/
+build-editor: check-bun fetch-editor-source
+	cd $(EDITOR_SUBMODULE_PATH) && bun install && bun run build:static
+	@mkdir -p $(EDITOR_DIST_PATH)
+	@rm -rf $(EDITOR_DIST_PATH)/*
+	cp -r $(EDITOR_SUBMODULE_PATH)/dist/static/* $(EDITOR_DIST_PATH)/
+
+# Backward-compatible alias
+build-editor-no-update: build-editor
+
+# Remove build artifacts
+clean-editor:
+	rm -rf $(EDITOR_DIST_PATH)
+
+# -------------------------------------------------------
+# Packaging
+# -------------------------------------------------------
+
+PLUGIN_NAME = mod_exeweb
+
+# Create a distributable ZIP package
+# Usage: make package RELEASE=0.0.2
+# VERSION (YYYYMMDDXX) is auto-generated from current date
+package:
+	@if [ -z "$(RELEASE)" ]; then \
+		echo "Error: RELEASE not specified. Use 'make package RELEASE=0.0.2'"; \
+		exit 1; \
+	fi
+	$(eval DATE_VERSION := $(shell date +%Y%m%d)00)
+	@echo "Packaging release $(RELEASE) (version $(DATE_VERSION))..."
+	$(SED_INPLACE) "s/\(plugin->version[[:space:]]*=[[:space:]]*\)[0-9]*/\1$(DATE_VERSION)/" version.php
+	$(SED_INPLACE) "s/\(plugin->release[[:space:]]*=[[:space:]]*'\)[^']*/\1$(RELEASE)/" version.php
+	@echo "Creating ZIP archive: $(PLUGIN_NAME)-$(RELEASE).zip..."
+	@if command -v rsync > /dev/null 2>&1 && command -v zip > /dev/null 2>&1; then \
+		rm -rf /tmp/exeweb-package; \
+		mkdir -p /tmp/exeweb-package/exeweb; \
+		rsync -av --exclude-from=.distignore ./ /tmp/exeweb-package/exeweb/; \
+		cd /tmp/exeweb-package && zip -qr "$(CURDIR)/$(PLUGIN_NAME)-$(RELEASE).zip" exeweb; \
+		rm -rf /tmp/exeweb-package; \
+	else \
+		PYTHON=$$(python3 -c "" > /dev/null 2>&1 && echo python3 || echo python); \
+		$$PYTHON scripts/package.py $(RELEASE) $(PLUGIN_NAME); \
+	fi
+	@echo "Restoring version.php..."
+	$(SED_INPLACE) "s/\(plugin->version[[:space:]]*=[[:space:]]*\)[0-9]*/\19999999999/" version.php
+	$(SED_INPLACE) "s/\(plugin->release[[:space:]]*=[[:space:]]*'\)[^']*/\1dev/" version.php
+	@echo "Package created: $(PLUGIN_NAME)-$(RELEASE).zip"
+
+# -------------------------------------------------------
+
 # Display help with available commands
 # This target lists all available Makefile commands with a brief description.
 help:
 	@echo "Available commands:"
-	@echo "  up                - Start Docker containers in interactive mode"
-	@echo "  upd               - Start Docker containers in background mode (daemon)"
-	@echo "  down              - Stop and remove Docker containers"
-	@echo "  build             - Build or rebuild Docker containers"
-	@echo "  pull              - Pull the latest images from the registry"
-	@echo "  clean             - Clean up and stop Docker containers, removing volumes and orphan containers"
-	@echo "  shell             - Open a shell inside the exelearning-web container"
-	@echo "  install-deps      - Install PHP dependencies using Composer"
-	@echo "  lint              - Run code linting using Composer"
-	@echo "  fix               - Automatically fix code style issues using Composer"
-	@echo "  test              - Run tests using Composer"
-	@echo "  phpmd             - Run PHP Mess Detector using Composer"
-	@echo "  behat             - Run Behat tests using Composer"
-	@echo "  help              - Display this help with available commands"
+	@echo "  up                     - Start Docker containers in interactive mode"
+	@echo "  upd                    - Start Docker containers in background mode (daemon)"
+	@echo "  down                   - Stop and remove Docker containers"
+	@echo "  build                  - Build or rebuild Docker containers"
+	@echo "  pull                   - Pull the latest images from the registry"
+	@echo "  clean                  - Clean up and stop Docker containers, removing volumes and orphan containers"
+	@echo "  shell                  - Open a shell inside the exelearning-web container"
+	@echo "  install-deps           - Install PHP dependencies using Composer"
+	@echo "  lint                   - Run code linting using Composer"
+	@echo "  fix                    - Automatically fix code style issues using Composer"
+	@echo "  test                   - Run tests using Composer"
+	@echo "  phpmd                  - Run PHP Mess Detector using Composer"
+	@echo "  behat                  - Run Behat tests using Composer"
+	@echo "  build-editor           - Build embedded static editor"
+	@echo "  build-editor-no-update - Alias of build-editor"
+	@echo "  clean-editor           - Remove editor build artifacts"
+	@echo "  fetch-editor-source    - Download editor source from configured repo/ref"
+	@echo "  package                - Create distributable ZIP (RELEASE=X.Y.Z required)"
+	@echo "  help                   - Display this help with available commands"
 
 
 # Set help as the default goal if no target is specified
