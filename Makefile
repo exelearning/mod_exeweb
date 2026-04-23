@@ -199,11 +199,16 @@ package:
 	$(SED_INPLACE) "s/\(plugin->version[[:space:]]*=[[:space:]]*\)[0-9]*/\1$(DATE_VERSION)/" version.php
 	$(SED_INPLACE) "s/\(plugin->release[[:space:]]*=[[:space:]]*'\)[^']*/\1$(RELEASE)/" version.php
 	@echo "Creating ZIP archive: $(PLUGIN_NAME)-$(RELEASE).zip..."
-	rm -rf /tmp/exeweb-package
-	mkdir -p /tmp/exeweb-package/exeweb
-	rsync -av --exclude-from=.distignore ./ /tmp/exeweb-package/exeweb/
-	cd /tmp/exeweb-package && zip -qr "$(CURDIR)/$(PLUGIN_NAME)-$(RELEASE).zip" exeweb
-	rm -rf /tmp/exeweb-package
+	@if command -v rsync > /dev/null 2>&1 && command -v zip > /dev/null 2>&1; then \
+		rm -rf /tmp/exeweb-package; \
+		mkdir -p /tmp/exeweb-package/exeweb; \
+		rsync -av --exclude-from=.distignore ./ /tmp/exeweb-package/exeweb/; \
+		cd /tmp/exeweb-package && zip -qr "$(CURDIR)/$(PLUGIN_NAME)-$(RELEASE).zip" exeweb; \
+		rm -rf /tmp/exeweb-package; \
+	else \
+		PYTHON=$$(python3 -c "" > /dev/null 2>&1 && echo python3 || echo python); \
+		$$PYTHON scripts/package.py $(RELEASE) $(PLUGIN_NAME); \
+	fi
 	@echo "Restoring version.php..."
 	$(SED_INPLACE) "s/\(plugin->version[[:space:]]*=[[:space:]]*\)[0-9]*/\19999999999/" version.php
 	$(SED_INPLACE) "s/\(plugin->release[[:space:]]*=[[:space:]]*'\)[^']*/\1dev/" version.php
