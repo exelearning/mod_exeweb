@@ -5,10 +5,10 @@
 - Version jump to 4.0.0 to align numbering with eXeLearning for consistency across related projects.
 - Introduce fully integrated embedded eXeLearning editor inside Moodle, enabling content creation and editing without leaving the platform.
 - Add editor bootstrap system (`editor/index.php`, `editor/static.php`, `editor/save.php`) with iframe-based loading and postMessage communication layer.
-- Implement admin settings interface to install, update, and uninstall the editor from GitHub releases, including improved UX feedback and multilingual status messages.
+- Implement admin settings interface to install, update and uninstall the editor from GitHub releases, including improved UX feedback and multilingual status messages.
 - Add external AJAX API (`manage_embedded_editor`) for installation and status management operations.
 - Introduce source resolution strategy prioritizing `moodledata` over bundled assets for editor resources.
-- Add postMessage bridge (`moodle_exe_bridge.js`) supporting document lifecycle events such as open, save/export, and real-time change tracking via Yjs.
+- Add postMessage bridge (`moodle_exe_bridge.js`) supporting document lifecycle events such as open, save/export and real-time change tracking via Yjs.
 - Improve admin-aware error handling with differentiated messaging for administrators and standard users.
 - Add blueprint configuration for default setup and sample activities.
 - Extend multilingual support (en, es, ca, eu, gl).
@@ -18,7 +18,7 @@
 - Replace iframe error handling with inline HTML rendering to avoid Moodle exception screens inside embedded contexts.
 - Add `manage_embedded_editor_upload.php` endpoint for environments where direct GitHub access is not available (e.g., Playground/WASM constraints).
 - Add compatibility with eXeLearning 4 while maintaining support from eXeLearning 2.9 online onwards.
-- Update activity icons to match the latest eXeLearning design system.
+- Update activity icons to align with the latest eXeLearning design.
 
 ## v1.1 – 2025-06-20
 
