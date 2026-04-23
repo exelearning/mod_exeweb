@@ -259,9 +259,11 @@ class styles_service {
      * @return bool
      */
     public static function is_import_blocked(): bool {
+        // Default: imports allowed (matches upstream ONLINE_THEMES_INSTALL=true).
+        // Admins enable the lockdown explicitly from the Styles page.
         $value = get_config('exeweb', 'stylesblockimport');
         if ($value === false || $value === '' || $value === null) {
-            return true;
+            return false;
         }
         return (bool) $value;
     }

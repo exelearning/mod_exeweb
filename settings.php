@@ -78,7 +78,7 @@ if ($ADMIN->fulltree) {
         'exeweb/stylesblockimport',
         get_string('stylesblockimport', 'mod_exeweb'),
         get_string('stylesblockimport_desc', 'mod_exeweb'),
-        1
+        0
     ));
 
     // Connection settings (only relevant for online mode).
