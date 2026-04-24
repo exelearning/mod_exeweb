@@ -24,6 +24,20 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+// Register the styles management admin page so it is reachable from
+// `/admin/settings.php` and from a dedicated link below.
+if ($hassiteconfig) {
+    $ADMIN->add(
+        'modsettings',
+        new admin_externalpage(
+            'mod_exeweb_styles',
+            get_string('stylesmanager', 'mod_exeweb'),
+            new moodle_url('/mod/exeweb/admin/styles.php'),
+            ['moodle/site:config', 'mod/exeweb:manageembeddededitor']
+        )
+    );
+}
+
 if ($ADMIN->fulltree) {
     require_once("$CFG->libdir/resourcelib.php");
 
@@ -45,6 +59,41 @@ if ($ADMIN->fulltree) {
         ''
     ));
 
+    // Inline style ZIP upload (native filemanager). Each dropped .zip is
+    // validated + extracted + registered on save; the file is then
+    // removed from the filearea so the next render starts clean.
+    $settings->add(new \mod_exeweb\admin\admin_setting_stylesupload(
+        'exeweb/styles_drops',
+        get_string('stylesupload_label', 'mod_exeweb'),
+        get_string('stylesupload_hint', 'mod_exeweb',
+            display_size(\mod_exeweb\local\styles_service::get_max_zip_size())),
+        'styles_drops',
+        0,
+        [
+            'accepted_types' => ['.zip'],
+            'maxbytes' => \mod_exeweb\local\styles_service::get_max_zip_size(),
+            'maxfiles' => -1,
+            'subdirs' => 0,
+        ]
+    ));
+
+    // Uploaded styles list (checkbox per style + per-row delete link).
+    $settings->add(new \mod_exeweb\admin\admin_setting_stylesuploaded(
+        'exeweb/styles_uploaded'
+    ));
+
+    // Built-in styles list (checkbox per style).
+    $settings->add(new \mod_exeweb\admin\admin_setting_stylesbuiltins(
+        'exeweb/styles_builtins'
+    ));
+
+    $settings->add(new admin_setting_configcheckbox(
+        'exeweb/stylesblockimport',
+        get_string('stylesblockimport', 'mod_exeweb'),
+        get_string('stylesblockimport_desc', 'mod_exeweb'),
+        0
+    ));
+
     // Connection settings (only relevant for online mode).
     // Inline JS to hide/show connection settings based on editor mode selection.
     $connectionsettingsdesc = '<script>
@@ -63,6 +112,11 @@ if ($ADMIN->fulltree) {
             });
             var embeddedWidget = document.querySelector(".mod_exeweb-admin-embedded-editor-setting");
             if (embeddedWidget) embeddedWidget.style.display = (mode === "embedded") ? "" : "none";
+            ["admin-styles_drops", "admin-styles_uploaded", "admin-styles_builtins",
+                "admin-stylesblockimport"].forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.style.display = (mode === "embedded") ? "" : "none";
+            });
         }
         modeSelect.addEventListener("change", toggleConnectionSettings);
         toggleConnectionSettings();
