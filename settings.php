@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die;
 // `/admin/settings.php` and from a dedicated link below.
 if ($hassiteconfig) {
     $ADMIN->add(
-        'modsettingsexeweb',
+        'modsettings',
         new admin_externalpage(
             'mod_exeweb_styles',
             get_string('stylesmanager', 'mod_exeweb'),
