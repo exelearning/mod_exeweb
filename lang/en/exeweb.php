@@ -133,7 +133,7 @@ $string['exeorigin_help'] = 'This setting determines how the package is included
 
 * Uploaded package - Enables a zipped eXeLearning website to be chosen via the file picker.
 * Create with eXeLearning (embedded editor) - Creates the activity using the embedded editor. You can then edit it directly from the activity view page.
-* Create/Edit with eXeLearning (Online) - Creates the activity and takes you to eXeLearning Online to edit the package. When done, eXeLearning will send the newly created package back to Moodle.';
+* Create/Edit with eXeLearning - Creates the activity and takes you to eXeLearning to edit the package. When done, eXeLearning will send the newly created package back to Moodle.';
 $string['exeweb:exportexeweb'] = 'Export';
 $string['exeweb:view'] = 'View';
 $string['search:activity'] = 'File';
