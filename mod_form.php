@@ -75,11 +75,9 @@ class mod_exeweb_mod_form extends moodleform_mod {
             }
         } else if (exeweb_online_editor_available()) {
             if ($editmode) {
-                $exeorigins[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebedit', 'mod_exeweb')
-                    . ' (Online)';
+                $exeorigins[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebedit', 'mod_exeweb');
             } else {
-                $exeorigins[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebcreate', 'mod_exeweb')
-                    . ' (Online)';
+                $exeorigins[EXEWEB_ORIGIN_EXEONLINE] = get_string('typeexewebcreate', 'mod_exeweb');
                 $defaulttype = EXEWEB_ORIGIN_EXEONLINE;
             }
         }
