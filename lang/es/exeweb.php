@@ -133,7 +133,7 @@ $string['exeorigin_help'] = 'Este ajuste determina cómo se incluye el paquete e
 
 * Paquete subido - Permite elegir el zip creado con eXeLearning por medio del selector de archivos.
 * Crear con eXeLearning (editor integrado) - Crea la actividad usando el editor integrado. Podrá editarla directamente desde la página de visualización de la actividad.
-* Crear/Editar con eXeLearning (Online) - Crea la actividad y te lleva a eXeLearning Online para editar el contenido. Al terminar, eXeLearning lo enviará de vuelta a Moodle.';
+* Crear/Editar con eXeLearning - Crea la actividad y te lleva a eXeLearning para editar el contenido. Al terminar, eXeLearning lo enviará de vuelta a Moodle.';
 $string['exeweb:exportexeweb'] = 'Exportar recurso';
 $string['exeweb:view'] = 'Ver recurso';
 $string['search:activity'] = 'Fichero';
