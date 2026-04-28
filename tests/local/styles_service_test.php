@@ -171,10 +171,64 @@ class styles_service_test extends \advanced_testcase {
         $this->assertSame('base', $override['fallbackTheme']);
         $this->assertCount(1, $override['uploaded']);
         $this->assertSame('seen', $override['uploaded'][0]['id']);
+        // Even icon-less styles must expose the field so the editor's
+        // Theme constructor doesn't fall back to its empty default.
+        $this->assertArrayHasKey('icons', $override['uploaded'][0]);
+        $this->assertSame([], $override['uploaded'][0]['icons']);
 
         styles_service::set_uploaded_enabled('seen', false);
         $override = styles_service::build_theme_registry_override();
         $this->assertCount(0, $override['uploaded']);
+        @unlink($zip);
+    }
+
+    public function test_build_theme_registry_override_publishes_icons_from_icons_folder(): void {
+        $zip = $this->make_zip([
+            'config.xml' => $this->sample_config_xml('iconic'),
+            'style.css' => 'a{}',
+            'icons/activity.png' => 'PNG',
+            'icons/alert.svg' => '<svg/>',
+            'icons/photo.JPG' => 'JPEG',
+            'icons/readme.txt' => 'ignore',
+            'icons/no-extension' => 'ignore',
+        ]);
+        styles_service::install_from_zip($zip);
+
+        $override = styles_service::build_theme_registry_override();
+        $this->assertCount(1, $override['uploaded']);
+        $entry = $override['uploaded'][0];
+        $this->assertSame('iconic', $entry['id']);
+        $this->assertArrayHasKey('icons', $entry);
+        $this->assertSame(['activity', 'alert', 'photo'], array_keys($entry['icons']));
+        $activity = $entry['icons']['activity'];
+        $this->assertSame('activity', $activity['id']);
+        $this->assertSame('activity', $activity['title']);
+        $this->assertSame('img', $activity['type']);
+        $this->assertSame($entry['url'] . '/icons/activity.png', $activity['value']);
+        @unlink($zip);
+    }
+
+    public function test_scan_uploaded_icons_returns_empty_when_icons_folder_missing(): void {
+        $this->assertSame(
+            [],
+            styles_service::scan_uploaded_icons('no-such-style', 'http://example.test/styles/no-such-style')
+        );
+    }
+
+    public function test_scan_uploaded_icons_url_encodes_filenames_with_spaces(): void {
+        $zip = $this->make_zip([
+            'config.xml' => $this->sample_config_xml('spaced'),
+            'style.css' => 'a{}',
+            'icons/my activity.png' => 'PNG',
+        ]);
+        styles_service::install_from_zip($zip);
+
+        $icons = styles_service::scan_uploaded_icons('spaced', 'http://example.test/styles/spaced');
+        $this->assertArrayHasKey('my activity', $icons);
+        $this->assertSame(
+            'http://example.test/styles/spaced/icons/my%20activity.png',
+            $icons['my activity']['value']
+        );
         @unlink($zip);
     }
 
