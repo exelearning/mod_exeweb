@@ -143,24 +143,42 @@ if (!empty($errors)) {
     echo json_encode($resultmsg);
     exit(1);
 }
-// Package is valid so delete files from package area and move the new one.
-$fs->delete_area_files($context->id, 'mod_exeweb', 'package');
-$exeweb->revision++;
-$fileinfo['itemid'] = $exeweb->revision;
+// Store the new package on a fresh revision before touching the previous one.
+// Old package and content files are deleted only after the new revision is in place,
+// so the activity remains consistent if extraction fails midway.
+$newrevision = (int)$exeweb->revision + 1;
+$fileinfo['itemid'] = $newrevision;
 $fileinfo['filearea'] = 'package';
 $package = $fs->create_file_from_storedfile($fileinfo, $tmpfile);
 $fs->delete_area_files($context->id, 'mod_exeweb', 'temppackage');
-// Process package contents.
+
+// Process package contents. expand_package() deletes content files for ALL itemids
+// before extracting the new ones into $package->get_itemid(), keeping the file area clean.
 $contentslist = exeweb_package::expand_package($package);
-$mainfile = exeweb_package::get_mainfile($contentslist, $package->get_contextid());
+// Pass $package->get_itemid() so get_mainfile() searches in the new revision.
+// Without it the lookup defaulted to itemid 0 and the entry file was never refreshed,
+// which left the activity pointing to outdated entrypath/entryname after each online save.
+$mainfile = exeweb_package::get_mainfile($contentslist, $package->get_contextid(), $package->get_itemid());
 if ($mainfile !== false) {
     file_set_sortorder($mainfile->get_contextid(), 'mod_exeweb', 'content',
-        $exeweb->revision, $mainfile->get_filepath(), $mainfile->get_filename(), 1);
-    $data->entrypath = $mainfile->get_filepath();
-    $data->entryname = $mainfile->get_filename();
+        $newrevision, $mainfile->get_filepath(), $mainfile->get_filename(), 1);
+    $exeweb->entrypath = $mainfile->get_filepath();
+    $exeweb->entryname = $mainfile->get_filename();
 }
 
+// Persist the new revision and entry file metadata together.
+$exeweb->revision = $newrevision;
+$exeweb->timemodified = time();
+$exeweb->usermodified = $user->id;
 $DB->update_record('exeweb', $exeweb);
+
+// Delete leftover package files from previous revisions only after success.
+$packagefiles = $fs->get_area_files($context->id, 'mod_exeweb', 'package', false, 'itemid', false);
+foreach ($packagefiles as $storedfile) {
+    if ((int)$storedfile->get_itemid() !== $newrevision) {
+        $storedfile->delete();
+    }
+}
 
 // Prepare OK response.
 $resultmsg['status'] = '0';
