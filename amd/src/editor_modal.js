@@ -19,6 +19,20 @@ let session = null;
 let requestCounter = 0;
 let openAttemptCount = 0;
 let openResponseTimer = null;
+let hostWindow = null;
+let hostDocument = null;
+
+const getHostWindow = () => {
+    let candidate = window;
+    try {
+        while (candidate.parent && candidate.parent !== candidate && candidate.parent.document) {
+            candidate = candidate.parent;
+        }
+    } catch {
+        // Cross-origin parent — stay where we are.
+    }
+    return candidate;
+};
 
 const MAX_OPEN_ATTEMPTS = 3;
 const OPEN_RESPONSE_TIMEOUT_MS = 3000;
@@ -105,7 +119,8 @@ const setSaveLabel = async(key, fallback) => {
 };
 
 const createLoadingModal = async() => {
-    const modal = document.createElement('div');
+    const targetDocument = hostDocument || document;
+    const modal = targetDocument.createElement('div');
     modal.className = 'exeweb-loading-modal';
     modal.id = 'exeweb-loading-modal';
 
@@ -126,7 +141,7 @@ const createLoadingModal = async() => {
         </div>
     `;
 
-    document.body.appendChild(modal);
+    targetDocument.body.appendChild(modal);
     return modal;
 };
 
@@ -431,6 +446,8 @@ export const close = async(skipConfirm) => {
     }
 
     const wasShowingLoader = isSaving || (skipConfirm === true);
+    const activeWindow = hostWindow || window;
+    const activeDocument = hostDocument || document;
 
     overlay.remove();
     overlay = null;
@@ -445,9 +462,11 @@ export const close = async(skipConfirm) => {
     openAttemptCount = 0;
     clearOpenResponseTimer();
 
-    document.body.style.overflow = '';
-    window.removeEventListener('message', handleMessage);
-    document.removeEventListener('keydown', handleKeydown);
+    activeDocument.body.style.overflow = '';
+    activeWindow.removeEventListener('message', handleMessage);
+    activeDocument.removeEventListener('keydown', handleKeydown);
+    hostWindow = null;
+    hostDocument = null;
 
     if (wasShowingLoader) {
         setTimeout(() => {
@@ -527,11 +546,16 @@ export const open = async(cmid, editorUrl, activityName, packageUrl, saveUrl, se
     });
     overlay.appendChild(iframe);
 
-    document.body.appendChild(overlay);
-    document.body.style.overflow = 'hidden';
+    // Attach the overlay to the topmost same-origin window so the modal covers
+    // the full viewport even when triggered from inside a small frame (e.g. the
+    // FRAME display mode top frame, or the embedded iframe).
+    hostWindow = getHostWindow();
+    hostDocument = hostWindow.document;
+    hostDocument.body.appendChild(overlay);
+    hostDocument.body.style.overflow = 'hidden';
 
-    window.addEventListener('message', handleMessage);
-    document.addEventListener('keydown', handleKeydown);
+    hostWindow.addEventListener('message', handleMessage);
+    hostDocument.addEventListener('keydown', handleKeydown);
 };
 
 export const init = () => {

@@ -87,6 +87,8 @@ function exeweb_display_frame($exeweb, $cm, $course, $file) {
         $PAGE->set_pagelayout('frametop');
         $PAGE->activityheader->set_description(exeweb_get_intro($exeweb, $cm, true));
         exeweb_print_header($exeweb, $cm, $course);
+        // Show action bar with Edit button in the top frame.
+        echo $PAGE->get_renderer('mod_exeweb')->generate_action_bar($cm);
         if (!exeweb_is_teacher_mode_visible($exeweb)) {
             exeweb_require_teacher_mode_hider_for_content_frame();
         }
@@ -217,6 +219,9 @@ function exeweb_print_workaround($exeweb, $cm, $course, $file) {
     $PAGE->activityheader->set_description(exeweb_get_intro($exeweb, $cm, true));
 
     exeweb_print_header($exeweb, $cm, $course);
+
+    // Show action bar with Edit button when user has edit capability.
+    echo $PAGE->get_renderer('mod_exeweb')->generate_action_bar($cm);
 
     echo '<div class="exewebworkaround">';
     switch ($exeweb->display) {
