@@ -26,6 +26,17 @@
 
 import Log from 'core/log';
 
+let contentName = '';
+
+const updateIframeTitle = function(iframe) {
+    try {
+        const pageTitle = iframe.contentDocument && iframe.contentDocument.title;
+        iframe.title = pageTitle ? contentName + ' - ' + pageTitle : contentName;
+    } catch (e) {
+        // cross-origin content, keep existing title
+    }
+};
+
 /**
  * Resizes iFrame and container height to iframes body size.
  * This function is to be declared on window namespace so iframe onload event can find it.
@@ -49,15 +60,22 @@ export const exewebResize = function() {
  */
 export const exewebIframeOnload = function(event) {
     exewebResize();
+    let iFrame = event.target;
+    updateIframeTitle(iFrame);
     // Set a mutation observer, so we can adapt to changes from iFrame's javascript (such
     // as tab clicks o hide/show sections).
-    let iFrame = event.target;
     const config = {attributes: true, childList: true, subtree: true};
     const observer = new MutationObserver(window.exewebResize);
     observer.observe(iFrame.contentDocument.body, config);
+    // Watch for title changes caused by hash-based navigation within the same page.
+    const titleEl = iFrame.contentDocument.querySelector('title');
+    if (titleEl) {
+        new MutationObserver(() => updateIframeTitle(iFrame)).observe(titleEl, {childList: true});
+    }
 };
 
-export const init = () => {
+export const init = (iframeid, name) => {
+    contentName = name || '';
     // Declare on window namespace so iframe onload event can find it.
     window.exewebResize = exewebResize;
     window.exewebIframeOnload = exewebIframeOnload;
@@ -69,6 +87,7 @@ export const init = () => {
 
     if (iframe.contentDocument.readyState === 'complete') {
         exewebResize();
+        updateIframeTitle(iframe);
     }
 
     // Watch for page changes.
