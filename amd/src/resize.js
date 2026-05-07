@@ -30,8 +30,9 @@ let contentName = '';
 
 const updateIframeTitle = function(iframe) {
     try {
-        const pageTitle = iframe.contentDocument && iframe.contentDocument.title;
-        iframe.title = pageTitle ? contentName + ' - ' + pageTitle : contentName;
+        const rawTitle = iframe.contentDocument && iframe.contentDocument.title;
+        const pageTitle = rawTitle ? rawTitle.replace(/\s*\|[^|]*$/, '').replace(/['"]/g, '').trim() : rawTitle;
+        iframe.title = pageTitle ? contentName + ': ' + pageTitle : contentName;
     } catch (e) {
         // cross-origin content, keep existing title
     }
