@@ -30,7 +30,6 @@ $string['badexelearningpackage'] = 'O paquete non cumpre coas normas dos contido
 $string['clicktodownload'] = 'Faga clic en {$a} para descargar o ficheiro.';
 $string['clicktoopen2'] = 'Faga clic en {$a} para ver o ficheiro.';
 $string['configdisplayoptions'] = 'Pode seleccionar calquera das opcións dispoñibles (os axustes existentes non se modificarán). Manteña premida a tecla CTRL para seleccionar varios campos simultaneamente.';
-$string['configframesize'] = 'Cando se amosa unha páxina web ou un ficheiro cargado dentro dun marco (FRAME), este valor é o tamaño en píxeles do marco superior que contén a navegación.';
 $string['configparametersettings'] = 'Configura o valor por defecto do panel de axustes cando se agregan novos recursos. Logo desta primeira vez, convértese nunha preferencia do usuario.';
 $string['configpopup'] = 'Cando se agrega un recurso que pode amosarse nunha xanela emerxente ("popup"), esta opción débese activar por defecto?';
 $string['configpopupdirectories'] = 'As xanelas "popup", deben amosar por defecto as ligazóns do directorio?';
@@ -49,7 +48,6 @@ $string['displayselect'] = 'Amosar';
 $string['displayselect_help'] = 'Este axuste determina como se amosa o contido. As opcións poden incluír:
 
 * Incrustar - Un IFRAME dentro dunha páxina de actividade de Moodle, cos seus bloques laterais (dependerá do estilo de eXeLearning).
-* No marco - Un FRAMESET con dous marcos. O superior amosa algún dato do curso no que estás e as opcións para ir ás actividades anterior e seguinte. O inferior amosa o contido do paquete.
 * Nova xanela - Ábrese unha nova xanela do navegador.
 * Abrir - Ábrese na mesma xanela do navegador.
 * En xanela emerxente - Xanela tipo "popup".';
@@ -83,7 +81,6 @@ $string['filterfiles'] = 'Utilizar filtros de contido do ficheiro';
 $string['filterfilesexplain'] = 'Seleccione o tipo de ficheiro que contén o filtro. Esto pode causar problemas nalgúns contidos. Por favor, revise que todos os ficheiros de texto están en UTF-8.';
 $string['filtername'] = 'Auto-ligazón de nomes de recursos';
 $string['forcedownload'] = 'Forzar descarga';
-$string['framesize'] = 'Altura do marco';
 $string['indicator:cognitivedepth'] = 'Ficheiro cognitivo';
 $string['indicator:cognitivedepth_help'] = 'Este indicador está baseado na profundidade cognitiva acadada polo estudante.';
 $string['indicator:cognitivedepthdef'] = 'Ficheiro cognitivo';

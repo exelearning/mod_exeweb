@@ -158,8 +158,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
             $mform->setAdvanced('popupheight', true);
         }
 
-        if (array_key_exists(RESOURCELIB_DISPLAY_EMBED, $options) ||
-          array_key_exists(RESOURCELIB_DISPLAY_FRAME, $options)) {
+        if (array_key_exists(RESOURCELIB_DISPLAY_EMBED, $options)) {
             $mform->addElement('checkbox', 'printintro', get_string('printintro', 'mod_exeweb'));
             $mform->hideIf('printintro', 'display', 'eq', RESOURCELIB_DISPLAY_POPUP);
             $mform->hideIf('printintro', 'display', 'eq', RESOURCELIB_DISPLAY_OPEN);

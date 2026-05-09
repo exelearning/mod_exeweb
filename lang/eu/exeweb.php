@@ -30,7 +30,6 @@ $string['badexelearningpackage'] = 'El paquete no cumple las normas de los conte
 $string['clicktodownload'] = 'Haga clic en {$a} para descargar el archivo.';
 $string['clicktoopen2'] = 'Haga clic en {$a} para ver el archivo.';
 $string['configdisplayoptions'] = 'Puede seleccionar cualquiera de las opciones disponibles (los ajustes existentes no se modificarán). Mantenga pulsada la tecla CTRL para seleccionar varios campos simultáneamente.';
-$string['configframesize'] = 'Cuando se muestra una página web o un archivo cargado dentro de un marco (FRAME), este valor es el tamaño en píxeles del marco superior, que contiene la navegación.';
 $string['configparametersettings'] = 'Configura el valor por defecto del panel de ajustes cuando se agregan nuevos recursos. Tras esta primera vez, se convierte en una preferencia del usuario.';
 $string['configpopup'] = 'Cuando se agrega un recurso que puede mostrarse en un ventana emergente ("popup"), ¿esta opción se debe activar por defecto?';
 $string['configpopupdirectories'] = 'Las ventanas "popup", ¿deben mostrar por defecto los enlaces del directorio?';
@@ -49,7 +48,6 @@ $string['displayselect'] = 'Mostrar';
 $string['displayselect_help'] = 'Este ajuste determina cómo se muestra el contenido. Las opciones pueden incluir:
 
 * Incrustar - Un IFRAME dentro de una página de actividad de Moodle, con sus bloques laterales (dependerá del tema).
-* En el marco - Un FRAMESET con dos marcos. El superior muestra algún dato del curso en el que estás y las opciones para ir a las actividades anterior y siguiente. El inferior muestra el contenido del paquete.
 * Nueva ventana - Se abre en una nueva ventana del navegador.
 * Abrir - Se abre en la misma ventana del navegador.
 * En ventana emergente - Ventana tipo "popup".';
@@ -83,7 +81,6 @@ $string['filterfiles'] = 'Utilizar filtros del contenido del archivo';
 $string['filterfilesexplain'] = 'Seleccione el tipo de archivo que contiene el filtro. Esto puede causar problemas en algunos contenidos. Por favor, asegúrese de que todos los archivos de texto están en UTF-8.';
 $string['filtername'] = 'Auto-enlace de nombres de recursos';
 $string['forcedownload'] = 'Forzar descarga';
-$string['framesize'] = 'Altura del marco';
 $string['indicator:cognitivedepth'] = 'Archivo cognitivo';
 $string['indicator:cognitivedepth_help'] = 'Este indicador está basado en la profundidad cognitiva alcanzada por el estudiante.';
 $string['indicator:cognitivedepthdef'] = 'Archivo cognitivo';

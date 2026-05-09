@@ -67,68 +67,6 @@ function exeweb_display_embed($exeweb, $cm, $course, $file) {
     die;
 }
 
-
-
-
-/**
- * Display exeweb frames.
- * @param object $exeweb
- * @param object $cm
- * @param object $course
- * @param stored_file $file main file
- * @return does not return
- */
-function exeweb_display_frame($exeweb, $cm, $course, $file) {
-    global $PAGE, $OUTPUT, $CFG;
-
-    $frame = optional_param('frameset', 'main', PARAM_ALPHA);
-
-    if ($frame === 'top') {
-        $PAGE->set_pagelayout('frametop');
-        $PAGE->activityheader->set_description(exeweb_get_intro($exeweb, $cm, true));
-        exeweb_print_header($exeweb, $cm, $course);
-        if (!exeweb_is_teacher_mode_visible($exeweb)) {
-            exeweb_require_teacher_mode_hider_for_content_frame();
-        }
-        echo $OUTPUT->footer();
-        die;
-
-    } else {
-        $config = get_config('exeweb');
-        $context = context_module::instance($cm->id);
-        $fileurl = moodle_url::make_pluginfile_url($context->id, 'mod_exeweb', 'content', $exeweb->revision,
-                        $file->get_filepath(), $file->get_filename());
-        $navurl = "$CFG->wwwroot/mod/exeweb/view.php?id=$cm->id&amp;frameset=top";
-        $title = strip_tags(format_string($course->shortname.': '.$exeweb->name));
-        $framesize = $config->framesize;
-        $contentframetitle = s(format_string($exeweb->name));
-        $modulename = s(get_string('modulename', 'mod_exeweb'));
-        $dir = get_string('thisdirection', 'langconfig');
-
-        $file = <<<EOF
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
-<html dir="$dir">
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>$title</title>
-  </head>
-  <frameset rows="$framesize,*">
-    <frame src="$navurl" title="$modulename" />
-    <frame src="$fileurl" title="$contentframetitle" />
-  </frameset>
-</html>
-EOF;
-
-        @header('Content-Type: text/html; charset=utf-8');
-        echo $file;
-        die;
-    }
-}
-
-/**
- * Internal function - create click to open text with link.
- */
-
 /**
  * Check whether teacher mode toggler should be visible for this activity.
  *
@@ -168,27 +106,6 @@ function exeweb_require_teacher_mode_hider_for_iframe(string $iframeid): void {
     $PAGE->requires->js_init_code($js);
 }
 
-/**
- * Inject CSS into the frame content document to hide teacher mode toggler.
- *
- * @return void
- */
-function exeweb_require_teacher_mode_hider_for_content_frame(): void {
-    global $PAGE;
-
-    $cssjson = json_encode('#teacher-mode-toggler-wrapper { visibility: hidden !important; }');
-    $js = "(function(){"
-        . "var css=" . $cssjson . ";"
-        . "var inject=function(){try{if(!window.parent||!window.parent.frames||!window.parent.frames[1]){return;}"
-        . "var frameWin=window.parent.frames[1];if(!frameWin.document){return;}"
-        . "var d=frameWin.document;var st=d.createElement('style');st.textContent=css;"
-        . "(d.head||d.documentElement).appendChild(st);}catch(e){}};"
-        . "window.addEventListener('load', inject);setTimeout(inject, 300);"
-        . "})();";
-
-    $PAGE->requires->js_init_code($js);
-}
-
 function exeweb_get_clicktoopen($file, $revision, $extra='') {
     global $CFG;
 
@@ -217,6 +134,9 @@ function exeweb_print_workaround($exeweb, $cm, $course, $file) {
     $PAGE->activityheader->set_description(exeweb_get_intro($exeweb, $cm, true));
 
     exeweb_print_header($exeweb, $cm, $course);
+
+    // Show action bar with Edit button when user has edit capability.
+    echo $PAGE->get_renderer('mod_exeweb')->generate_action_bar($cm);
 
     echo '<div class="exewebworkaround">';
     switch ($exeweb->display) {

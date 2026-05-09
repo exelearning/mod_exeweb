@@ -43,11 +43,21 @@
  */
 
 function xmldb_exeweb_upgrade($oldversion) {
-    global $DB;
+    global $DB, $CFG;
 
     $dbman = $DB->get_manager();
 
-    // Put any upgrade step here.
+    if ($oldversion < 2026050900) {
+        require_once($CFG->libdir . '/resourcelib.php');
+
+        // Frameset display has been removed in favour of the equivalent
+        // IFRAME-based EMBED mode. Migrate legacy activities and drop the
+        // orphan framesize plugin config.
+        $DB->set_field('exeweb', 'display', RESOURCELIB_DISPLAY_EMBED, ['display' => RESOURCELIB_DISPLAY_FRAME]);
+        unset_config('framesize', 'exeweb');
+
+        upgrade_mod_savepoint(true, 2026050900, 'exeweb');
+    }
 
     return true;
 }

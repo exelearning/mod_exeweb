@@ -185,7 +185,6 @@ if ($ADMIN->fulltree) {
 
     $displayoptions = resourcelib_get_displayoptions([
         RESOURCELIB_DISPLAY_EMBED,
-        RESOURCELIB_DISPLAY_FRAME,
         RESOURCELIB_DISPLAY_OPEN,
         RESOURCELIB_DISPLAY_NEW,
         RESOURCELIB_DISPLAY_POPUP,
@@ -196,9 +195,6 @@ if ($ADMIN->fulltree) {
         RESOURCELIB_DISPLAY_POPUP,
     ];
 
-    // General settings.
-    $settings->add(new admin_setting_configtext('exeweb/framesize',
-        new lang_string('framesize', 'mod_exeweb'), new lang_string('configframesize', 'mod_exeweb'), 130, PARAM_INT));
     $settings->add(new admin_setting_configmultiselect('exeweb/displayoptions',
         new lang_string('displayoptions', 'mod_exeweb'), new lang_string('configdisplayoptions', 'mod_exeweb'),
         $defaultdisplayoptions, $displayoptions));

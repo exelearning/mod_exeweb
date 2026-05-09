@@ -30,7 +30,6 @@ $string['badexelearningpackage'] = 'The package does not comply with the package
 $string['clicktodownload'] = 'Click {$a} link to download the file.';
 $string['clicktoopen2'] = 'Click {$a} link to view the file.';
 $string['configdisplayoptions'] = 'Select all options that should be available, existing settings are not modified. Hold CTRL key to select multiple fields.';
-$string['configframesize'] = 'When a web page or an uploaded file is displayed within a frame, this value is the height (in pixels) of the top frame (which contains the navigation).';
 $string['configparametersettings'] = 'This sets the default value for the Parameter settings pane in the form when adding some new contents. After the first time, this becomes an individual user preference.';
 $string['configpopup'] = 'When adding a new content that can be shown in a popup window, should this option be enabled by default?';
 $string['configpopupdirectories'] = 'Should popup windows show directory links by default?';
@@ -49,7 +48,6 @@ $string['displayselect'] = 'Display';
 $string['displayselect_help'] = 'This setting determines how the content is displayed. Options may include:
 
 * Embed - The file is displayed in an IFRAME, below the navigation bar, together with the file description and any blocks.
-* In frame - The file is displayed using a FRAMESET with two FRAMES, below the navigation bar and the file description.
 * New window - The content is open on a new browser window.
 * Open - The content is open on the same browser window.
 * In pop-up - The file is displayed in a new browser window without menus or address bar (popup window).';
@@ -83,7 +81,6 @@ $string['filterfiles'] = 'Use filters on file content';
 $string['filterfilesexplain'] = 'Select type of file content filtering, please note this may cause problems in some contents. Please make sure that all text files are in UTF-8 encoding.';
 $string['filtername'] = 'Content names auto-linking';
 $string['forcedownload'] = 'Force download';
-$string['framesize'] = 'Frame height';
 $string['indicator:cognitivedepth'] = 'File cognitive';
 $string['indicator:cognitivedepth_help'] = 'This indicator is based on the cognitive depth reached by the student.';
 $string['indicator:cognitivedepthdef'] = 'File cognitive';
