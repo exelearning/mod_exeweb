@@ -119,3 +119,15 @@ Uses Moodle's file API — packages stored in `mod_exeweb/package` filearea, exp
 - `make package RELEASE=X.Y.Z` updates `version.php`, creates ZIP excluding files in `.distignore`, then restores dev values
 - GitHub Actions `release.yml` triggers on git tags: fetches editor, builds, packages, uploads to GitHub Release
 - `check-editor-releases.yml` runs daily to auto-release when new editor versions appear
+
+## Twin-plugin checks (mod_exeweb ↔ mod_exescorm)
+
+`mod_exeweb` and [`mod_exescorm`](https://github.com/exelearning/mod_exescorm) share large amounts of code, history, and bug surface (embedded editor, action bar, packaging pipeline, online callbacks, etc.). **Before closing a fix, always cross-check the sibling plugin:**
+
+1. **Search the sibling repo for a matching issue.** Examples:
+   - `gh issue list --repo exelearning/mod_exescorm --search "<keywords>"`
+   - `gh issue list --repo exelearning/mod_exescorm --state all --search "<keywords>"` (also closed)
+   If a matching issue exists, plan to fix both at once and link them in the PR bodies.
+2. **Even if no twin issue is open**, audit the sibling for the same root cause: most bugs reproduce on both sides because the relevant code is intentionally near-identical.
+3. When the bug applies to both, **open a PR in each repo** with the parallel fix and **cross-reference the sibling PR** in the body (e.g. `Sibling PR: exelearning/mod_exescorm#65`). Use parallel branch names and commit messages so the diffs are easy to compare.
+4. If after auditing only one plugin is affected, document why in the PR body so a future reader doesn't repeat the search.
