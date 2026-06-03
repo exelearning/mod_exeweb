@@ -120,7 +120,13 @@ class mod_exeweb_mod_form extends moodleform_mod {
         $mform->addElement('header', 'optionssection', get_string('appearance'));
 
         if ($this->current->instance) {
-            $options = resourcelib_get_displayoptions(explode(',', $config->displayoptions), $this->current->display);
+            // Legacy FRAME activities are rendered as EMBED; normalise the stored value so the
+            // removed "In frame" option is not re-injected into the dropdown for those activities.
+            $currentdisplay = (int) $this->current->display;
+            if ($currentdisplay === RESOURCELIB_DISPLAY_FRAME) {
+                $currentdisplay = RESOURCELIB_DISPLAY_EMBED;
+            }
+            $options = resourcelib_get_displayoptions(explode(',', $config->displayoptions), $currentdisplay);
         } else {
             $options = resourcelib_get_displayoptions(explode(',', $config->displayoptions));
         }
@@ -191,6 +197,11 @@ class mod_exeweb_mod_form extends moodleform_mod {
 
 
     public function data_preprocessing(&$defaultvalues) {
+        // Migrate legacy FRAME activities to EMBED so the select defaults correctly and never
+        // shows the removed "In frame" option (the DB upgrade only covers real version bumps).
+        if (isset($defaultvalues['display']) && (int) $defaultvalues['display'] === RESOURCELIB_DISPLAY_FRAME) {
+            $defaultvalues['display'] = RESOURCELIB_DISPLAY_EMBED;
+        }
         if ($this->current->instance) {
             $draftitemid = file_get_submitted_draft_itemid('packagefile');
             file_prepare_draft_area($draftitemid, $this->context->id, 'mod_exeweb', 'package',
