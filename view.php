@@ -91,10 +91,9 @@ $PAGE->requires->js_call_amd('mod_exeweb/resize', 'init', ['exewebobject', $exew
 $PAGE->requires->js_call_amd('mod_exeweb/editor_modal', 'init');
 switch ($displaytype) {
     case RESOURCELIB_DISPLAY_EMBED:
-        exeweb_display_embed($exeweb, $cm, $course, $file);
-        break;
     case RESOURCELIB_DISPLAY_FRAME:
-        exeweb_display_frame($exeweb, $cm, $course, $file);
+        // FRAME mode is deprecated; legacy activities fall back to EMBED.
+        exeweb_display_embed($exeweb, $cm, $course, $file);
         break;
     default:
         exeweb_print_workaround($exeweb, $cm, $course, $file);

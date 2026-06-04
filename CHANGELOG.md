@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+- Show the eXeLearning **Edit** button on the activity view when **Display** is set to *In pop-up*, *Open* or *New window* (issue #43). Previously the button only appeared for *Embed* activities, leaving teachers no way to edit the package from those modes.
+- Remove the legacy *In frame* (HTML4 frameset) display option. The mode duplicated *Embed* (which already uses an `<iframe>`) and prevented the editor modal and fullscreen control from working correctly. Existing activities configured with *In frame* are migrated to *Embed* on upgrade; the activity form also normalises any leftover *In frame* value to *Embed* when edited, so the removed option never reappears in the dropdown. The orphan `framesize` admin setting is removed.
+
 ## v4.0.0 – 2025-04-30
 
 - Version jump to 4.0.0 to align numbering with eXeLearning for consistency across related projects.

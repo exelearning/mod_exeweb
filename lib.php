@@ -229,7 +229,7 @@ function exeweb_set_display_options($data) {
         $displayoptions['popupwidth']  = $data->popupwidth;
         $displayoptions['popupheight'] = $data->popupheight;
     }
-    if (in_array($data->display, [RESOURCELIB_DISPLAY_EMBED, RESOURCELIB_DISPLAY_FRAME])) {
+    if ($data->display == RESOURCELIB_DISPLAY_EMBED) {
         $displayoptions['printintro']   = (int)!empty($data->printintro);
     }
     if (!empty($data->showsize)) {
