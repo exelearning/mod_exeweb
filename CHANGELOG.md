@@ -1,9 +1,14 @@
 # CHANGELOG
 
-## Unreleased
+## v4.0.1 – 2026-06-09
 
-- Show the eXeLearning **Edit** button on the activity view when **Display** is set to *In pop-up*, *Open* or *New window* (issue #43). Previously the button only appeared for *Embed* activities, leaving teachers no way to edit the package from those modes.
-- Remove the legacy *In frame* (HTML4 frameset) display option. The mode duplicated *Embed* (which already uses an `<iframe>`) and prevented the editor modal and fullscreen control from working correctly. Existing activities configured with *In frame* are migrated to *Embed* on upgrade; the activity form also normalises any leftover *In frame* value to *Embed* when edited, so the removed option never reappears in the dropdown. The orphan `framesize` admin setting is removed.
+- Show the eXeLearning "Edit" button on the activity view when "Display" is set to "In pop-up", "Open" or "New window".
+- Remove the legacy "In frame" display option and migrate existing activities to "Embed" during upgrade.
+- Fix embedded editor version detection in release packages so the correct eXeLearning version is reported.
+- Improve accessibility by updating embedded content frame titles dynamically based on the activity and page title.
+- Exclude development files from release packages.
+- Update the README to clarify Moodle compatibility, editor modes and support information.
+- Automatically install and configure the embedded editor in Playground environments.
 
 ## v4.0.0 – 2025-04-30
 
