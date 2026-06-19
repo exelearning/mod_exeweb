@@ -246,8 +246,8 @@ $string['typeexewebcreate'] = 'Crear con eXeLearning';
 $string['typeexewebedit'] = 'Editar con eXeLearning';
 $string['typelocal'] = 'Paquete subido';
 
-$string['teachermodevisible'] = 'Mostrar el contenido docente de eXeLearning al profesorado';
-$string['teachermodevisible_help'] = 'Los paquetes de eXeLearning pueden marcar contenido como "solo para el profesorado", que el paquete oculta de forma predeterminada. Cuando esta opción está activada, el profesorado (las personas que pueden gestionar la actividad) ve ese contenido docente revelado en el recurso incrustado; el plugin solicita al paquete que lo muestre mediante su parámetro de URL admitido. El alumnado nunca ve el contenido docente, independientemente de esta opción. Cuando está desactivada, incluso el profesorado ve la vista del alumnado.';
+$string['teachermodevisible'] = 'Mostrar el selector de capa docente';
+$string['teachermodevisible_help'] = 'Si se desactiva, se ocultará el selector de capa docente dentro del recurso incrustado.';
 
 $string['editoruploadmissingfile'] = 'No se ha subido ningún archivo ZIP del editor.';
 $string['editoruploadfailed'] = 'No se pudo subir el paquete del editor: {$a}';

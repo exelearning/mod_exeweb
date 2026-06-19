@@ -1,8 +1,8 @@
 @mod @mod_exeweb
-Feature: Reveal eXeLearning teacher content via the exe-teacher URL parameter
-  In order to keep teacher-only content hidden from students
-  As a teacher
-  I need the embedded resource to request the teacher view only for teachers who opted in
+Feature: Show the eXeLearning teacher-layer selector via the exe-teacher URL parameter
+  In order to let viewers show or hide the teacher-only layer of an embedded eXeLearning resource
+  As a teacher configuring the activity
+  I need the embedded resource to expose its teacher-layer selector when the per-activity setting is on
 
   Background:
     Given the following "users" exist:
@@ -18,11 +18,11 @@ Feature: Reveal eXeLearning teacher content via the exe-teacher URL parameter
       | student1 | C1     | student        |
 
   # The iframe src is server-rendered, so these scenarios assert on it directly
-  # without @javascript. eXeLearning hides teacher-only content by default and reveals
-  # it via the package's own ?exe-teacher=1 URL parameter (upstream exelearning#1772);
-  # the plugin appends it only for users who can manage the activity AND when the
-  # per-activity "Reveal eXeLearning teacher content to teachers" setting is on.
-  Scenario: A teacher sees the exe-teacher parameter when teacher content is revealed
+  # without @javascript. eXeLearning hides teacher-only content by default and exposes a
+  # selector to show it via the package's own ?exe-teacher=1 URL parameter (upstream
+  # exelearning#1772); the plugin appends it whenever the per-activity "Show teacher
+  # layer selector" setting is on — for any viewer.
+  Scenario: A teacher sees the exe-teacher parameter when the setting is on
     Given the following "activities" exist:
       | activity | course | name           | display | teachermodevisible |
       | exeweb   | C1     | Teacher reveal | 5       | 1                  |
@@ -36,9 +36,9 @@ Feature: Reveal eXeLearning teacher content via the exe-teacher URL parameter
     And I am on the "Teacher noreveal" "exeweb activity" page logged in as teacher1
     Then the "src" attribute of "iframe#exewebobject" "css_element" should not contain "exe-teacher"
 
-  Scenario: A student never sees the exe-teacher parameter even when the reveal is on
+  Scenario: A student also sees the exe-teacher parameter when the setting is on
     Given the following "activities" exist:
       | activity | course | name               | display | teachermodevisible |
       | exeweb   | C1     | Teacher student vw | 5       | 1                  |
     And I am on the "Teacher student vw" "exeweb activity" page logged in as student1
-    Then the "src" attribute of "iframe#exewebobject" "css_element" should not contain "exe-teacher"
+    Then the "src" attribute of "iframe#exewebobject" "css_element" should contain "exe-teacher=1"

@@ -56,11 +56,9 @@ function exeweb_display_embed($exeweb, $cm, $course, $file) {
     // (eXeLearning core hides teacher content by default and opts in to reveal with
     // ?exe-teacher=1; see upstream exelearning#1772). This replaces the former CSS
     // injection that hid the teacher-mode toggle: the plugin no longer mutates the
-    // embedded document, it just passes the supported flag. The reveal is granted only
-    // to users who can manage the activity AND when the per-activity setting opts in;
-    // students never receive the parameter, so they always see the student view.
-    $canpreview = has_capability('moodle/course:manageactivities', $context);
-    if (exeweb_should_reveal_teacher_content($canpreview, exeweb_is_teacher_mode_visible($exeweb))) {
+    // embedded document, it just passes the supported flag when the per-activity
+    // setting opts in.
+    if (exeweb_is_teacher_mode_visible($exeweb)) {
         $moodleurl->param('exe-teacher', '1');
     }
 
@@ -79,10 +77,10 @@ function exeweb_display_embed($exeweb, $cm, $course, $file) {
  * Whether this activity opts in to revealing eXeLearning's teacher-only content.
  *
  * This is the per-activity "teachermodevisible" setting stored in displayoptions.
- * It used to gate the parent-side CSS that hid the in-package teacher-mode toggle;
- * it now gates whether the plugin asks the package to reveal teacher content via the
- * ?exe-teacher=1 URL parameter (see exeweb_should_reveal_teacher_content()). The
- * default when the key is absent is true, matching the form default and legacy rows.
+ * When on, exeweb_display_embed() appends the package's own ?exe-teacher=1 URL
+ * parameter so the in-package teacher-layer selector is available to viewers (it
+ * replaces the former parent-side CSS injection). The default when the key is absent
+ * is true, matching the form default and legacy rows.
  *
  * @param stdClass $exeweb
  * @return bool
@@ -93,28 +91,6 @@ function exeweb_is_teacher_mode_visible($exeweb) {
         return true;
     }
     return !empty($options['teachermodevisible']);
-}
-
-/**
- * Whether to reveal eXeLearning's teacher-only content in the embedded view.
- *
- * eXeLearning packages hide teacher-marked content by default and opt in to reveal
- * it via the ?exe-teacher=1 URL parameter (upstream exelearning#1772).
- * exeweb_display_embed() appends that parameter to the iframe content URL when this
- * returns true. It does so only for users who can manage the activity AND when the
- * per-activity setting opts in, so a student never receives the parameter and always
- * sees the student view. This replaces the former parent-side CSS injection that hid
- * the in-package teacher-mode toggle.
- *
- * Extracted as a pure function so the decision is unit-testable without rendering the
- * embedded view (project philosophy: extract testable pure functions).
- *
- * @param bool $canpreview Whether the user can manage the activity (teacher/editing-teacher).
- * @param bool $teachermodevisible Whether the per-activity setting opts in to revealing teacher content.
- * @return bool True when the iframe should request the teacher view.
- */
-function exeweb_should_reveal_teacher_content(bool $canpreview, bool $teachermodevisible): bool {
-    return $canpreview && $teachermodevisible;
 }
 
 function exeweb_get_clicktoopen($file, $revision, $extra='') {

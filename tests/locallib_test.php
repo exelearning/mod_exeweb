@@ -31,7 +31,6 @@ namespace mod_exeweb;
  * @category   test
  * @copyright  2026 ATE (Área de Tecnología Educativa)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     ::exeweb_should_reveal_teacher_content
  * @covers     ::exeweb_is_teacher_mode_visible
  */
 class locallib_test extends \advanced_testcase {
@@ -43,22 +42,6 @@ class locallib_test extends \advanced_testcase {
     public static function setUpBeforeClass(): void {
         global $CFG;
         require_once($CFG->dirroot . '/mod/exeweb/locallib.php');
-    }
-
-    /**
-     * exeweb_should_reveal_teacher_content() reveals teacher content only when the
-     * user can manage the activity AND the per-activity setting opts in. A student
-     * (cannot manage) never gets the reveal regardless of the setting.
-     * @return void
-     */
-    public function test_should_reveal_teacher_content() {
-        // Teacher (can manage) + setting on -> reveal.
-        $this->assertTrue(exeweb_should_reveal_teacher_content(true, true));
-        // Teacher but setting off -> student view even for the teacher.
-        $this->assertFalse(exeweb_should_reveal_teacher_content(true, false));
-        // Student (cannot manage) is never revealed, even if the setting is on.
-        $this->assertFalse(exeweb_should_reveal_teacher_content(false, true));
-        $this->assertFalse(exeweb_should_reveal_teacher_content(false, false));
     }
 
     /**
