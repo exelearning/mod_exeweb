@@ -172,8 +172,8 @@ $string['typeexewebcreate'] = 'Create with eXeLearning';
 $string['typeexewebedit'] = 'Edit with eXeLearning';
 $string['typelocal'] = 'Uploaded package';
 
-$string['teachermodevisible'] = 'Show teacher layer selector';
-$string['teachermodevisible_help'] = 'If disabled, the teacher layer selector inside the embedded resource is hidden.';
+$string['teachermodevisible'] = 'Reveal eXeLearning teacher content to teachers';
+$string['teachermodevisible_help'] = 'eXeLearning packages can mark content as "teacher only", which the package hides by default. When this setting is enabled, teachers (users who can manage the activity) see that teacher content revealed in the embedded resource; the plugin asks the package to show it via its supported URL parameter. Students never see teacher content regardless of this setting. When disabled, even teachers see the student view.';
 
 // Embedded editor management.
 $string['manageembeddededitor'] = 'Manage embedded editor';

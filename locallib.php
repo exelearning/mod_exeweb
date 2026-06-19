@@ -52,14 +52,22 @@ function exeweb_display_embed($exeweb, $cm, $course, $file) {
     // We need a way to discover if we are loading remote docs inside an iframe.
     $moodleurl->param('embed', 1);
 
+    // Reveal eXeLearning's teacher-only content via the package's own URL parameter
+    // (eXeLearning core hides teacher content by default and opts in to reveal with
+    // ?exe-teacher=1; see upstream exelearning#1772). This replaces the former CSS
+    // injection that hid the teacher-mode toggle: the plugin no longer mutates the
+    // embedded document, it just passes the supported flag. The reveal is granted only
+    // to users who can manage the activity AND when the per-activity setting opts in;
+    // students never receive the parameter, so they always see the student view.
+    $canpreview = has_capability('moodle/course:manageactivities', $context);
+    if (exeweb_should_reveal_teacher_content($canpreview, exeweb_is_teacher_mode_visible($exeweb))) {
+        $moodleurl->param('exe-teacher', '1');
+    }
+
     // Let the module handle the display.
     $PAGE->activityheader->set_description(exeweb_get_intro($exeweb, $cm));
 
     exeweb_print_header($exeweb, $cm, $course);
-
-    if (!exeweb_is_teacher_mode_visible($exeweb)) {
-        exeweb_require_teacher_mode_hider_for_iframe('exewebobject');
-    }
 
     echo $PAGE->get_renderer('mod_exeweb')->generate_embed_general($cm, $moodleurl, $title, $clicktoopen);
 
@@ -68,7 +76,13 @@ function exeweb_display_embed($exeweb, $cm, $course, $file) {
 }
 
 /**
- * Check whether teacher mode toggler should be visible for this activity.
+ * Whether this activity opts in to revealing eXeLearning's teacher-only content.
+ *
+ * This is the per-activity "teachermodevisible" setting stored in displayoptions.
+ * It used to gate the parent-side CSS that hid the in-package teacher-mode toggle;
+ * it now gates whether the plugin asks the package to reveal teacher content via the
+ * ?exe-teacher=1 URL parameter (see exeweb_should_reveal_teacher_content()). The
+ * default when the key is absent is true, matching the form default and legacy rows.
  *
  * @param stdClass $exeweb
  * @return bool
@@ -82,28 +96,25 @@ function exeweb_is_teacher_mode_visible($exeweb) {
 }
 
 /**
- * Inject CSS into the embedded iframe to hide the teacher mode toggler.
+ * Whether to reveal eXeLearning's teacher-only content in the embedded view.
  *
- * @param string $iframeid
- * @return void
+ * eXeLearning packages hide teacher-marked content by default and opt in to reveal
+ * it via the ?exe-teacher=1 URL parameter (upstream exelearning#1772).
+ * exeweb_display_embed() appends that parameter to the iframe content URL when this
+ * returns true. It does so only for users who can manage the activity AND when the
+ * per-activity setting opts in, so a student never receives the parameter and always
+ * sees the student view. This replaces the former parent-side CSS injection that hid
+ * the in-package teacher-mode toggle.
+ *
+ * Extracted as a pure function so the decision is unit-testable without rendering the
+ * embedded view (project philosophy: extract testable pure functions).
+ *
+ * @param bool $canpreview Whether the user can manage the activity (teacher/editing-teacher).
+ * @param bool $teachermodevisible Whether the per-activity setting opts in to revealing teacher content.
+ * @return bool True when the iframe should request the teacher view.
  */
-function exeweb_require_teacher_mode_hider_for_iframe(string $iframeid): void {
-    global $PAGE;
-
-    $iframeidjson = json_encode($iframeid);
-    $cssjson = json_encode('#teacher-mode-toggler-wrapper { visibility: hidden !important; }');
-
-    $js = "(function(){"
-        . "var iframe=document.getElementById(" . $iframeidjson . ");"
-        . "if(!iframe){return;}"
-        . "var css=" . $cssjson . ";"
-        . "var inject=function(){try{if(!iframe.contentDocument){return;}"
-        . "var d=iframe.contentDocument;var st=d.createElement('style');st.textContent=css;"
-        . "(d.head||d.documentElement).appendChild(st);}catch(e){}};"
-        . "iframe.addEventListener('load', inject);inject();"
-        . "})();";
-
-    $PAGE->requires->js_init_code($js);
+function exeweb_should_reveal_teacher_content(bool $canpreview, bool $teachermodevisible): bool {
+    return $canpreview && $teachermodevisible;
 }
 
 function exeweb_get_clicktoopen($file, $revision, $extra='') {
