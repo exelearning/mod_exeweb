@@ -156,7 +156,7 @@ if ($ADMIN->fulltree) {
         'subdirs' => 0,
     ];
 
-    $settings->add(new admin_setting_configstoredfile('exeweb/template',
+    $settings->add(new \mod_exeweb\admin\admin_setting_optional_configstoredfile('exeweb/template',
         get_string('exeweb:template', 'mod_exeweb'),
         get_string('exeweb:template_desc', 'mod_exeweb'),
         'config', 0, $filemanageroptions
