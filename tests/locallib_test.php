@@ -45,14 +45,14 @@ class locallib_test extends \advanced_testcase {
     }
 
     /**
-     * exeweb_is_teacher_mode_visible() defaults to true when the option is absent and
+     * exeweb_is_teacher_mode_visible() defaults to false when the option is absent and
      * otherwise mirrors the stored per-activity flag.
      * @return void
      */
     public function test_is_teacher_mode_visible() {
-        // Absent option -> default true (matches the form default and legacy rows).
-        $this->assertTrue(exeweb_is_teacher_mode_visible((object) []));
-        $this->assertTrue(exeweb_is_teacher_mode_visible((object) ['displayoptions' => '']));
+        // Absent option -> default false (matches the form default and the opt-in principle).
+        $this->assertFalse(exeweb_is_teacher_mode_visible((object) []));
+        $this->assertFalse(exeweb_is_teacher_mode_visible((object) ['displayoptions' => '']));
         // Stored 1 -> true, stored 0 -> false.
         $this->assertTrue(
             exeweb_is_teacher_mode_visible((object) ['displayoptions' => serialize(['teachermodevisible' => 1])])

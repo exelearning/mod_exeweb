@@ -80,7 +80,8 @@ function exeweb_display_embed($exeweb, $cm, $course, $file) {
  * When on, exeweb_display_embed() appends the package's own ?exe-teacher=1 URL
  * parameter so the in-package teacher-layer selector is available to viewers (it
  * replaces the former parent-side CSS injection). The default when the key is absent
- * is true, matching the form default and legacy rows.
+ * is false, matching the form default and the "hidden by default, opt in to reveal"
+ * principle from upstream exelearning#1772 (legacy rows therefore keep it hidden).
  *
  * @param stdClass $exeweb
  * @return bool
@@ -88,7 +89,7 @@ function exeweb_display_embed($exeweb, $cm, $course, $file) {
 function exeweb_is_teacher_mode_visible($exeweb) {
     $options = empty($exeweb->displayoptions) ? [] : (array) unserialize_array($exeweb->displayoptions);
     if (!array_key_exists('teachermodevisible', $options)) {
-        return true;
+        return false;
     }
     return !empty($options['teachermodevisible']);
 }
