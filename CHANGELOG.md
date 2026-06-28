@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v4.0.2 – 2026-06-28
+
+- Allow saving the plugin settings page without uploading an optional package template file.
+- Playground: fix the embedded editor loading an outdated version when `.editor-version` had already been updated.
+- Playground: automatically keep the blueprint editor URL in sync with `.editor-version` on each release.
+- Reviewed and completed Spanish (ES) translation.
+- Complete review of all language files; added placeholder translations for new strings in incomplete language packs.
+
+---
+
 ## v4.0.1 – 2026-06-09
 
 - Show the eXeLearning "Edit" button on the activity view when "Display" is set to "In pop-up", "Open" or "New window".
