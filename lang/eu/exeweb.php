@@ -150,10 +150,35 @@ Si hay varios archivos en el recurso, se muestra el tipo del archivo inicial.
 Si el tipo de archivo es desconocido para el sistema, no se muestra.';
 $string['uploadeddate'] = 'Subido {$a}';
 $string['embeddededitorsettings'] = 'Editore mota';
-$string['embeddededitorstatus'] = 'Editore txertatua';
-$string['editorlatestversionongithub'] = 'GitHub-eko azken bertsioa:';
+$string['editormode'] = 'Editore modua';
+$string['editormodedesc'] = 'Aukeratu zein editore erabili eXeLearning edukia sortu eta editatzeko. Online konexio-ezarpenak soilik aplikatzen dira "eXeLearning Online" modua hautatzen denean.';
+$string['editormodeonline'] = 'eXeLearning Online (urruneko zerbitzaria)';
+$string['editormodeembedded'] = 'Editore txertatua (integratua)';
+$string['embeddednotinstalledcontactadmin'] = 'Editore txertatuaren fitxategiak ez daude instalatuta. Jarri harremanetan guneko administratzailearekin instalatzeko.';
+$string['embeddednotinstalledadmin'] = 'Editore txertatuaren fitxategiak ez daude instalatuta. Pluginaren ezarpenetan instala dezakezu.';
+$string['editembedded'] = 'Editatu eXeLearning-ekin';
+$string['editembedded_integrated'] = 'Integratua';
+$string['editembedded_help'] = 'Ireki eXeLearning editore txertatua edukia zuzenean Moodle-n editatzeko.';
+$string['editormissing'] = 'eXeLearning editore txertatua ez dago instalatuta. Jarri harremanetan administratzailearekin.';
+$string['editorreaderror'] = 'Ezin izan dira eXeLearning editore txertatuaren fitxategiak irakurri. Egiaztatu fitxategien baimenak eta jarri harremanetan administratzailearekin.';
+$string['embeddedtypehelp'] = 'Jarduera sortuko da eta eXeLearning editore txertatuarekin editatu ahal izango duzu jardueraren ikuspegi-orritik.';
+$string['saving'] = 'Gordetzen...';
+$string['savedsuccess'] = 'Aldaketak ondo gorde dira';
+$string['savetomoodle'] = 'Moodle-n gorde';
+$string['savingwait'] = 'Mesedez, itxaron fitxategia gordetzen den bitartean.';
+$string['unsavedchanges'] = 'Gorde gabeko aldaketak dituzu. Ziur zaude itxi nahi duzula?';
+$string['typeembedded'] = 'Sortu eXeLearning-ekin (editore txertatua)';
+$string['typeexewebcreate'] = 'Sortu eXeLearning-ekin';
+$string['typeexewebedit'] = 'Editatu eXeLearning-ekin';
+$string['typelocal'] = 'Igotako paketea';
+
+$string['teachermodevisible'] = 'Erakutsi irakasle-geruzaren hautatzailea';
+$string['teachermodevisible_help'] = 'Desaktibatuz gero, barne-baliabidearen irakasle-geruzaren hautatzailea ezkutatuko da.';
+
+// Editore txertatuaren kudeaketa.
 $string['manageembeddededitor'] = 'Kudeatu editore txertatua';
 $string['manageembeddededitor_desc'] = 'Instalatu, eguneratu edo konpondu eXeLearning editore txertatua.';
+$string['embeddededitorstatus'] = 'Editore txertatua';
 $string['editorsource_moodledata'] = 'Instalatua (administrazioak kudeatua)';
 $string['editorsource_bundled'] = 'Pluginarekin batera dator';
 $string['editorsource_none'] = 'Instalatu gabe';
@@ -169,6 +194,7 @@ $string['editoractivesource'] = 'Jatorri aktiboa';
 $string['editormoodledatadir'] = 'Datuen direktorioa';
 $string['editorbundleddir'] = 'Barneko direktorioa';
 $string['editorlatestversion'] = 'Eskuragarri dagoen azken bertsioa';
+$string['editorlatestversionongithub'] = 'GitHub-eko azken bertsioa:';
 $string['editorstatusinfo'] = 'Editore txertatuak baliabide estatikoak zerbitzatzen ditu eXeLearning editore integraturako. Jatorriak ordena honetan egiaztatzen dira: administrazioak instalatutakoa (moodledata) eta, ondoren, pluginarekin datorrena (dist/).';
 $string['editorgithubconnecterror'] = 'Ezin izan da GitHub-era konektatu: {$a}';
 $string['editorgithubapierror'] = 'GitHub-ek HTTP egoera hau itzuli du: {$a}. Saiatu berriro geroago.';
@@ -224,32 +250,7 @@ $string['editorinstalledsuccess'] = 'Editorea ondo instalatu da';
 $string['editoruninstalledsuccess'] = 'Editorea ondo desinstalatu da';
 $string['editorupdatedsuccess'] = 'Editorea ondo eguneratu da';
 $string['editorrepairsuccess'] = 'Editorea ondo konpondu da';
-$string['editormode'] = 'Editore modua';
-$string['editormodedesc'] = 'Aukeratu zein editore erabili eXeLearning edukia sortu eta editatzeko. Online konexio-ezarpenak soilik aplikatzen dira "eXeLearning Online" modua hautatzen denean.';
-$string['editormodeonline'] = 'eXeLearning Online (urruneko zerbitzaria)';
-$string['editormodeembedded'] = 'Editore txertatua (integratua)';
-$string['embeddednotinstalledcontactadmin'] = 'Editore txertatuaren fitxategiak ez daude instalatuta. Jarri harremanetan guneko administratzailearekin instalatzeko.';
-$string['embeddednotinstalledadmin'] = 'Editore txertatuaren fitxategiak ez daude instalatuta. Pluginaren ezarpenetan instala dezakezu.';
-$string['editembedded'] = 'Editatu eXeLearning-ekin';
-$string['editembedded_integrated'] = 'Integratua';
-$string['editembedded_help'] = 'Ireki eXeLearning editore txertatua edukia zuzenean Moodle-n editatzeko.';
-$string['editormissing'] = 'eXeLearning editore txertatua ez dago instalatuta. Jarri harremanetan administratzailearekin.';
-$string['editorreaderror'] = 'Ezin izan dira eXeLearning editore txertatuaren fitxategiak irakurri. Egiaztatu fitxategien baimenak eta jarri harremanetan administratzailearekin.';
-$string['embeddedtypehelp'] = 'Jarduera sortuko da eta eXeLearning editore txertatuarekin editatu ahal izango duzu jardueraren ikuspegi-orritik.';
-$string['saving'] = 'Gordetzen...';
-$string['savedsuccess'] = 'Aldaketak ondo gorde dira';
-$string['savetomoodle'] = 'Moodle-n gorde';
-$string['savingwait'] = 'Mesedez, itxaron fitxategia gordetzen den bitartean.';
-$string['unsavedchanges'] = 'Gorde gabeko aldaketak dituzu. Ziur zaude itxi nahi duzula?';
-$string['typeembedded'] = 'Sortu eXeLearning-ekin (editore txertatua)';
-$string['typeexewebcreate'] = 'Sortu eXeLearning-ekin';
-$string['typeexewebedit'] = 'Editatu eXeLearning-ekin';
-$string['typelocal'] = 'Igotako paketea';
 
-$string['teachermodevisible'] = 'Erakutsi irakasle-geruzaren hautatzailea';
-$string['teachermodevisible_help'] = 'Desaktibatuz gero, barne-baliabidearen irakasle-geruzaren hautatzailea ezkutatuko da.';
-
-// Editore txertatuaren kudeaketa.
 $string['editoruploadmissingfile'] = 'Ez da editorearen ZIP fitxategirik igo.';
 $string['editoruploadfailed'] = 'Errorea editorearen paketea igotzerakoan: {$a}';
 

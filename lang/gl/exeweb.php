@@ -149,10 +149,35 @@ Se hai varios ficheiros no recurso, amosa o tipo del ficheiro inicial.
 Se o tipo de ficheiro é descoñecido para o sistema, nos se amosa.';
 $string['uploadeddate'] = 'Enviado {$a}';
 $string['embeddededitorsettings'] = 'Tipo de editor';
-$string['embeddededitorstatus'] = 'Editor embebido';
-$string['editorlatestversionongithub'] = 'Última versión en GitHub:';
+$string['editormode'] = 'Modo de editor';
+$string['editormodedesc'] = 'Seleccione que editor usar para crear e editar contido eXeLearning. A configuración de conexión online só aplica cando se selecciona o modo "eXeLearning Online".';
+$string['editormodeonline'] = 'eXeLearning Online (servidor remoto)';
+$string['editormodeembedded'] = 'Editor integrado (embebido)';
+$string['embeddednotinstalledcontactadmin'] = 'Os ficheiros do editor integrado non están instalados. Contacte co administrador do sitio para instalalo.';
+$string['embeddednotinstalledadmin'] = 'Os ficheiros do editor integrado non están instalados. Pode instalalo desde a configuración do complemento.';
+$string['editembedded'] = 'Editar con eXeLearning';
+$string['editembedded_integrated'] = 'Integrado';
+$string['editembedded_help'] = 'Abre o editor eXeLearning integrado para editar o contido directamente dentro de Moodle.';
+$string['editormissing'] = 'O editor integrado eXeLearning non está instalado. Contacte co administrador.';
+$string['editorreaderror'] = 'Non se puideron ler os ficheiros do editor integrado eXeLearning. Comprobe os permisos dos ficheiros e contacte co administrador.';
+$string['embeddedtypehelp'] = 'Crearase a actividade e poderá editala usando o editor eXeLearning integrado dende a páxina de visualización da actividade.';
+$string['saving'] = 'Gardando...';
+$string['savedsuccess'] = 'Cambios gardados correctamente';
+$string['savetomoodle'] = 'Gardar en Moodle';
+$string['savingwait'] = 'Por favor, agarde mentres se garda o ficheiro.';
+$string['unsavedchanges'] = 'Ten cambios sen gardar. Está seguro de que desexa pechar?';
+$string['typeembedded'] = 'Crear con eXeLearning (editor integrado)';
+$string['typeexewebcreate'] = 'Crear con eXeLearning';
+$string['typeexewebedit'] = 'Editar con eXeLearning';
+$string['typelocal'] = 'Paquete enviado';
+
+$string['teachermodevisible'] = 'Mostrar o selector de capa docente';
+$string['teachermodevisible_help'] = 'Se se desactiva, ocultarase o selector de capa docente dentro do recurso incrustado.';
+
+// Xestión do editor embebido.
 $string['manageembeddededitor'] = 'Xestionar editor embebido';
 $string['manageembeddededitor_desc'] = 'Instalar, actualizar ou reparar o editor embebido de eXeLearning.';
+$string['embeddededitorstatus'] = 'Editor embebido';
 $string['editorsource_moodledata'] = 'Instalado (xestionado pola administración)';
 $string['editorsource_bundled'] = 'Incluído co plugin';
 $string['editorsource_none'] = 'Non instalado';
@@ -168,6 +193,7 @@ $string['editoractivesource'] = 'Orixe activa';
 $string['editormoodledatadir'] = 'Directorio de datos';
 $string['editorbundleddir'] = 'Directorio incluído';
 $string['editorlatestversion'] = 'Última versión dispoñible';
+$string['editorlatestversionongithub'] = 'Última versión en GitHub:';
 $string['editorstatusinfo'] = 'O editor embebido serve recursos estáticos para o editor integrado de eXeLearning. As orixes compróbanse nesta orde: instalado pola administración (moodledata) e despois incluído co plugin (dist/).';
 $string['editorgithubconnecterror'] = 'Non se puido conectar con GitHub: {$a}';
 $string['editorgithubapierror'] = 'GitHub devolveu o estado HTTP {$a}. Ténteo de novo máis tarde.';
@@ -223,32 +249,7 @@ $string['editorinstalledsuccess'] = 'Editor instalado correctamente';
 $string['editoruninstalledsuccess'] = 'Editor desinstalado correctamente';
 $string['editorupdatedsuccess'] = 'Editor actualizado correctamente';
 $string['editorrepairsuccess'] = 'Editor reparado correctamente';
-$string['editormode'] = 'Modo de editor';
-$string['editormodedesc'] = 'Seleccione que editor usar para crear e editar contido eXeLearning. A configuración de conexión online só aplica cando se selecciona o modo "eXeLearning Online".';
-$string['editormodeonline'] = 'eXeLearning Online (servidor remoto)';
-$string['editormodeembedded'] = 'Editor integrado (embebido)';
-$string['embeddednotinstalledcontactadmin'] = 'Os ficheiros do editor integrado non están instalados. Contacte co administrador do sitio para instalalo.';
-$string['embeddednotinstalledadmin'] = 'Os ficheiros do editor integrado non están instalados. Pode instalalo desde a configuración do complemento.';
-$string['editembedded'] = 'Editar con eXeLearning';
-$string['editembedded_integrated'] = 'Integrado';
-$string['editembedded_help'] = 'Abre o editor eXeLearning integrado para editar o contido directamente dentro de Moodle.';
-$string['editormissing'] = 'O editor integrado eXeLearning non está instalado. Contacte co administrador.';
-$string['editorreaderror'] = 'Non se puideron ler os ficheiros do editor integrado eXeLearning. Comprobe os permisos dos ficheiros e contacte co administrador.';
-$string['embeddedtypehelp'] = 'Crearase a actividade e poderá editala usando o editor eXeLearning integrado dende a páxina de visualización da actividade.';
-$string['saving'] = 'Gardando...';
-$string['savedsuccess'] = 'Cambios gardados correctamente';
-$string['savetomoodle'] = 'Gardar en Moodle';
-$string['savingwait'] = 'Por favor, agarde mentres se garda o ficheiro.';
-$string['unsavedchanges'] = 'Ten cambios sen gardar. Está seguro de que desexa pechar?';
-$string['typeembedded'] = 'Crear con eXeLearning (editor integrado)';
-$string['typeexewebcreate'] = 'Crear con eXeLearning';
-$string['typeexewebedit'] = 'Editar con eXeLearning';
-$string['typelocal'] = 'Paquete enviado';
 
-$string['teachermodevisible'] = 'Mostrar o selector de capa docente';
-$string['teachermodevisible_help'] = 'Se se desactiva, ocultarase o selector de capa docente dentro do recurso incrustado.';
-
-// Xestión do editor embebido.
 $string['editoruploadmissingfile'] = 'Non se subiu ningún ficheiro ZIP do editor.';
 $string['editoruploadfailed'] = 'Non se puido subir o paquete do editor: {$a}';
 
