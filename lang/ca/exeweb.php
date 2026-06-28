@@ -126,10 +126,11 @@ $string['exewebdetails_sizedate'] = '{$a->size} {$a->date}';
 $string['exewebdetails_typedate'] = '{$a->type} {$a->date}';
 $string['exewebdetails_sizetypedate'] = '{$a->size} {$a->type} {$a->date}';
 $string['exeorigin'] = 'Tipo';
-$string['exeorigin_help'] = 'Este ajuste determina cómo se incluye el paquete en el curso. Hay dos opciones:
+$string['exeorigin_help'] = 'Aquest ajust determina com s\'inclou el paquet al curs. Les opcions poden incloure:
 
-* Paquete subido - Permite elegir el zip creado con eXeLearning por medio del selector de archivos.
-* Crear/Editar con eXeLearning - Crea la actividad y te lleva a eXeLearning para editar el contenido. Al terminar, eXeLearning lo enviará de vuelta a Moodle.';
+* Paquet pujat - Permet triar el zip creat amb eXeLearning per mitjà del selector de fitxers.
+* Crear amb eXeLearning (editor integrat) - Crea l\'activitat usant l\'editor integrat. Podreu editar-la directament des de la pàgina de visualització de l\'activitat.
+* Crear/Editar amb eXeLearning - Crea l\'activitat i t\'acompanya a eXeLearning per editar el contingut. En acabar, eXeLearning ho enviarà de tornada a Moodle.';
 $string['exeweb:exportexeweb'] = 'Exportar recurso';
 $string['exeweb:view'] = 'Ver recurso';
 $string['search:activity'] = 'Fichero';
@@ -241,6 +242,66 @@ $string['savetomoodle'] = 'Desar a Moodle';
 $string['savingwait'] = 'Si us plau, espereu mentre es desa l\'arxiu.';
 $string['unsavedchanges'] = 'Teniu canvis sense desar. Esteu segurs que voleu tancar?';
 $string['typeembedded'] = 'Crear amb eXeLearning (editor integrat)';
-$string['typeexewebcreate'] = 'Crear con eXeLearning';
-$string['typeexewebedit'] = 'Editar con eXeLearning';
-$string['typelocal'] = 'Paquete subido';
+$string['typeexewebcreate'] = 'Crear amb eXeLearning';
+$string['typeexewebedit'] = 'Editar amb eXeLearning';
+$string['typelocal'] = 'Paquet pujat';
+
+$string['teachermodevisible'] = 'Mostra el selector de capa docent';
+$string['teachermodevisible_help'] = 'Si es desactiva, s\'ocultarà el selector de capa docent dins del recurs incrustat.';
+
+// Gestió de l'editor incrustat.
+$string['editoruploadmissingfile'] = 'No s\'ha pujat cap fitxer ZIP de l\'editor.';
+$string['editoruploadfailed'] = 'No s\'ha pogut pujar el paquet de l\'editor: {$a}';
+
+// Gestió d'estils.
+$string['stylesmanager'] = 'Estils';
+$string['stylesmanager_hint'] = 'Puja paquets d\'estils d\'eXeLearning i controla quins estils exposa l\'editor integrat.';
+$string['stylesmanager_intro'] = 'Gestiona els estils d\'eXeLearning disponibles per a l\'editor integrat. Els estils integrats es poden ocultar de manera individual. Els estils pujats es poden habilitar, deshabilitar o eliminar en qualsevol moment.';
+$string['stylesmanager_manage'] = 'Gestionar estils instal·lats';
+$string['stylesmanager_manage_hint'] = 'Obre la pàgina d\'estils per habilitar o deshabilitar els estils integrats, o per eliminar estils pujats.';
+$string['stylesonlywhenembedded'] = 'L\'editor integrat no està activat. Els estils gestionats aquí només s\'apliquen quan el mode de l\'editor és «integrat».';
+$string['stylesblockimport'] = 'Bloquejar estils importats per l\'usuari';
+$string['stylesblockimport_desc'] = 'Quan està activat, l\'editor integrat oculta la pestanya «Estils importats» i refusa instal·lar un estil inclòs en un projecte .elpx importat. L\'usuari només podrà triar de la llista aprovada per l\'administrador. Equival al comportament d\'eXeLearning ONLINE_THEMES_INSTALL=false.';
+$string['stylesupload_label'] = 'Paquet ZIP d\'estil';
+$string['stylesupload_submit'] = 'Pujar estil';
+$string['stylesupload_hint'] = 'Mida màxima: {$a}. Només s\'accepten paquets .zip amb un config.xml vàlid.';
+$string['stylesupload_success'] = 'Estil «{$a}» instal·lat.';
+$string['stylesupload_success_many'] = 'Instal·lats: {$a}';
+$string['stylesupload_goto_settings'] = 'Pujar estils des de la pàgina de configuració del connector';
+$string['stylesupload_failed'] = 'La pujada de l\'estil ha fallat.';
+$string['stylesupload_missing'] = 'El fitxer pujat no existeix o no es pot llegir.';
+$string['stylesupload_empty'] = 'El fitxer pujat és buit.';
+$string['stylesupload_toolarge'] = 'L\'estil pujat supera la mida màxima permesa de {$a}.';
+$string['stylesupload_nozip'] = 'L\'extensió PHP ZipArchive no està disponible.';
+$string['stylesupload_badzip'] = 'El fitxer pujat no és un ZIP vàlid.';
+$string['stylesupload_badentry'] = 'El fitxer ZIP conté entrades que no es poden llegir.';
+$string['stylesupload_unsafe'] = 'Entrada de fitxer no segura rebutjada: {$a}';
+$string['stylesupload_multiconfig'] = 'El fitxer conté més d\'un config.xml.';
+$string['stylesupload_noconfig'] = 'Al paquet d\'estil li falta el config.xml.';
+$string['stylesupload_mixedroots'] = 'El fitxer ha de contenir una única carpeta arrel o tenir tots els fitxers a l\'arrel.';
+$string['stylesupload_badext'] = 'Tipus de fitxer no permès al paquet d\'estil: {$a}';
+$string['stylesupload_configread'] = 'No s\'ha pogut llegir config.xml del fitxer.';
+$string['stylesupload_badxml'] = 'config.xml no és XML vàlid.';
+$string['stylesupload_noname'] = 'config.xml ha de declarar un element <name>.';
+$string['stylesupload_traversal'] = 'S\'ha bloquejat un intent d\'escalada de directoris durant l\'extracció.';
+$string['stylesupload_readfailed'] = 'No s\'ha pogut llegir un fitxer del ZIP durant l\'extracció.';
+$string['stylesupload_writefailed'] = 'No s\'ha pogut escriure un fitxer extret.';
+$string['stylesnocss'] = 'L\'estil pujat no conté cap full d\'estils.';
+$string['stylesinstallfailed'] = 'No s\'ha pogut instal·lar l\'estil: {$a}';
+$string['stylesuploaded'] = 'Estils pujats';
+$string['stylesuploaded_empty'] = 'Encara no hi ha estils pujats.';
+$string['stylesuploaded_hint'] = 'Activa o desactiva els estils pujats. Desmarca\'ls per ocultar-los de l\'editor; elimina\'ls per esborrar-los definitivament.';
+$string['stylesbuiltin'] = 'Estils integrats';
+$string['stylesbuiltin_empty'] = 'Els estils integrats no estan disponibles perquè l\'editor integrat no està instal·lat.';
+$string['stylesbuiltin_hint'] = 'Desmarca un estil per ocultar-lo de l\'editor. Els estils integrats desactivats no s\'eliminen; el projecte sempre pot recórrer a l\'estil per defecte.';
+$string['stylestable_title'] = 'Títol';
+$string['stylestable_id'] = 'Id';
+$string['stylestable_version'] = 'Versió';
+$string['stylestable_installed'] = 'Instal·lat';
+$string['stylestable_enabled'] = 'Habilitat';
+$string['stylestable_actions'] = 'Accions';
+$string['stylesenable'] = 'Habilitar';
+$string['stylesdisable'] = 'Deshabilitar';
+$string['stylesdelete'] = 'Eliminar';
+$string['stylesdelete_confirm'] = 'Eliminar aquest estil? Aquesta acció no es pot desfer.';
+$string['stylesdelete_success'] = 'Estil eliminat.';

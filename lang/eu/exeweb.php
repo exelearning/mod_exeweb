@@ -59,10 +59,10 @@ $string['exeonline:baseuri'] = 'URI remoto';
 $string['exeonline:baseuri_desc'] = 'URL de eXeLearning';
 $string['exeonline:hmackey1'] = 'Clave de firma';
 $string['exeonline:hmackey1_desc'] = 'Clave utilizada para firmar los datos enviados al servidor de eXeLearning, de forma que podamos estar seguros de que se originaron en este servidor. Utilice un máximo de 32 caracteres.';
-$string['exeonline:provider_name'] = 'Provider name';
-$string['exeonline:provider_name_desc'] = 'Name of the eXeLearning provider. This is used to identify the provider in the eXeLearning interface.';
-$string['exeonline:provider_version'] = 'Provider version';
-$string['exeonline:provider_version_desc'] = 'Version of the eXeLearning provider. This is used to identify the provider in the eXeLearning interface.';
+$string['exeonline:provider_name'] = 'Hornitzaile-izena';
+$string['exeonline:provider_name_desc'] = 'eXeLearning hornitzailearen izena. Hau eXeLearning interfazean hornitzailea identifikatzeko erabiltzen da.';
+$string['exeonline:provider_version'] = 'Hornitzaile-bertsioa';
+$string['exeonline:provider_version_desc'] = 'eXeLearning hornitzailearen bertsioa. Hau eXeLearning interfazean hornitzailea identifikatzeko erabiltzen da.';
 $string['exeonline:tokenexpiration'] = 'Caducidad del token';
 $string['exeonline:tokenexpiration_desc'] = 'Tiempo máximo (en segundos) para editar el paquete en eXeLearning y volver a Moodle.';
 $string['exeweb:forbiddenfileslist'] = 'Archivos prohibidos, lista RE';
@@ -126,10 +126,11 @@ $string['exewebdetails_sizedate'] = '{$a->size} {$a->date}';
 $string['exewebdetails_typedate'] = '{$a->type} {$a->date}';
 $string['exewebdetails_sizetypedate'] = '{$a->size} {$a->type} {$a->date}';
 $string['exeorigin'] = 'Tipo';
-$string['exeorigin_help'] = 'Este ajuste determina cómo se incluye el paquete en el curso. Hay dos opciones:
+$string['exeorigin_help'] = 'Ezarpen honek pakeatea nola txertatzen den zehazten du ikastaro batean. Aukerak honakoak dira:
 
-* Paquete subido - Permite elegir el zip creado con eXeLearning por medio del selector de archivos.
-* Crear/Editar con eXeLearning - Crea la actividad y te lleva a eXeLearning para editar el contenido. Al terminar, eXeLearning lo enviará de vuelta a Moodle.';
+* Igotako paketea - eXeLearning-ekin sortutako zip-a hautatzeko aukera ematen du fitxategi-hautatzailearen bidez.
+* Sortu eXeLearning-ekin (editore txertatua) - Jarduera editore txertatuarekin sortzen da. Jarduera bistaratze-orritik zuzenean editatu dezakezu.
+* Sortu/Editatu eXeLearning-ekin - Jarduera sortzen du eta eXeLearning-era eramaten zaitu edukia editatzeko. Amaitutakoan, eXeLearning-ek Moodle-ra bidaliko du.';
 $string['exeweb:exportexeweb'] = 'Exportar recurso';
 $string['exeweb:view'] = 'Ver recurso';
 $string['search:activity'] = 'Fichero';
@@ -241,6 +242,66 @@ $string['savetomoodle'] = 'Moodle-n gorde';
 $string['savingwait'] = 'Mesedez, itxaron fitxategia gordetzen den bitartean.';
 $string['unsavedchanges'] = 'Gorde gabeko aldaketak dituzu. Ziur zaude itxi nahi duzula?';
 $string['typeembedded'] = 'Sortu eXeLearning-ekin (editore txertatua)';
-$string['typeexewebcreate'] = 'Crear con eXeLearning';
-$string['typeexewebedit'] = 'Editar con eXeLearning';
-$string['typelocal'] = 'Paquete subido';
+$string['typeexewebcreate'] = 'Sortu eXeLearning-ekin';
+$string['typeexewebedit'] = 'Editatu eXeLearning-ekin';
+$string['typelocal'] = 'Igotako paketea';
+
+$string['teachermodevisible'] = 'Erakutsi irakasle-geruzaren hautatzailea';
+$string['teachermodevisible_help'] = 'Desaktibatuz gero, barne-baliabidearen irakasle-geruzaren hautatzailea ezkutatuko da.';
+
+// Editore txertatuaren kudeaketa.
+$string['editoruploadmissingfile'] = 'Ez da editorearen ZIP fitxategirik igo.';
+$string['editoruploadfailed'] = 'Errorea editorearen paketea igotzerakoan: {$a}';
+
+// Estiloen kudeaketa.
+$string['stylesmanager'] = 'Estiloak';
+$string['stylesmanager_hint'] = 'Igo eXeLearning estilo-paketeak eta kontrolatu zein estilo eskaintzen dituen editore txertatuak.';
+$string['stylesmanager_intro'] = 'Kudeatu editore txertatuarako eskuragarri dauden eXeLearning estiloak. Barneko estiloak banaka ezkuta daitezke. Igotako estiloak edozein unetan gaitu, desgaitu edo ezabatu daitezke.';
+$string['stylesmanager_manage'] = 'Kudeatu instalatutako estiloak';
+$string['stylesmanager_manage_hint'] = 'Ireki estiloen orria barneko estiloak gaitu edo desgaitzeko, edo igotakoak ezabatzeko.';
+$string['stylesonlywhenembedded'] = 'Editore txertatua ez dago aktibo. Hemen kudeatutako estiloak soilik aplikatzen dira editoreak «txertatua» moduan dagoenean.';
+$string['stylesblockimport'] = 'Blokeatu erabiltzaileak inportatutako estiloak';
+$string['stylesblockimport_desc'] = 'Aktibatuta dagoenean, editore txertatuak «Inportatutako estiloak» fitxa ezkutatzen du eta inportatutako .elpx proiektu batean bildutako estiloak instalatzeari uko egiten dio. Erabiltzaileek soilik administratzaileak onartutako zerrendatik hautatu ahal izango dute. eXeLearning ONLINE_THEMES_INSTALL=false jokabidearen baliokidea da.';
+$string['stylesupload_label'] = 'Estilo ZIP paketea';
+$string['stylesupload_submit'] = 'Igo estiloa';
+$string['stylesupload_hint'] = 'Gehieneko tamaina: {$a}. Soilik config.xml balioduna duten .zip paketeak onartzen dira.';
+$string['stylesupload_success'] = '«{$a}» estiloa instalatuta.';
+$string['stylesupload_success_many'] = 'Instalatuta: {$a}';
+$string['stylesupload_goto_settings'] = 'Igo estiloak pluginaren konfigurazio-orritik';
+$string['stylesupload_failed'] = 'Estiloa igotzeak huts egin du.';
+$string['stylesupload_missing'] = 'Igotako fitxategia ez dago edo ezin da irakurri.';
+$string['stylesupload_empty'] = 'Igotako fitxategia hutsik dago.';
+$string['stylesupload_toolarge'] = 'Igotako estiloak onartutako gehieneko tamaina gainditzen du: {$a}.';
+$string['stylesupload_nozip'] = 'PHP ZipArchive hedapena ez dago erabilgarri.';
+$string['stylesupload_badzip'] = 'Igotako fitxategia ez da ZIP balioduna.';
+$string['stylesupload_badentry'] = 'ZIP fitxategiak ezin diren sarrerak ditu.';
+$string['stylesupload_unsafe'] = 'Fitxategi ez-segurua baztertua: {$a}';
+$string['stylesupload_multiconfig'] = 'Fitxategiak config.xml bat baino gehiago ditu.';
+$string['stylesupload_noconfig'] = 'Estilo-paketeak config.xml falta zaio.';
+$string['stylesupload_mixedroots'] = 'Fitxategiak karpeta bakarreko erroa eduki behar du edo fitxategi guztiak erroan egon behar dira.';
+$string['stylesupload_badext'] = 'Estilo-paketan onartzen ez den fitxategi-mota: {$a}';
+$string['stylesupload_configread'] = 'Ezin izan da config.xml irakurri fitxategitik.';
+$string['stylesupload_badxml'] = 'config.xml ez da XML balioduna.';
+$string['stylesupload_noname'] = 'config.xml-k <name> elementua deklaratu behar du.';
+$string['stylesupload_traversal'] = 'Direktorioetan zeharreko saiakera bat blokeatu da erauzketan.';
+$string['stylesupload_readfailed'] = 'Ezin izan da ZIP fitxategi bat irakurri erauzketan.';
+$string['stylesupload_writefailed'] = 'Ezin izan da fitxategi erauzi bat idatzi.';
+$string['stylesnocss'] = 'Igotako estiloak ez du estilo-orrialderik.';
+$string['stylesinstallfailed'] = 'Ezin izan da estiloa instalatu: {$a}';
+$string['stylesuploaded'] = 'Igotako estiloak';
+$string['stylesuploaded_empty'] = 'Oraindik ez dago igotako estilorik.';
+$string['stylesuploaded_hint'] = 'Gaitu edo desgaitu igotako estiloak. Desmarkatu editoretik ezkutatzeko; ezabatu betirako kentzeko.';
+$string['stylesbuiltin'] = 'Barneko estiloak';
+$string['stylesbuiltin_empty'] = 'Barneko estiloak ez daude eskuragarri editore txertatua instalatuta ez dagoelako.';
+$string['stylesbuiltin_hint'] = 'Desmarkatu estilo bat editoretik ezkutatzeko. Desgaitutako barneko estiloak ez dira ezabatzen; proiektuak beti jo dezake estilo lehenetsiara.';
+$string['stylestable_title'] = 'Izenburua';
+$string['stylestable_id'] = 'Id';
+$string['stylestable_version'] = 'Bertsioa';
+$string['stylestable_installed'] = 'Instalatuta';
+$string['stylestable_enabled'] = 'Gaituta';
+$string['stylestable_actions'] = 'Ekintzak';
+$string['stylesenable'] = 'Gaitu';
+$string['stylesdisable'] = 'Desgaitu';
+$string['stylesdelete'] = 'Ezabatu';
+$string['stylesdelete_confirm'] = 'Estilo hau ezabatu? Ekintza hau ezin da desegin.';
+$string['stylesdelete_success'] = 'Estiloa ezabatuta.';
