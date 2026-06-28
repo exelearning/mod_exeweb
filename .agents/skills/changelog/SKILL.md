@@ -32,7 +32,7 @@ The release date is **today's date** in `YYYY-MM-DD` format.
 Fetch the latest release to get the cut-off timestamp:
 
 ```sh
-gh release view --repo exelearning/exelearning --json tagName,publishedAt
+gh release view --repo exelearning/mod_exeweb --json tagName,publishedAt
 ```
 
 Record:
@@ -46,7 +46,7 @@ Record:
 
 ```sh
 gh pr list \
-  --repo exelearning/exelearning \
+  --repo exelearning/mod_exeweb \
   --state merged \
   --search "merged:>YYYY-MM-DDTHH:MM:SSZ" \
   --json number,title,body,labels,mergedAt \
@@ -67,7 +67,7 @@ For each PR, read:
 If a PR body references issues with `Closes #NNN` or `Fixes #NNN`, fetch them too:
 
 ```sh
-gh issue view NNN --repo exelearning/exelearning --json title,body
+gh issue view NNN --repo exelearning/mod_exeweb --json title,body
 ```
 
 ---
