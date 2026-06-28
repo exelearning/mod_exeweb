@@ -1,12 +1,12 @@
 # CHANGELOG
 
-## v4.0.2 – 2026-06-28
+## v4.0.2 – 2026-07-07
 
-- Allow saving the plugin settings page without uploading an optional package template file.
-- Playground: fix the embedded editor loading an outdated version when `.editor-version` had already been updated.
-- Playground: automatically keep the blueprint editor URL in sync with `.editor-version` on each release.
-- Reviewed and completed Spanish (ES) translation.
-- Complete review of all language files; added placeholder translations for new strings in incomplete language packs.
+- Allow saving the plugin settings page without requiring an optional package template file.
+- Fix Playground environments loading an outdated embedded editor version when `.editor-version` had already been updated.
+- Automatically keep the Playground blueprint editor URL in sync with `.editor-version` on each release.
+- Review and complete the Spanish (es) translation.
+- Review all language packs and add placeholder translations for newly introduced strings in incomplete translations.
 
 ---
 
