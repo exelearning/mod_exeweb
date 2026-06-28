@@ -81,6 +81,9 @@ if ($redirect && !$forceview) {
     // this redirect trick solves caching problems when tracking views ;-) .
     $path = '/'.$context->id.'/mod_exeweb/content/'.$exeweb->revision.$file->get_filepath().$file->get_filename();
     $fullurl = moodle_url::make_file_url('/pluginfile.php', $path);
+    // Reveal eXeLearning's teacher-only content (?exe-teacher=1) when the activity opts in,
+    // matching the embedded iframe path so every display mode stays consistent.
+    exeweb_apply_teacher_mode_param($fullurl, $exeweb);
     redirect($fullurl);
 }
 
