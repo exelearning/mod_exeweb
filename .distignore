@@ -2,6 +2,7 @@
 .github
 .gitignore
 .aider*
+.agents
 .claude
 .DS_Store
 .distignore
