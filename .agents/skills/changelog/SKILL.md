@@ -8,7 +8,9 @@ description: Generate a draft CHANGELOG entry for the next release from merged G
 
 > **This skill produces a working draft, not a finished changelog.** The output is a starting point to make the task easier — the maintainer must review, edit and refine every entry before committing.
 
-Generate a draft entry for `public/CHANGELOG.md` based on the pull requests merged since the last published release, then insert it at the top of the file.
+Generate a draft entry for `CHANGELOG.md` based on the pull requests merged since the last published release.
+
+If you can modify files, insert the new entry into `CHANGELOG.md` as described below. Otherwise, output the completed block ready to be inserted manually.
 
 ---
 
@@ -21,7 +23,7 @@ Generate a draft entry for `public/CHANGELOG.md` based on the pull requests merg
 
 Wait for the answer. Use that value verbatim for the heading — do not infer or calculate it from the existing CHANGELOG.
 
-The release date is **today's date** in `yyyy-mm-dd` format.
+The release date is **today's date** in `YYYY-MM-DD` format.
 
 ---
 
@@ -53,11 +55,14 @@ gh pr list \
 
 > Replace the timestamp with the `publishedAt` value from step 1.
 
+If the result reaches the limit, continue fetching additional pages until all merged PRs have been processed.
+
 For each PR, read:
 
 * **`title`** — the PR headline.
 * **`body`** — the **full description**. This is the primary source; many PRs bundle several unrelated changes under a single title.
-* **`labels`** — useful classification hints.
+* **`labels`** — supporting context only. When labels conflict with the PR body, prefer the PR body.
+* **`mergedAt`** — for verification if needed.
 
 If a PR body references issues with `Closes #NNN` or `Fixes #NNN`, fetch them too:
 
@@ -69,28 +74,28 @@ gh issue view NNN --repo exelearning/exelearning --json title,body
 
 ## 3. Write the entries
 
-Follow the **exact style** of the existing changelog entries in `public/CHANGELOG.md`:
+Follow the **exact style** of the existing changelog entries in `CHANGELOG.md`.
 
 ### Style rules
 
 * **One sentence per bullet.** Start with a capital letter; no trailing full stop.
-* **Lead with the subject area** for component-specific entries:
-  `TinyMCE: …`, `Sort iDevice: …`, `File Manager: …`, `Admin panel: …`
-* Describe the **outcome for users**, not the implementation:
+* Describe the **outcome for users**, not the implementation.
 
   * ✅ `Sort iDevice: exercises with identical cards are now correctly validated`
   * ❌ `Fixed a bug in the validation logic of SortIdevice.js`
-* **Avoid technical jargon** unless already used in the existing changelog (e.g. `blob:`, `asset://`, `SCORM`).
-* **Dependency upgrades:** `package-name: OLD → NEW` (lowercase, `→`, no extra words).
-* **Group related items together** (all TinyMCE entries together, all iDevice entries together, etc.).
+* Use component prefixes only when they improve clarity and match the style already used in the changelog (e.g. `TinyMCE:`, `File Manager:`).
+* Avoid technical jargon unless it is already common in the existing changelog (e.g. `blob:`, `asset://`, `SCORM`).
+* Dependency upgrades: `package-name: OLD → NEW` (lowercase, `→`, no extra words).
+* Group related entries together.
 
 ### What NOT to include
 
 * Duplicate entries for the same fix.
-* Multiple "Updated X translation" lines — merge into one: `Updated [Language] ([CODE]) translation`.
-* Dependency-only PRs with no user-visible effect may be grouped into one bullet if there are many minor bumps.
-* Merge commits and version-bump-only PRs.
-* Purely internal changes (CI tweaks, test additions, linting) unless significant.
+* Multiple translation-only bullets when they can reasonably be combined.
+* Dependency-only PRs with no user-visible effect may be grouped into a single bullet if there are many minor updates.
+* Merge commits.
+* Version-bump-only PRs.
+* Purely internal changes (CI, tests, linting, formatting) unless they have a significant user or developer impact.
 
 ---
 
@@ -100,24 +105,23 @@ Follow the **exact style** of the existing changelog entries in `public/CHANGELO
 ## vX.Y.Z-type – YYYY-MM-DD
 
 - …
-
----
+- …
 ```
 
 ---
 
-## 5. Insert into `public/CHANGELOG.md`
+## 5. Insert into `CHANGELOG.md`
 
-Insert the new block immediately after the `# CHANGELOG` heading, before the previous version's `## v…` entry.
+Insert the new block immediately after the `# CHANGELOG` heading, before the previous version entry.
 
 ```markdown
 # CHANGELOG
 
-## vX.Y.Z-type – YYYY-MM-DD      ← new draft block
+## vX.Y.Z-type – YYYY-MM-DD
 …
----
+…
 
-## v4.0.0-rc1 – 2026-04-07       ← previous block, unchanged
+## v4.0.0-rc1 – 2026-04-07
 …
 ```
 
@@ -127,7 +131,7 @@ Do **not** modify any existing content below the insertion point.
 
 ## 6. Remind the user this is a draft
 
-After inserting the block, tell the user:
+After generating the entry, tell the user:
 
 > ⚠️ This is a draft. Please review every entry before committing:
 >
