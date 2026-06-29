@@ -52,14 +52,18 @@ function exeweb_display_embed($exeweb, $cm, $course, $file) {
     // We need a way to discover if we are loading remote docs inside an iframe.
     $moodleurl->param('embed', 1);
 
+    // Reveal eXeLearning's teacher-only content via the package's own URL parameter
+    // (eXeLearning core hides teacher content by default and opts in to reveal with
+    // ?exe-teacher=1; see upstream exelearning#1772). This replaces the former CSS
+    // injection that hid the teacher-mode toggle: the plugin no longer mutates the
+    // embedded document, it just passes the supported flag when the per-activity
+    // setting opts in.
+    exeweb_apply_teacher_mode_param($moodleurl, $exeweb);
+
     // Let the module handle the display.
     $PAGE->activityheader->set_description(exeweb_get_intro($exeweb, $cm));
 
     exeweb_print_header($exeweb, $cm, $course);
-
-    if (!exeweb_is_teacher_mode_visible($exeweb)) {
-        exeweb_require_teacher_mode_hider_for_iframe('exewebobject');
-    }
 
     echo $PAGE->get_renderer('mod_exeweb')->generate_embed_general($cm, $moodleurl, $title, $clicktoopen);
 
@@ -68,7 +72,14 @@ function exeweb_display_embed($exeweb, $cm, $course, $file) {
 }
 
 /**
- * Check whether teacher mode toggler should be visible for this activity.
+ * Whether this activity opts in to revealing eXeLearning's teacher-only content.
+ *
+ * This is the per-activity "teachermodevisible" setting stored in displayoptions.
+ * When on, exeweb_display_embed() appends the package's own ?exe-teacher=1 URL
+ * parameter so the in-package teacher-layer selector is available to viewers (it
+ * replaces the former parent-side CSS injection). The default when the key is absent
+ * is false, matching the form default and the "hidden by default, opt in to reveal"
+ * principle from upstream exelearning#1772 (legacy rows therefore keep it hidden).
  *
  * @param stdClass $exeweb
  * @return bool
@@ -76,42 +87,51 @@ function exeweb_display_embed($exeweb, $cm, $course, $file) {
 function exeweb_is_teacher_mode_visible($exeweb) {
     $options = empty($exeweb->displayoptions) ? [] : (array) unserialize_array($exeweb->displayoptions);
     if (!array_key_exists('teachermodevisible', $options)) {
-        return true;
+        return false;
     }
     return !empty($options['teachermodevisible']);
 }
 
 /**
- * Inject CSS into the embedded iframe to hide the teacher mode toggler.
+ * Append eXeLearning's ?exe-teacher=1 reveal parameter to a content URL when the
+ * activity opts in (teachermodevisible).
  *
- * @param string $iframeid
- * @return void
+ * Centralizes the rule so every display mode — embedded iframe, popup, new window
+ * and the direct file redirect — reveals the in-package teacher-layer selector
+ * consistently. Without this, only the embedded iframe carried the flag and the
+ * other modes silently dropped it.
+ *
+ * @param moodle_url $url content/pluginfile URL to flag in place
+ * @param stdClass $exeweb
+ * @return moodle_url the same URL, with exe-teacher=1 added when reveal is on
  */
-function exeweb_require_teacher_mode_hider_for_iframe(string $iframeid): void {
-    global $PAGE;
-
-    $iframeidjson = json_encode($iframeid);
-    $cssjson = json_encode('#teacher-mode-toggler-wrapper { visibility: hidden !important; }');
-
-    $js = "(function(){"
-        . "var iframe=document.getElementById(" . $iframeidjson . ");"
-        . "if(!iframe){return;}"
-        . "var css=" . $cssjson . ";"
-        . "var inject=function(){try{if(!iframe.contentDocument){return;}"
-        . "var d=iframe.contentDocument;var st=d.createElement('style');st.textContent=css;"
-        . "(d.head||d.documentElement).appendChild(st);}catch(e){}};"
-        . "iframe.addEventListener('load', inject);inject();"
-        . "})();";
-
-    $PAGE->requires->js_init_code($js);
+function exeweb_apply_teacher_mode_param(moodle_url $url, $exeweb): moodle_url {
+    if (exeweb_is_teacher_mode_visible($exeweb)) {
+        $url->param('exe-teacher', '1');
+    }
+    return $url;
 }
 
-function exeweb_get_clicktoopen($file, $revision, $extra='') {
+/**
+ * Build the "click to open" link for the package entry file.
+ *
+ * @param stored_file $file
+ * @param int $revision
+ * @param string $extra extra HTML attributes for the anchor
+ * @param stdClass|null $exeweb activity record; when provided the link honours the
+ *     teacher-mode reveal setting by appending ?exe-teacher=1
+ * @return string
+ */
+function exeweb_get_clicktoopen($file, $revision, $extra='', $exeweb = null) {
     global $CFG;
 
     $filename = $file->get_filename();
     $fullurl = moodle_url::make_pluginfile_url($file->get_contextid(), 'mod_exeweb', 'content', $revision,
                 $file->get_filepath(), $filename);
+
+    if ($exeweb !== null) {
+        exeweb_apply_teacher_mode_param($fullurl, $exeweb);
+    }
 
     $string = get_string('clicktoopen2', 'mod_exeweb', "<a href=\"$fullurl\" $extra>$filename</a>");
 
@@ -143,23 +163,24 @@ function exeweb_print_workaround($exeweb, $cm, $course, $file) {
         case RESOURCELIB_DISPLAY_POPUP:
             $fullurl = moodle_url::make_pluginfile_url($file->get_contextid(), 'mod_exeweb', 'content', $exeweb->revision,
                             $file->get_filepath(), $file->get_filename());
+            exeweb_apply_teacher_mode_param($fullurl, $exeweb);
                     $options = empty($exeweb->displayoptions) ? [] : (array) unserialize_array($exeweb->displayoptions);
             $width  = empty($options['popupwidth']) ? 620 : $options['popupwidth'];
             $height = empty($options['popupheight']) ? 450 : $options['popupheight'];
             $wh = "width=$width,height=$height,toolbar=no,location=no,menubar=no,copyhistory=no,"
                     . "status=no,directories=no,scrollbars=yes,resizable=yes";
             $extra = "onclick=\"window.open('$fullurl', '', '$wh'); return false;\"";
-            echo exeweb_get_clicktoopen($file, $exeweb->revision, $extra);
+            echo exeweb_get_clicktoopen($file, $exeweb->revision, $extra, $exeweb);
             break;
 
         case RESOURCELIB_DISPLAY_NEW:
             $extra = 'onclick="this.target=\'_blank\'"';
-            echo exeweb_get_clicktoopen($file, $exeweb->revision, $extra);
+            echo exeweb_get_clicktoopen($file, $exeweb->revision, $extra, $exeweb);
             break;
 
         case RESOURCELIB_DISPLAY_OPEN:
         default:
-            echo exeweb_get_clicktoopen($file, $exeweb->revision);
+            echo exeweb_get_clicktoopen($file, $exeweb->revision, '', $exeweb);
             break;
     }
     echo '</div>';

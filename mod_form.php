@@ -175,7 +175,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
         $mform->addElement('advcheckbox', 'teachermodevisible',
             get_string('teachermodevisible', 'exeweb'));
         $mform->addHelpButton('teachermodevisible', 'teachermodevisible', 'exeweb');
-        $mform->setDefault('teachermodevisible', 1);
+        $mform->setDefault('teachermodevisible', 0);
 
 
         $options = ['0' => get_string('none'), '1' => get_string('allfiles'), '2' => get_string('htmlfilesonly'), ];
@@ -239,7 +239,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
             if (array_key_exists('teachermodevisible', $displayoptions)) {
                 $defaultvalues['teachermodevisible'] = (int) $displayoptions['teachermodevisible'];
             } else {
-                $defaultvalues['teachermodevisible'] = 1;
+                $defaultvalues['teachermodevisible'] = 0;
             }
         }
     }

@@ -71,7 +71,11 @@ class renderer extends \plugin_renderer_base {
      */
     public function generate_embed_general(\stdClass $cm, $fullurl, $title, $clicktoopen): string {
         $context = [];
-        $context['fullurl'] = ($fullurl instanceof moodle_url) ? $fullurl->out() : $fullurl;
+        // Pass the raw (unescaped) URL: the mustache template escapes {{ fullurl }} once when
+        // rendering the iframe src. Using out() (escaped) here would double-escape the ampersand
+        // (&amp; -> &amp;amp;), so the browser would parse e.g. "exe-teacher" as "amp;exe-teacher"
+        // and the teacher-mode reveal flag would be silently dropped in embed mode.
+        $context['fullurl'] = ($fullurl instanceof moodle_url) ? $fullurl->out(false) : $fullurl;
         $context['title'] = s($title);
         $context['clicktoopen'] = $clicktoopen;
 
