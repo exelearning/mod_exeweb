@@ -120,6 +120,14 @@ Uses Moodle's file API — packages stored in `mod_exeweb/package` filearea, exp
 - GitHub Actions `release.yml` triggers on git tags: fetches editor, builds, packages, uploads to GitHub Release
 - `check-editor-releases.yml` runs daily to auto-release when new editor versions appear
 
+## Agent skills (`.agents/`)
+
+The `.agents/skills/` directory contains Claude Code project skills — reusable prompt workflows invoked with `/skill-name` in the Claude Code CLI. They are development tooling only and are excluded from release packages via `.distignore`.
+
+| Skill | File | Purpose |
+|-------|------|---------|
+| `changelog` | `.agents/skills/changelog/SKILL.md` | Draft a CHANGELOG entry from merged GitHub PRs since the last release |
+
 ## Twin-plugin checks (mod_exeweb ↔ mod_exescorm)
 
 `mod_exeweb` and [`mod_exescorm`](https://github.com/exelearning/mod_exescorm) share large amounts of code, history, and bug surface (embedded editor, action bar, packaging pipeline, online callbacks, etc.). **Before closing a fix, always cross-check the sibling plugin:**
