@@ -3,6 +3,7 @@
 ## v4.0.2 – 2026-07-07
 
 - Allow saving the plugin settings page without requiring an optional package template file.
+- Use eXeLearning's native `?exe-teacher=1` URL parameter to reveal teacher-layer content instead of the previous CSS injection approach.
 - Fix Playground environments loading an outdated embedded editor version when `.editor-version` had already been updated.
 - Automatically keep the Playground blueprint editor URL in sync with `.editor-version` on each release.
 - Review and complete the Spanish (es) translation.
@@ -19,6 +20,8 @@
 - Exclude development files from release packages.
 - Update the README to clarify Moodle compatibility, editor modes and support information.
 - Automatically install and configure the embedded editor in Playground environments.
+
+---
 
 ## v4.0.0 – 2025-04-30
 
@@ -39,6 +42,8 @@
 - Add `manage_embedded_editor_upload.php` endpoint for environments where direct GitHub access is not available (e.g., Playground/WASM constraints).
 - Add compatibility with eXeLearning 4 while maintaining support from eXeLearning 2.9 online onwards.
 - Update activity icons to align with the latest eXeLearning design.
+
+---
 
 ## v1.1 – 2025-06-20
 
