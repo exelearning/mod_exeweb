@@ -172,8 +172,8 @@ $string['typeexewebcreate'] = 'Crear con eXeLearning';
 $string['typeexewebedit'] = 'Editar con eXeLearning';
 $string['typelocal'] = 'Paquete subido';
 
-$string['teachermodevisible'] = 'Mostrar el selector de capa docente';
-$string['teachermodevisible_help'] = 'Si se desactiva, se ocultará el selector de capa docente dentro del recurso incrustado.';
+$string['teachermodevisible'] = 'Habilitar el selector de contenido para docentes';
+$string['teachermodevisible_help'] = 'Permite alternar la visualización del contenido exclusivo para docentes desde la propia actividad. Si se desactiva, la actividad mostrará únicamente el contenido dirigido al alumnado.';
 
 // Gestión del editor embebido.
 $string['manageembeddededitor'] = 'Gestionar editor embebido';

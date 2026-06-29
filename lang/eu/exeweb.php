@@ -172,8 +172,8 @@ $string['typeexewebcreate'] = 'Sortu eXeLearning-ekin';
 $string['typeexewebedit'] = 'Editatu eXeLearning-ekin';
 $string['typelocal'] = 'Igotako paketea';
 
-$string['teachermodevisible'] = 'Erakutsi irakasle-geruzaren hautatzailea';
-$string['teachermodevisible_help'] = 'Desaktibatuz gero, barne-baliabidearen irakasle-geruzaren hautatzailea ezkutatuko da.';
+$string['teachermodevisible'] = 'Gaitu irakasleen edukiaren etengailua';
+$string['teachermodevisible_help'] = 'Irakasleentzako soilik den edukia jardueraren barruan erakutsi edo ezkutatu daiteke. Desgaitzen bada, jarduerak ikasleentzako soilik den edukia erakutsiko du.';
 
 // Editore txertatuaren kudeaketa.
 $string['manageembeddededitor'] = 'Kudeatu editore txertatua';

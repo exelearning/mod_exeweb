@@ -172,8 +172,8 @@ $string['typeexewebcreate'] = 'Crear amb eXeLearning';
 $string['typeexewebedit'] = 'Editar amb eXeLearning';
 $string['typelocal'] = 'Paquet pujat';
 
-$string['teachermodevisible'] = 'Mostra el selector de capa docent';
-$string['teachermodevisible_help'] = 'Si es desactiva, s\'ocultarà el selector de capa docent dins del recurs incrustat.';
+$string['teachermodevisible'] = 'Habilitar el selector de contingut per a docents';
+$string['teachermodevisible_help'] = 'Permet alternar la visualització del contingut exclusiu per a docents des de la pròpia activitat. Si es desactiva, l\'activitat mostrarà únicament el contingut adreçat a l\'alumnat.';
 
 // Gestió de l'editor incrustat.
 $string['manageembeddededitor'] = 'Gestiona l\'editor incrustat';
