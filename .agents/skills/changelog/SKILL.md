@@ -78,10 +78,10 @@ Follow the **exact style** of the existing changelog entries in `CHANGELOG.md`.
 
 ### Style rules
 
-* **One sentence per bullet.** Start with a capital letter; no trailing full stop.
+* **One sentence per bullet.** Start with a capital letter and end with a full stop.
 * Describe the **outcome for users**, not the implementation.
 
-  * ✅ `Sort iDevice: exercises with identical cards are now correctly validated`
+  * ✅ `Sort iDevice: exercises with identical cards are now correctly validated.`
   * ❌ `Fixed a bug in the validation logic of SortIdevice.js`
 * Use component prefixes only when they improve clarity and match the style already used in the changelog (e.g. `TinyMCE:`, `File Manager:`).
 * Avoid technical jargon unless it is already common in the existing changelog (e.g. `blob:`, `asset://`, `SCORM`).
@@ -96,6 +96,17 @@ Follow the **exact style** of the existing changelog entries in `CHANGELOG.md`.
 * Merge commits.
 * Version-bump-only PRs.
 * Purely internal changes (CI, tests, linting, formatting) unless they have a significant user or developer impact.
+* Documentation-only changes that are not addressed to end users (contributor guides, issue-tracker links, README maintenance notes).
+
+### Releases with no user-facing changes
+
+If, after applying the rules above, no entry remains, do **not** publish an empty section and do **not** pad it with internal changes. Use this single bullet instead:
+
+```markdown
+- Maintenance release with no functional changes: version bumped to keep numbering aligned with eXeLearning for consistency across related projects.
+```
+
+Also tell the user which PRs were discarded and why, so they can confirm the release really has no user-visible content.
 
 ---
 
