@@ -27,9 +27,21 @@
 namespace mod_exeweb\exeonline;
 
 use mod_exeweb\exeonline\token_manager;
+use \moodle_exception;
 use \moodle_url;
+use \stdClass;
 
 class exeonline_redirector {
+
+    /**
+     * Module script eXeLearning sends the browser back to when the final destination is outside the module.
+     */
+    private const RETURNTO_SCRIPT = '/mod/exeweb/returnto.php';
+
+    /**
+     * Query parameter carrying the final destination through RETURNTO_SCRIPT.
+     */
+    public const RETURNTO_PARAM = 'returnurl';
 
     /**
      * Keeps if editing or adding instance.
@@ -64,9 +76,11 @@ class exeonline_redirector {
         $action = $action ?? self::$action;
         $target = $action === 'add' ? '/new_ode' : '/edit_ode';
         $returnto = $returnto ?? self::$returnto ?? new moodle_url($CFG->wwwroot);
-        // Ensure return url has a valid cmid if it is a module view url.
         if (strpos($returnto->get_path(), 'mod/exeweb') !== false) {
+            // Ensure return url has a valid cmid if it is a module view url.
             $returnto->params(['id' => $cmid]);
+        } else {
+            $returnto = self::get_returnto_url($cmid, $returnto);
         }
         // Get remote URL from config.
         $exeonlineurl = get_config('exeweb', 'exeonlinebaseuri');
@@ -94,6 +108,57 @@ class exeonline_redirector {
         return new \moodle_url($url, $params);
     }
 
+    /**
+     * Wraps a destination outside the module into a return url eXeLearning can work with.
+     *
+     * eXeLearning derives its Moodle callback endpoints (get_ode.php / set_ode.php) by splitting the
+     * return url on the module path, so anything outside /mod/exeweb (the course page used by the
+     * "Edit on eXeLearning and return to course" button, for instance) aborts the send back with
+     * "Could not build platform integration URL from return URL". RETURNTO_SCRIPT does live under the
+     * module path, so it is accepted, and it forwards the browser to the real destination.
+     *
+     * @param integer $cmid
+     * @param moodle_url $returnto Final destination for the user's browser.
+     * @return moodle_url
+     */
+    private static function get_returnto_url(int $cmid, moodle_url $returnto) {
+        $params = ['id' => $cmid];
+        try {
+            $localurl = $returnto->out_as_local_url(false);
+            if ($localurl !== '') {
+                $params[self::RETURNTO_PARAM] = $localurl;
+            }
+        } catch (moodle_exception $e) {
+            // Destination is not part of this Moodle, so it can't be forwarded to.
+            // Drop it and let the return script fall back to the activity's course.
+            $params = ['id' => $cmid];
+        }
+
+        return new \moodle_url(self::RETURNTO_SCRIPT, $params);
+    }
+
+    /**
+     * Resolves the destination RETURNTO_SCRIPT has to forward the browser to.
+     *
+     * Counterpart of {@see get_returnto_url()}: it turns the carried parameter back into a url, and
+     * falls back to the activity's course when nothing usable arrived, either because the wrapping
+     * dropped a non-local destination or because the script was reached by hand.
+     *
+     * @param string $returnurl Value of the RETURNTO_PARAM parameter, already cleaned as PARAM_LOCALURL.
+     * @param stdClass $course Course the activity belongs to.
+     * @return moodle_url
+     */
+    public static function resolve_returnto_url(string $returnurl, stdClass $course) {
+        global $CFG;
+
+        if ($returnurl === '') {
+            require_once($CFG->dirroot . '/course/lib.php');
+
+            return course_get_url($course);
+        }
+
+        return new \moodle_url($returnurl);
+    }
 
     /**
      * Hack to get redirected to eXeLearning Online by core's modedit.
