@@ -1,8 +1,14 @@
 # CHANGELOG
 
-## v4.0.4 – 2026-09-15
+## v4.0.5 – 2026-09-16
 
 - Fix the "Edit on eXeLearning and return to course" button, which failed with a "Could not build platform integration URL from return URL" error when sending the package back to Moodle.
+
+---
+
+## v4.0.4
+
+- 404 Not Found. The requested release was not found in this project.
 
 ---
 
