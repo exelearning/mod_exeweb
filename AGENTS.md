@@ -57,7 +57,7 @@ Lint/test/phpmd/behat all delegate to `composer` scripts defined in `composer.js
 - **Core Moodle hooks**: `lib.php`, `locallib.php` (display/rendering), `mod_form.php` (activity form), `settings.php` (admin config)
 - **Editor integration**: `editor/index.php` (bootstrap), `editor/static.php` (asset server), `editor/save.php` (AJAX save)
 - **Online editor**: `get_ode.php`, `set_ode.php`, `classes/exeonline/` (redirector, JWT token manager)
-- **Frontend JS** (AMD): `amd/src/editor_modal.js` (fullscreen overlay), `amd/src/admin_embedded_editor.js` (settings page AJAX + progress), `amd/src/moodle_exe_bridge.js` (runs inside editor iframe, raw — not AMD)
+- **Frontend JS** (AMD): `amd/src/editor_modal.js` (fullscreen overlay), `amd/src/admin_embedded_editor.js` (settings page AJAX + progress), `js/moodle_exe_bridge.js` (runs inside editor iframe, raw — not AMD)
 - **Package handling**: `classes/exeweb_package.php` (validation, extraction)
 - **Database**: `db/install.xml` (schema), `db/access.php` (capabilities), `db/upgrade.php` (migrations)
 - **Backup/restore**: `backup/moodle2/`
@@ -112,7 +112,7 @@ Uses Moodle's file API — packages stored in `mod_exeweb/package` filearea, exp
 
 - **PHP**: Moodle coding standard enforced via PHP CodeSniffer (`make lint`/`make fix`)
 - **Strings**: All UI strings in `lang/{ca,en,es,eu,gl}/exeweb.php` — use `get_string('key', 'mod_exeweb')`
-- **JS**: AMD modules in `amd/src/`, compiled to `amd/build/` (exception: `moodle_exe_bridge.js` loads raw in editor iframe)
+- **JS**: AMD modules in `amd/src/`, compiled to `amd/build/`. Plain scripts go in `js/`, never in `amd/`: Moodle bundles every `amd/build` file into the RequireJS bundle of every page, and a file without `define()` corrupts it (`tests/amd_modules_test.php` guards this). `js/moodle_exe_bridge.js` is one; it loads raw in the editor iframe
 
 ## Packaging & Release
 
