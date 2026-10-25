@@ -76,7 +76,7 @@ class exeonline_redirector {
     }
 
     /**
-     * Builds moodle url object needed to redirect to eXeLearnig Online.
+     * Builds moodle url object needed to redirect to eXeLearning Cloud.
      *
      * @param integer $cmid
      * @param moodle_url|null $returnto Where the user's browser ends up once eXeLearning sends the

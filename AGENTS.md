@@ -49,14 +49,14 @@ Lint/test/phpmd/behat all delegate to `composer` scripts defined in `composer.js
 | Constant | Mode | How it works |
 |----------|------|-------------|
 | `EXEWEB_ORIGIN_LOCAL` | Upload | ZIP package uploaded via form |
-| `EXEWEB_ORIGIN_EXEONLINE` | Online | Redirects to remote eXeLearning; JWT-authenticated callbacks (`get_ode.php`/`set_ode.php`) sync the package |
+| `EXEWEB_ORIGIN_EXEONLINE` | Cloud | Redirects to remote eXeLearning; JWT-authenticated callbacks (`get_ode.php`/`set_ode.php`) sync the package |
 | `EXEWEB_ORIGIN_EMBEDDED` | Embedded | Static HTML5 editor in iframe from `dist/static/`; bridge script + postMessage for Moodle ↔ editor communication |
 
 ### Key File Groups
 
 - **Core Moodle hooks**: `lib.php`, `locallib.php` (display/rendering), `mod_form.php` (activity form), `settings.php` (admin config)
 - **Editor integration**: `editor/index.php` (bootstrap), `editor/static.php` (asset server), `editor/save.php` (AJAX save)
-- **Online editor**: `get_ode.php`, `set_ode.php`, `classes/exeonline/` (redirector, JWT token manager)
+- **eXeLearning Cloud editor**: `get_ode.php`, `set_ode.php`, `classes/exeonline/` (redirector, JWT token manager)
 - **Frontend JS** (AMD): `amd/src/editor_modal.js` (fullscreen overlay), `amd/src/admin_embedded_editor.js` (settings page AJAX + progress), `js/moodle_exe_bridge.js` (runs inside editor iframe, raw — not AMD)
 - **Package handling**: `classes/exeweb_package.php` (validation, extraction)
 - **Database**: `db/install.xml` (schema), `db/access.php` (capabilities), `db/upgrade.php` (migrations)

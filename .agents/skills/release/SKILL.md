@@ -13,7 +13,7 @@ Prepare everything a maintainer needs to publish `mod_exeweb` vX.Y.Z, leaving th
 * `.github/workflows/check-editor-releases.yml` runs daily (and on `workflow_dispatch`). It compares the latest `exelearning/exelearning` release tag with `.editor-version` and does nothing if they match. When they differ, it builds the editor from that tag, runs `make package RELEASE=X.Y.Z` on the current `main`, writes the tag to `.editor-version`, syncs the editor URL in `blueprint.json`, commits both to `main`, and creates the GitHub release `vX.Y.Z` with `mod_exeweb-X.Y.Z.zip` attached (`softprops/action-gh-release`).
 * That release is created with `GITHUB_TOKEN`, so it does **not** fire `release: published`: `.github/workflows/release.yml` does not run in the automatic path. `release.yml` only runs for releases published by a person or via `workflow_dispatch` (manual builds).
 * **Do not edit `.editor-version` or the editor URL in `blueprint.json` by hand**: CI owns them. Setting `.editor-version` to the new tag makes the daily job report "Already up to date" and silently **skips** the automatic release.
-* **Merge order matters**: the daily job packages whatever is on `main` when the editor tag appears. The `Prepare vX.Y.Z` PR must be merged **before** the matching eXeLearning release is published, or the ZIP ships without the new CHANGELOG entry.
+* **Merge order matters**: the daily job packages whatever is on `main` when the editor tag appears. The `Prepare vX.Y.Z` PR must be merged **before** the daily job first runs after the matching eXeLearning release appears, or the ZIP ships without the new CHANGELOG entry. The job reads `releases/latest`, so eXeLearning prereleases do not trigger it.
 * Plugin versions stay aligned with eXeLearning versions; a release can have no functional changes.
 
 ---
@@ -32,7 +32,7 @@ Work on a preparation branch, never on `main`. If the user has not created one, 
 ## 2. Sanity checks
 
 * `git status` — note untracked or modified files that must not end up in the release commits.
-* `gh release view --repo exelearning/mod_exeweb --json tagName,publishedAt` — last published release; the new version must be greater and must not already exist as a tag (`git tag -l vX.Y.Z`, `gh release view vX.Y.Z`).
+* `gh release view --repo exelearning/mod_exeweb --json tagName,publishedAt` — last published release; the new version must be greater and must not already exist as a tag (`git tag -l vX.Y.Z`, `gh release view --repo exelearning/mod_exeweb vX.Y.Z`).
 * `version.php` still holds dev values.
 * `gh release view --repo exelearning/exelearning vX.Y.Z` — tell the user whether the matching editor release already exists. If it does not, the automatic release will happen the first day the job runs after it appears, so this branch must be merged before then. If it already exists, check whether `vX.Y.Z` was already published here without this CHANGELOG and warn the user.
 

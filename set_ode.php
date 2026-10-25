@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file doesn't use login. It's a callback for eXeLearnin Online to set the activity new package.
+ * This file doesn't use login. It's a callback for eXeLearning Cloud to set the activity new package.
  *
  * It uses AccountId verification (low security as it is not a secret) and, if set in plugin
  * configuration, HMAC verification through share secret HMAC keys.
