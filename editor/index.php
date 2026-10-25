@@ -316,7 +316,7 @@ $configscript = <<<EOT
 EOT;
 
 // Inject bridge script before </body>.
-$bridgescript = '<script src="' . $CFG->wwwroot . '/mod/exeweb/amd/src/moodle_exe_bridge.js"></script>';
+$bridgescript = '<script src="' . $CFG->wwwroot . '/mod/exeweb/js/moodle_exe_bridge.js"></script>';
 
 $html = str_replace('</head>', $configscript . "\n" . '</head>', $html);
 $html = str_replace('</body>', $bridgescript . "\n" . '</body>', $html);
