@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v4.0.6 – 2026-10-29
+
+- Fix "Edit with eXeLearning" in eXeLearning Cloud showing "Access denied" when another teacher was the last to send the activity back from eXeLearning.
+- eXeLearning Cloud now always opens the activity's latest package from Moodle instead of a potentially outdated copy.
+- Fix missing embedded editor files in release packages, which broke the edicuatex menu editor and SCORM 1.2 exports from the embedded editor.
+- Fix pages losing their JavaScript on the first load after a cache purge or upgrade.
+- Fix the embedded editor failing to load in Playground environments running Moodle 5.1 or later.
+
+---
+
 ## v4.0.5 – 2026-09-16
 
 - Fix the "Edit on eXeLearning and return to course" button, which failed with a "Could not build platform integration URL from return URL" error when sending the package back to Moodle.
