@@ -7,6 +7,7 @@
 - Fix missing embedded editor files in release packages, which broke the edicuatex menu editor and SCORM 1.2 exports from the embedded editor.
 - Fix pages losing their JavaScript on the first load after a cache purge or upgrade.
 - Fix the embedded editor failing to load in Playground environments running Moodle 5.1 or later.
+- Review eXeLearning edition names in language strings and documentation.
 
 ---
 
