@@ -151,7 +151,7 @@ Si el tipo de archivo es desconocido para el sistema, no se muestra.';
 $string['uploadeddate'] = 'Subido {$a}';
 $string['embeddededitorsettings'] = 'Tipus d\'editor';
 $string['editormode'] = 'Mode d\'editor';
-$string['editormodedesc'] = 'Seleccioneu quin editor voleu utilitzar per crear i editar contingut eXeLearning. La configuració de connexió online només s\'aplica quan es selecciona el mode "eXeLearning Cloud".';
+$string['editormodedesc'] = 'Seleccioneu quin editor voleu utilitzar per crear i editar contingut eXeLearning. La configuració de la connexió amb el servidor eXeLearning només s\'aplica quan es selecciona el mode "eXeLearning Cloud".';
 $string['editormodeonline'] = 'eXeLearning Cloud (servidor remot)';
 $string['editormodeembedded'] = 'Editor integrat (incrustat)';
 $string['embeddednotinstalledcontactadmin'] = 'Els fitxers de l\'editor integrat no estan instal·lats. Contacteu amb l\'administrador del lloc per instal·lar-lo.';

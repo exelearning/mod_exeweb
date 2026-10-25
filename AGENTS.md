@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Moodle activity module (`mod_exeweb`) for creating and editing web sites with eXeLearning. Teachers can author educational content via three modes: local upload, eXeLearning Online (remote editor), or an embedded static editor.
+Moodle activity module (`mod_exeweb`) for creating and editing web sites with eXeLearning. Teachers can author educational content via three modes: local upload, eXeLearning Cloud (remote editor), or an embedded static editor.
 
 **Component**: `mod_exeweb`
 **Moodle compatibility**: 4.2+
@@ -117,12 +117,12 @@ Uses Moodle's file API — packages stored in `mod_exeweb/package` filearea, exp
 ## Packaging & Release
 
 - `make package RELEASE=X.Y.Z` updates `version.php`, creates ZIP excluding files in `.distignore`, then restores dev values
-- GitHub Actions `release.yml` triggers on git tags: fetches editor, builds, packages, uploads to GitHub Release
-- `check-editor-releases.yml` runs daily to auto-release when new editor versions appear
+- `check-editor-releases.yml` runs daily: when the latest eXeLearning release tag differs from `.editor-version`, it builds the editor, packages the current `main`, updates `.editor-version` and `blueprint.json`, and creates the GitHub Release with the ZIP attached. Merge release preparation PRs before the matching eXeLearning release
+- `release.yml` runs on `release: published` and `workflow_dispatch`: builds the editor, packages and uploads the ZIP. It does not run for the automatic releases above, which are created with `GITHUB_TOKEN`
 
 ## Agent skills (`.agents/`)
 
-The `.agents/skills/` directory contains Claude Code project skills — reusable prompt workflows invoked with `/skill-name` in the Claude Code CLI. They are development tooling only and are excluded from release packages via `.distignore`.
+The `.agents/skills/` directory contains agent skills — reusable prompt workflows. They are not mirrored in `.claude/skills/`, so Claude Code does not offer them as slash commands: ask the agent to follow the skill file instead. They are development tooling only and are excluded from release packages via `.distignore`.
 
 | Skill | File | Purpose |
 |-------|------|---------|

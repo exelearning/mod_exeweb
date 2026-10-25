@@ -18,7 +18,7 @@
  * Unit tests for mod_exeweb package handling.
  *
  * Covers the regression behind issue #42 where webzip packages received from
- * eXeLearning Online were extracted into the right itemid but
+ * eXeLearning Cloud were extracted into the right itemid but
  * {@see exeweb_package::get_mainfile()} was queried with the default itemid
  * (0), leaving entrypath/entryname stale and breaking image references on the
  * served HTML page.
@@ -36,7 +36,7 @@ final class exeweb_package_test extends \advanced_testcase {
 
     /**
      * Build an in-memory zip mimicking the layout produced by Html5Exporter
-     * when eXeLearning Online sends a webzip back to mod_exeweb. The structure
+     * when eXeLearning Cloud sends a webzip back to mod_exeweb. The structure
      * matches what the editor generates: index.html at the root, an asset
      * inside content/resources/, and a content.xml descriptor (the only file
      * the validation rules require by default).

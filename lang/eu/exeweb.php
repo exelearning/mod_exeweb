@@ -151,7 +151,7 @@ Si el tipo de archivo es desconocido para el sistema, no se muestra.';
 $string['uploadeddate'] = 'Subido {$a}';
 $string['embeddededitorsettings'] = 'Editore mota';
 $string['editormode'] = 'Editore modua';
-$string['editormodedesc'] = 'Aukeratu zein editore erabili eXeLearning edukia sortu eta editatzeko. Online konexio-ezarpenak soilik aplikatzen dira "eXeLearning Cloud" modua hautatzen denean.';
+$string['editormodedesc'] = 'Aukeratu zein editore erabili eXeLearning edukia sortu eta editatzeko. eXeLearning zerbitzariarekiko konexio-ezarpenak soilik aplikatzen dira "eXeLearning Cloud" modua hautatzen denean.';
 $string['editormodeonline'] = 'eXeLearning Cloud (urruneko zerbitzaria)';
 $string['editormodeembedded'] = 'Editore txertatua (integratua)';
 $string['embeddednotinstalledcontactadmin'] = 'Editore txertatuaren fitxategiak ez daude instalatuta. Jarri harremanetan guneko administratzailearekin instalatzeko.';
