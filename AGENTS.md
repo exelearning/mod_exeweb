@@ -127,6 +127,7 @@ The `.agents/skills/` directory contains Claude Code project skills — reusable
 | Skill | File | Purpose |
 |-------|------|---------|
 | `changelog` | `.agents/skills/changelog/SKILL.md` | Draft a CHANGELOG entry from merged GitHub PRs since the last release |
+| `release` | `.agents/skills/release/SKILL.md` | Prepare a release: CHANGELOG entry, version and twin-plugin checks, package audit (no tagging or publishing) |
 
 ## Twin-plugin checks (mod_exeweb ↔ mod_exescorm)
 
