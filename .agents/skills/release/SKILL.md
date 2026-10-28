@@ -40,7 +40,7 @@ Work on a preparation branch, never on `main`. If the user has not created one, 
 
 Follow `.agents/skills/changelog/SKILL.md` (steps 1–5) to draft the entry from PRs merged since the last release, with these overrides:
 
-* Use the version and date from step 0, not today's date.
+* Use the version and release date from this skill's step 0, not the changelog skill's step 0 or today's date.
 * Write entries for site administrators and teachers (what changes for them), not descriptions of internal work.
 * Heading format: `## vX.Y.Z – YYYY-MM-DD` (en dash), followed by a `---` separator line before the previous entry, as in the existing file.
 * List the PRs you discarded and why.
@@ -51,7 +51,7 @@ Follow `.agents/skills/changelog/SKILL.md` (steps 1–5) to draft the entry from
 
 ## 5. Package audit (optional, if requested or tooling is available)
 
-* `make package RELEASE=X.Y.Z` must finish without errors and restore `version.php` to dev values afterwards (`git diff version.php` empty).
+* `make package RELEASE=X.Y.Z` must finish without errors and restore `version.php` to dev values afterwards (`git diff version.php` empty). If packaging fails partway, `version.php` keeps the release values: run `git checkout version.php` before continuing.
 * Inspect the ZIP: top-level `exeweb/`; `.agents/`, `.claude/`, `AGENTS.md`, `CLAUDE.md`, `Makefile`, `composer.*`, `scripts/` and other `.distignore` entries excluded; `dist/static/` complete if the editor was built.
 * Delete the generated ZIP afterwards: `.distignore` keeps it out of later packages, but it is not gitignored and must not be committed.
 
