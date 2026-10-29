@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file doesn't use login. It's a callback for eXeLearnin Online to set the activity new package.
+ * This file doesn't use login. It's a callback for eXeLearning Cloud to set the activity new package.
  *
  * It uses AccountId verification (low security as it is not a secret) and, if set in plugin
  * configuration, HMAC verification through share secret HMAC keys.
@@ -37,7 +37,7 @@ require_once($CFG->dirroot.'/mod/exeweb/locallib.php');
 
 // TODO: Add a security measure to prevent unauthorized access adding ip whitelist.
 
-// Get ode_data param sended by eXeLearning Online by POST and
+// Get ode_data param sended by eXeLearning Cloud by POST and
 // x-www-form-urlencoded we'll use Moodle's params functions.
 $odedata = required_param('ode_data', PARAM_RAW);
 // We'll set generic error here. We'll change elements as needed.

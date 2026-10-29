@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * eXeLearning Online url manager class.
+ * eXeLearning Cloud url manager class.
  *
  * @package     mod_exeweb
  * @category    exeweb
@@ -76,7 +76,7 @@ class exeonline_redirector {
     }
 
     /**
-     * Builds moodle url object needed to redirect to eXeLearnig Online.
+     * Builds moodle url object needed to redirect to eXeLearning Cloud.
      *
      * @param integer $cmid
      * @param moodle_url|null $returnto Where the user's browser ends up once eXeLearning sends the
@@ -178,7 +178,7 @@ class exeonline_redirector {
     }
 
     /**
-     * Hack to get redirected to eXeLearning Online by core's modedit.
+     * Hack to get redirected to eXeLearning Cloud by core's modedit.
      *
      * @param moodle_url $url URL of module view.
      * @return moodle_url

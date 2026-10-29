@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Moodle activity module (`mod_exeweb`) for creating and editing web sites with eXeLearning. Teachers can author educational content via three modes: local upload, eXeLearning Online (remote editor), or an embedded static editor.
+Moodle activity module (`mod_exeweb`) for creating and editing web sites with eXeLearning. Teachers can author educational content via three modes: local upload, eXeLearning Cloud (remote editor), or an embedded static editor.
 
 **Component**: `mod_exeweb`
 **Moodle compatibility**: 4.2+
@@ -49,14 +49,14 @@ Lint/test/phpmd/behat all delegate to `composer` scripts defined in `composer.js
 | Constant | Mode | How it works |
 |----------|------|-------------|
 | `EXEWEB_ORIGIN_LOCAL` | Upload | ZIP package uploaded via form |
-| `EXEWEB_ORIGIN_EXEONLINE` | Online | Redirects to remote eXeLearning; JWT-authenticated callbacks (`get_ode.php`/`set_ode.php`) sync the package |
+| `EXEWEB_ORIGIN_EXEONLINE` | Cloud | Redirects to remote eXeLearning; JWT-authenticated callbacks (`get_ode.php`/`set_ode.php`) sync the package |
 | `EXEWEB_ORIGIN_EMBEDDED` | Embedded | Static HTML5 editor in iframe from `dist/static/`; bridge script + postMessage for Moodle ↔ editor communication |
 
 ### Key File Groups
 
 - **Core Moodle hooks**: `lib.php`, `locallib.php` (display/rendering), `mod_form.php` (activity form), `settings.php` (admin config)
 - **Editor integration**: `editor/index.php` (bootstrap), `editor/static.php` (asset server), `editor/save.php` (AJAX save)
-- **Online editor**: `get_ode.php`, `set_ode.php`, `classes/exeonline/` (redirector, JWT token manager)
+- **eXeLearning Cloud editor**: `get_ode.php`, `set_ode.php`, `classes/exeonline/` (redirector, JWT token manager)
 - **Frontend JS** (AMD): `amd/src/editor_modal.js` (fullscreen overlay), `amd/src/admin_embedded_editor.js` (settings page AJAX + progress), `js/moodle_exe_bridge.js` (runs inside editor iframe, raw — not AMD)
 - **Package handling**: `classes/exeweb_package.php` (validation, extraction)
 - **Database**: `db/install.xml` (schema), `db/access.php` (capabilities), `db/upgrade.php` (migrations)
@@ -117,16 +117,17 @@ Uses Moodle's file API — packages stored in `mod_exeweb/package` filearea, exp
 ## Packaging & Release
 
 - `make package RELEASE=X.Y.Z` updates `version.php`, creates ZIP excluding files in `.distignore`, then restores dev values
-- GitHub Actions `release.yml` triggers on git tags: fetches editor, builds, packages, uploads to GitHub Release
-- `check-editor-releases.yml` runs daily to auto-release when new editor versions appear
+- `check-editor-releases.yml` runs daily: when the latest eXeLearning release tag differs from `.editor-version`, it builds the editor, packages the current `main`, updates `.editor-version` and `blueprint.json`, and creates the GitHub Release with the ZIP attached. Merge release preparation PRs before the matching eXeLearning release
+- `release.yml` runs on `release: published` and `workflow_dispatch`: builds the editor, packages and uploads the ZIP. It does not run for the automatic releases above, which are created with `GITHUB_TOKEN`
 
 ## Agent skills (`.agents/`)
 
-The `.agents/skills/` directory contains Claude Code project skills — reusable prompt workflows invoked with `/skill-name` in the Claude Code CLI. They are development tooling only and are excluded from release packages via `.distignore`.
+The `.agents/skills/` directory contains agent skills — reusable prompt workflows. They are not mirrored in `.claude/skills/`, so Claude Code does not offer them as slash commands: ask the agent to follow the skill file instead. They are development tooling only and are excluded from release packages via `.distignore`.
 
 | Skill | File | Purpose |
 |-------|------|---------|
 | `changelog` | `.agents/skills/changelog/SKILL.md` | Draft a CHANGELOG entry from merged GitHub PRs since the last release |
+| `release` | `.agents/skills/release/SKILL.md` | Prepare a release: CHANGELOG entry, version and twin-plugin checks, package audit (no tagging or publishing) |
 
 ## Twin-plugin checks (mod_exeweb ↔ mod_exescorm)
 

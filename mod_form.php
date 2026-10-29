@@ -289,7 +289,7 @@ class mod_exeweb_mod_form extends moodleform_mod {
     public function data_postprocessing($data) {
         parent::data_postprocessing($data);
 
-        // Hack to get redirected to eXeLearning Online to edit package.
+        // Hack to get redirected to eXeLearning Cloud to edit package.
         if ($data->exeorigin === EXEWEB_ORIGIN_EXEONLINE ) {
             if (! isset($data->showgradingmanagement)) {
                 if (isset($data->submitbutton)) {
