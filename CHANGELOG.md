@@ -5,7 +5,7 @@
 - Fix "Edit with eXeLearning" in eXeLearning Cloud showing "Access denied" when another teacher was the last to send the activity back from eXeLearning.
 - eXeLearning Cloud now always opens the activity's latest package from Moodle instead of a potentially outdated copy.
 - Each "Edit with eXeLearning" session in eXeLearning Cloud now creates a new project in the teacher's eXeLearning project list. Nothing is lost: the package stored in Moodle keeps the editable source.
-- Fix missing embedded editor files in release packages, which broke the edicuatex menu editor and SCORM 1.2 exports from the embedded editor.
+- Fix missing embedded editor files in release packages, which broke the menus of the maths equation editor in the embedded editor.
 - Fix pages losing their JavaScript on the first load after a cache purge or upgrade.
 - Fix embedded editor loading in Playground environments running Moodle 5.1 or later.
 - The remote editor mode is now labelled "eXeLearning Cloud" in the settings and documentation.

@@ -70,7 +70,7 @@ Go to the URL:
     {your/moodle/dirroot}/admin/settings.php?section=modsettingexeweb
 
   * Remote URI: *exeweb  | exeonlinebaseuri*
-    * eXeLearning Cloud base URI
+    * eXeLearning URL (the eXeLearning Cloud server)
 
   * Signing Key: *exeweb | hmackey1*
     * Key used to sign data sent to the eXeLearning server, to check the data origin. Use up to 32 characters.
